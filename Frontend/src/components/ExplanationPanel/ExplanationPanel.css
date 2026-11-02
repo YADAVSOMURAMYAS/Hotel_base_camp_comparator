@@ -1,0 +1,95 @@
+.explain-stale {
+  opacity: 0.55;
+}
+
+.explain-hotel {
+  margin: var(--space-3) 0 var(--space-1);
+  font-size: 1rem;
+}
+
+.explain-status {
+  margin: 0 0 var(--space-2);
+  font-weight: 600;
+}
+
+.explain-reason {
+  margin: 0 0 var(--space-1);
+}
+
+.explain-scroll {
+  overflow-x: auto;
+  margin: var(--space-3) 0 var(--space-2);
+}
+
+.explain-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.explain-table caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: var(--space-1);
+}
+
+.explain-table th,
+.explain-table td {
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-1) var(--space-2);
+  text-align: left;
+}
+
+.explain-table tfoot th {
+  font-weight: 700;
+  border-top: 2px solid var(--color-text);
+}
+
+.explain-average {
+  margin: 0 0 var(--space-3);
+  color: var(--color-muted);
+}
+
+.explain-chart {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.explain-chart li {
+  display: grid;
+  grid-template-columns: minmax(8rem, 14rem) 1fr 3.5rem;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.explain-bar-track {
+  display: block;
+  background: var(--color-bg);
+  border-radius: var(--radius);
+  height: 0.9rem;
+}
+
+.explain-bar {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  width: calc(var(--v) / var(--max) * 100%);
+}
+
+.explain-chart-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 900px) {
+  .explain-chart li {
+    grid-template-columns: 1fr 3.5rem;
+  }
+  .explain-bar-track {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}

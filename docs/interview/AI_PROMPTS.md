@@ -446,3 +446,37 @@ weighted total, average, longest trip, CSS-only price bar vs a budget marker wit
 click/Enter/Space calls inspectHotel. States: idle, INVALID/error, stale (aria-busy, dimmed), NO_AFFORDABLE_HOTEL (no star, no ranks).
 Tests use the real sample JSON; a shuffled list proves no sorting. Same Step 0-6 method as T10.
 ```
+
+### T12: CityMap
+| Field | Content |
+|---|---|
+| Prompt | Summarised below |
+| What was wrong or missing | The brief gave no dev port and asked for right/left label placement, which would let a long label (`CLOCK`) cover a neighbouring marker. Claude asked about the port, proposed a greedy fallback (below, above, other side) and reusing the Controls test helper; user answered "approve" |
+| Refined prompt | Step 0/1: element tree, states, label-placement approach and a 15-item test list |
+| Result | Tests first: 18 of 19 failed against the stub. After implementing: 126 tests pass, lint, typecheck, format check and build clean |
+
+**Prompt (summary):**
+```text
+Task T12: CityMap, editing only components/CityMap/. Schematic SVG from city.map (viewBox) with the 25 selected markers: square+H hotels, circle
+attractions, diamond food, legend, name labels with a halo. ★ on the recommended hotel and ✕ on over-budget hotels from result labels; thick ring and bold
+label for the inspected hotel. Only the inspected hotel gets 15 dashed links labelled "<minutes> min · <contribution>" straight from the API, with the caption
+"Comparison links, not routes. Line length is not travel time." No links when result is null; empty state before load. Hotel markers call inspectHotel on
+click/Enter/Space; place markers do not. role=img svg with title/desc, aria-busy when stale. No coordinate-based calculation. Same Step 0-6 method as T10.
+```
+
+### T13: ExplanationPanel + TravelMatrixTable
+| Field | Content |
+|---|---|
+| Prompt | Summarised below |
+| What was wrong or missing | The brief had no dev port and asked for a count of affordable flags, a subtraction for the "why not" line and a bar-width maximum, which brush against the no-calculation rule. Claude asked about both before building and logged them as D-32 |
+| Refined prompt | Step 0/1: wording of every reason sentence, element tree for both components, a 27-test list; approved before any code |
+| Result | Tests first: 27 of 27 failed against the stubs. After implementing: 153 tests pass, lint, typecheck, format check and build clean |
+
+**Prompt (summary):**
+```text
+Task T13: ExplanationPanel + TravelMatrixTable, editing only their two folders. Panel: header (name, ID, symbol+text status), plain-language reason built
+only from API values (RECOMMENDED, RANKED with a "why not #r-1" line for differing totals / equal totals / equal cost, OVER_BUDGET, NO_AFFORDABLE_HOTEL),
+per-place calculation table "3 x 40 = 120" with footer total and average line, CSS contribution bars with printed values, empty/invalid/stale states.
+Table: semantic <table> with caption, scope headers, scrollable focusable region with sticky first column, importance row, status column from the API
+label, inspected row marked, hotel button calls inspectHotel, times stay visible when INVALID. Same Step 0-6 method as T10.
+```

@@ -1,0 +1,132 @@
+.citymap-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.citymap-bg {
+  fill: var(--color-surface);
+}
+
+.citymap-grid-line {
+  fill: none;
+  stroke: var(--color-border);
+  stroke-width: 0.5;
+}
+
+.citymap-label {
+  font-size: 13px;
+  fill: var(--color-text);
+  /* Halo keeps the name readable over lines and the grid. */
+  stroke: var(--color-surface);
+  stroke-width: 4px;
+  paint-order: stroke;
+  stroke-linejoin: round;
+}
+
+.citymap-label-bold {
+  font-weight: 700;
+}
+
+.citymap-hotel {
+  cursor: pointer;
+}
+
+.citymap-hotel:focus-visible {
+  outline: none;
+}
+
+.citymap-hotel:focus-visible .citymap-hotel-shape {
+  stroke: var(--color-warning);
+  stroke-width: 4;
+}
+
+.citymap-hotel-shape {
+  fill: var(--color-accent);
+  stroke: var(--color-text);
+  stroke-width: 1.5;
+}
+
+.citymap-hotel-best .citymap-hotel-shape {
+  fill: var(--color-success);
+}
+
+.citymap-hotel-over .citymap-hotel-shape {
+  fill: var(--color-error);
+}
+
+.citymap-hotel-letter {
+  fill: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.citymap-badge {
+  font-size: 16px;
+  font-weight: 700;
+  fill: var(--color-text);
+  stroke: var(--color-surface);
+  stroke-width: 3px;
+  paint-order: stroke;
+  pointer-events: none;
+}
+
+.citymap-ring {
+  fill: none;
+  stroke: var(--color-text);
+  stroke-width: 4;
+}
+
+.citymap-attraction circle,
+.citymap-attraction-shape {
+  fill: var(--color-warning);
+  stroke: var(--color-text);
+  stroke-width: 1.5;
+}
+
+.citymap-food polygon,
+.citymap-food-shape {
+  fill: var(--color-muted);
+  stroke: var(--color-text);
+  stroke-width: 1.5;
+}
+
+.citymap-link {
+  stroke: var(--color-accent);
+  stroke-width: 1;
+  stroke-dasharray: 5 4;
+}
+
+.citymap-link-bg {
+  fill: var(--color-surface);
+  stroke: var(--color-accent);
+  stroke-width: 0.75;
+}
+
+.citymap-link-text {
+  font-size: 11px;
+  fill: var(--color-text);
+}
+
+.citymap-stale,
+.citymap-stale-badges .citymap-badge {
+  opacity: 0.4;
+}
+
+.citymap-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+}
+
+.citymap-legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}

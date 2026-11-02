@@ -20,8 +20,8 @@ Status values: Done · In progress · Pending. One task = one session. Definitio
 | T09 | Frontend scaffold, contracts, client, state hook | T01 | `Frontend/src/types/contracts.ts`, `api/client.ts`, `state/useComparator.ts`, `utils/currency.ts`, `App.tsx`, mocks, tests | Done | Frontend | A |
 | T10 | Controls and status banner | T09 | `components/Controls/*`, `components/StatusBanner/*` | Done | Frontend | A |
 | T11 | Ranking view | T09 | `components/HotelRanking/*` | Done | Frontend | A |
-| T12 | City map (SVG) | T09 | `components/CityMap/*` | Pending | Frontend | A |
-| T13 | Explanation panel and travel table | T09 | `components/ExplanationPanel/*`, `components/TravelMatrixTable/*` | Pending | Frontend | A |
+| T12 | City map (SVG) | T09 | `components/CityMap/*` | Done | Frontend | A |
+| T13 | Explanation panel and travel table | T09 | `components/ExplanationPanel/*`, `components/TravelMatrixTable/*` | Done | Frontend | A |
 | T14 | Integration and Phase A demo-ready checkpoint | T08, T10–T13 | `Frontend/src/App.tsx`, `Frontend/vite.config.ts`, integration tests, `docs/COMMANDS.md` | Pending | Integration | A |
 | T15 | Catalog data (2 cities), generator, catalog API, selection limits | T14 | `Backend/scripts/design_helper.py`, `app/data/cities/*.json`, `app/api/routes.py`, `app/domain/validation.py`, tests, docs | Pending | Backend | B |
 | T16 | Selection UI (list and map click) | T15 | `components/Selection/*`, small edits to `CityMap`, `Controls`, `useComparator`, tests | Pending | Frontend | B |
@@ -40,6 +40,8 @@ Parallel groups: see [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md). T05 ‖
 
 - T10 done: `Controls` and `StatusBanner` render from `useComparatorContext()` only; 85 Vitest tests. Stub test IDs `controls-stub` / `status-banner-stub` are kept on the new roots until T14 (D-27).
 - T11 done: `HotelRanking` renders one card per hotel in API order (rank or Unranked, status symbol + text, money line, importance-minutes / average / longest trip, CSS price bar vs budget marker with a text equivalent, Inspecting tag, `inspectHotel` on click). 17 new Vitest tests (102 total). Stub test ID `hotel-ranking-stub` kept on the root until T14 (D-27).
+- T12 done: `CityMap` draws the 25 selected markers (square H hotels, circle attractions, diamond food) with halo labels, ★ / ✕ status badges from `label`, a ring on the inspected hotel, and 15 dashed comparison links for the inspected hotel only, each labelled `<minutes> min · <contribution>` from the API. Legend and the "not routes" caption included. 24 new Vitest tests (126 total). Stub test ID `city-map-stub` kept on the root until T14 (D-27).
+- T13 done: `ExplanationPanel` (header with symbol + text status, plain-language reason from API values, per-place calculation table `3 × 40 = 120`, weighted total and average line as templates, CSS contribution bars with printed values) and `TravelMatrixTable` (caption, `scope` headers, sticky first column, importance row, status column, inspected row marked, hotel button calls `inspectHotel`). 27 new Vitest tests (153 total). Shared status wording lives in `ExplanationPanel/hotelStatus.ts` (D-32); stub test IDs kept until T14.
 
 ## Next up
 1. Review T01 output, especially "Assumptions to confirm" in [DECISIONS.md](DECISIONS.md).
@@ -58,3 +60,5 @@ Parallel groups: see [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md). T05 ‖
 | 2026-11-02 | Frontend foundation: contracts, client, `useComparator`, context, currency and wire-value helpers, layout shell with stubs, DevPanel, Vitest setup (55 tests), Prettier; D-20 to D-26 | T09 |
 | 2026-11-02 | Controls (Load/Reset, text budget input, 15 importance rows, field-level `aria-invalid`) and StatusBanner (idle/loading/stale/OK/NO_AFFORDABLE_HOTEL/INVALID/error); 30 new Vitest tests (85 total); D-27 to D-29 | T10 |
 | 2026-11-02 | HotelRanking cards, price bar, empty/invalid/stale states; 17 new Vitest tests (102 total); D-30 | T11 |
+| 2026-11-02 | CityMap SVG (markers, label layout, inspected hotel links, legend, a11y); 24 new Vitest tests (126 total); D-31 | T12 |
+| 2026-11-02 | ExplanationPanel + TravelMatrixTable, empty/invalid/stale states; 27 new Vitest tests (153 total); D-32 | T13 |

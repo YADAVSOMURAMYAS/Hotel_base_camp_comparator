@@ -1,0 +1,85 @@
+.traveltable-stale {
+  opacity: 0.55;
+}
+
+.traveltable-scroll {
+  overflow-x: auto;
+}
+
+.traveltable-scroll:focus-visible {
+  outline: 3px solid var(--color-warning);
+  outline-offset: 2px;
+}
+
+.traveltable-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.traveltable-table caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: var(--space-1);
+}
+
+.traveltable-table th,
+.traveltable-table td {
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-1) var(--space-2);
+  text-align: left;
+  background: var(--color-surface);
+  white-space: nowrap;
+}
+
+.traveltable-table td {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sticky first column so hotel names stay visible while scrolling sideways. */
+.traveltable-table tbody th,
+.traveltable-table thead tr:first-child th:first-child,
+.traveltable-importance th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.traveltable-type {
+  display: block;
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.traveltable-importance th,
+.traveltable-importance td {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.traveltable-table tbody th button {
+  background: transparent;
+  color: var(--color-accent);
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.traveltable-current th,
+.traveltable-current td {
+  background: #dbeafe;
+  border-bottom-color: var(--color-accent);
+}
+
+.traveltable-marker {
+  margin-left: var(--space-2);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.traveltable-marker::before {
+  content: '▶ ';
+}

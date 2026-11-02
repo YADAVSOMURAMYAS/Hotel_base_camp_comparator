@@ -1,5 +1,13 @@
 # CityMap
 
-**Status:** stub (T09). `index.tsx` shows the component name and the current phase, proving the context wiring.
-**T12 will build:** hand-written SVG map; comparison mode highlights only the inspected hotel links.
-**Rules:** read state via `useComparatorContext()`; no calculation; keep the folder layout (`index.tsx`, `README.md`, tests beside it as `CityMap.test.tsx`).
+**Purpose:** schematic SVG map of the selected hotels and places (25 markers for the Demo trip) and the inspected hotel's comparison links.
+**Contents:**
+- `index.tsx`: component (default export). Empty state before load; markers, status badges, links, legend and caption after.
+- `labelLayout.ts`: `placeLabels` greedy label placement (right/left by x, then below, above). Drawing only.
+- `CityMap.css`: styles (`citymap-` prefix, tokens from `styles.css`).
+- `CityMap.test.tsx`, `labelLayout.test.ts`: Vitest tests using the real sample JSON.
+
+**Responsibilities:** read state via `useComparatorContext()`; draw API values as given (`<minutes> min · <contribution>`, ★ / ✕ from `label`); hotel markers call `inspectHotel(id)` on click, Enter or Space.
+**Dependencies:** `state/ComparatorContext`, `types/contracts`. Tests also import `../Controls/renderWithComparator` (D-28).
+**Belongs here:** drawing and label layout. **Does not belong here:** totals, ranks, affordability or anything derived from coordinates (positions are layout-only), place selection, map-point creation.
+**Notes:** the root keeps `data-testid="city-map-stub"` until T14 (D-27). Link labels sit at 60% along each line and are not collision-checked.

@@ -188,3 +188,29 @@ npm run build         ✓ 31 modules transformed; dist/assets/index-CHH_MJXf.js 
 ```
 New tests (`HotelRanking.test.tsx`, 17): API order; shuffled input keeps input order (no sorting); recommended is `#1` with `★ Recommended`; ranked `#2` with `✓ Within budget`; four over-budget cards with `✕ Over budget`, exact `Over budget by ₹…`, no rank and `Unranked`; `₹0 left in budget` (sample hotel overridden to 0) and `₹13,500 left in budget`; price and the three numbers; bar text equivalents (within / over); click, Enter and Space call `inspectHotel`; only the inspected card has `aria-current` and `Inspecting`; summary `6 of 10 hotels fit the budget`; NO_AFFORDABLE_HOTEL (no star, no `#n`, `No hotel fits this budget`, shortfalls); idle, INVALID and error messages; `aria-busy` true when stale and false when fresh.
 Smoke: backend :8000 and `npm run dev` :5173 started; `/` and `/api/cities/surmapur/presets/demo` returned 200 through the proxy; both servers stopped. The visual check was not run by me.
+
+### T12 run (2026-11-02), CityMap
+Tests first, against the T09 stub: `Test Files 2 failed (2)`, `Tests 18 failed | 1 passed (19)` (the pass was vacuous on the stub).
+After implementing (Prettier applied): `src/components/CityMap` alone `Tests 24 passed (24)`; full suite and checks:
+```text
+npm test              Test Files  12 passed (12)   Tests  126 passed (126)
+npm run lint          (no output: clean)
+npm run typecheck     (no output: clean)
+npm run format:check  All matched files use Prettier code style!
+npm run build         ✓ 33 modules transformed; dist/assets/index-8eMUCeL6.js 238.55 kB │ gzip: 74.42 kB; ✓ built in 219ms
+```
+New tests: `CityMap.test.tsx` 19, `labelLayout.test.ts` 5. Covered: empty state before load; exactly 10 hotel + 15 place markers; every name visible; svg name and description pointing to the Travel times table; legend and the "not routes" caption; ★ only on `H_GARDEN`; ✕ on exactly the 4 over-budget hotels; NO_AFFORDABLE_HOTEL (no ★, ✕ on all 10, `H_CIVIL` inspected); `result` null and INVALID (25 markers, no links, no symbols); 15 links whose text equals the sample `minutes` and `contribution`; links move to `H_GHANTA` with 25 markers kept; `aria-current` on one hotel only; changed catalog positions leave every link text identical; `aria-busy` and dimmed links when stale; click, Enter and Space call `inspectHotel` with the hotel ID; place markers have no tabindex and never call it; label layout: side rule, no label overlap and no label over another marker on the Demo positions, and a label moves away from a close neighbour.
+Smoke: backend :8000 and `npm run dev` :5173 started; `/`, `/api/cities/surmapur` and the same path through the Vite proxy returned 200. The visual check in a browser was not run by me.
+
+### T13 run (2026-11-02), ExplanationPanel + TravelMatrixTable
+Tests first, against the T09 stubs: both files failed, `27 failed` (15 ExplanationPanel, 12 TravelMatrixTable).
+After implementing (Prettier applied): full suite and checks:
+```text
+npm test              Test Files  14 passed (14)   Tests  153 passed (153)
+npm run lint          (no output: clean)
+npm run typecheck     (no output: clean)
+npm run format:check  All matched files use Prettier code style!
+npm run build         36 modules transformed; dist/assets/index-CB_16hkl.css 11.09 kB; dist/assets/index-tIKM5LBv.js 244.33 kB, gzip 75.65 kB; built in 227ms
+```
+New tests: `ExplanationPanel.test.tsx` 15, `TravelMatrixTable.test.tsx` 12. Covered: reason sentence for RECOMMENDED, RANKED (differing total, equal total, equal cost via small hand-built results), OVER_BUDGET and NO_AFFORDABLE_HOTEL; 15 walk-through rows equal to the sample; footer total and average line equal the API; 15 chart items with printed values; mocked odd totals (777, 9, "86.3") shown verbatim; empty states (idle, INVALID, error, unknown inspected id); `aria-busy` when stale; table caption, `scope` col/row, labelled focusable scroll region; every cell equals `city.round_trip_minutes`; inspected row marked and clicking another row header calls `inspectHotel`; status column and importance row, blank / "-" on INVALID with times still visible.
+Smoke: backend :8000 was already running and `npx vite --port 5175` served `/` and the proxied `POST /api/compare` with 200. The visual check in a browser was not run by me.
