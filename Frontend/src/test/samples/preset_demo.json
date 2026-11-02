@@ -1,0 +1,50 @@
+{
+  "city_id": "surmapur",
+  "hotel_ids": [
+    "H_GHANTA",
+    "H_HAVELI",
+    "H_MAHAL",
+    "H_STEPWELL",
+    "H_NEELGHAT",
+    "H_RIVERBRZ",
+    "H_CIVIL",
+    "H_GARDEN",
+    "H_LAKEVIEW",
+    "H_HILLTOP"
+  ],
+  "place_ids": [
+    "CLOCK",
+    "FORTGATE",
+    "MUSEUM",
+    "NIGHTMKT",
+    "RIVERWALK",
+    "STEPWELL",
+    "VIEWPOINT",
+    "GARDEN",
+    "KACHORI",
+    "BIRYANI",
+    "CHAI",
+    "JALEBI",
+    "FISHCURRY",
+    "THALI",
+    "KULFI"
+  ],
+  "importances": {
+    "CLOCK": 5,
+    "FORTGATE": 4,
+    "MUSEUM": 3,
+    "NIGHTMKT": 4,
+    "RIVERWALK": 3,
+    "STEPWELL": 1,
+    "VIEWPOINT": 2,
+    "GARDEN": 1,
+    "KACHORI": 2,
+    "BIRYANI": 4,
+    "CHAI": 1,
+    "JALEBI": 3,
+    "FISHCURRY": 3,
+    "THALI": 2,
+    "KULFI": 2
+  },
+  "budget": 30000
+}

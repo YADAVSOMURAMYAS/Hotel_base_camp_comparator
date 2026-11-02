@@ -25,15 +25,17 @@
 | Vitest | Tests | Native to Vite, fast | Jest: extra config |
 | React Testing Library | Component tests by role/label | Accessible queries | Enzyme |
 | jsdom | DOM for Vitest | Required by RTL under Vitest | Real browser for unit tests |
-| oxlint | Lint (`npm run lint`) | Already in the Vite scaffold; approved in CLAUDE.md | ESLint, Prettier: **not approved**; ask first |
+| oxlint | Lint (`npm run lint`) | Already in the Vite scaffold; approved in CLAUDE.md | ESLint: **not approved**; ask first |
+| Prettier | `npm run format` / `format:check` (code only) | Approved for T09 (D-23) | `eslint-config-prettier`: not needed |
+| @testing-library/jest-dom, user-event, dom | DOM matchers, user events; `dom` is a required peer of RTL | Approved set | none |
 
-Vitest, RTL and jsdom are added in T09 (approved set; not yet in `package.json`).
+Added in T09 (dev dependencies, see `Frontend/package.json`): `vitest`, `jsdom`, `@testing-library/react`, `@testing-library/dom`, `@testing-library/jest-dom`, `@testing-library/user-event`, `prettier`.
 
 ## Optional / not approved
 | Tool | Status |
 |---|---|
 | Playwright (screenshots) | Not approved. Screenshots are taken manually (browser/OS tool) unless the user approves |
-| ESLint + Prettier | Not approved; oxlint is the linter |
+| ESLint | Not approved; oxlint is the linter (Prettier was approved in T09) |
 
 ## Rejected alternatives
 | Alternative | Reason |

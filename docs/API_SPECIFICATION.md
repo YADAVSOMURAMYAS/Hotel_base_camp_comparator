@@ -12,7 +12,7 @@ Data files behind these endpoints: [DATABASE_DESIGN.md](DATABASE_DESIGN.md). Cal
 | Base URL | `http://127.0.0.1:8000` (dev); Vite dev server `http://localhost:5173` is allowed by CORS |
 | Format | JSON, UTF-8, `snake_case` keys |
 | Numbers | Whole numbers only. Currency amounts are integer rupees (₹). No floats anywhere |
-| Currency display | Backend returns integers. Frontend formats `Intl.NumberFormat('en-IN')`, e.g. `₹1,25,000` |
+| Currency display | Backend returns integers. Frontend formats with hand-written Indian grouping (no `Intl`/`toLocaleString`), e.g. `₹1,25,000` |
 | Averages | `weighted_average_display` is a string like `"28.0"` produced by the backend; the frontend never recomputes it |
 | Calculation | Only the backend calculates (`Backend/app/domain/`) |
 | Availability | Phase A (T08): health, city detail, demo preset, compare. Phase B (T15): city list, selection subsets. Timeline: Optional (T18) |

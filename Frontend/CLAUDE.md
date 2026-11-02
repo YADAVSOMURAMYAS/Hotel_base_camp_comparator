@@ -21,7 +21,7 @@ src/
 
 ## Rules
 - **`types/contracts.ts` mirrors `docs/API_SPECIFICATION.md` field-for-field.** Change the doc first, then the type. Never invent fields.
-- **No calculation.** Never compute totals, contributions, averages, ranks, affordability, shortfalls or rounding. Show `weighted_average_display` as given. The only allowed transform is formatting integer rupees with `Intl.NumberFormat('en-IN')` (₹1,25,000).
+- **No calculation.** Never compute totals, contributions, averages, ranks, affordability, shortfalls or rounding. Show `weighted_average_display` as given. The only allowed transform is formatting integer rupees with the hand-written Indian grouping in `utils/currency.ts` (₹1,25,000); no `Intl`, no `toLocaleString`.
 - **Ignore out-of-order responses.** Each request gets an increasing sequence number; a response is applied only if it belongs to the latest request.
 - **INVALID clears everything derived**: ranks, recommendation, contributions, explanation and map highlights. Inputs stay editable so the user can fix them, and the errors are shown in `StatusBanner`.
 - **Not colour alone.** Recommended gets a "★ Recommended" text badge; over-budget hotels get "Over budget by ₹X" text plus a symbol. Every unranked hotel shows its reason.
@@ -34,7 +34,7 @@ src/
 - Marker coordinates are layout-only. Never derive anything from line length or distance.
 - Inspecting a hotel changes only the explanation and highlights, never the result. The default inspected hotel is the API's `default_inspected_hotel_id`.
 - No map, chart, state or UI libraries; plain React state and hand-written SVG/CSS. No new dependencies without asking.
-- Keep components small and readable. Match the existing naming: `ComponentName/ComponentName.tsx`.
+- Keep components small and readable. Each component lives in `components/ComponentName/index.tsx` (default export), with its `README.md`.
 
 ## Testing
 - Test first with Vitest + React Testing Library; mock `src/api/` (no real backend in unit tests).

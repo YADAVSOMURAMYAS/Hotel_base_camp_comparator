@@ -1,0 +1,15 @@
+{
+  "status": "INVALID",
+  "errors": [
+    {
+      "field": "budget",
+      "code": "BUDGET_INVALID",
+      "message": "Budget must be a whole number from 0 to 1,000,000"
+    }
+  ],
+  "importance_total": null,
+  "budget": null,
+  "recommended_hotel_id": null,
+  "default_inspected_hotel_id": null,
+  "hotels": []
+}

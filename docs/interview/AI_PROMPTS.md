@@ -387,3 +387,24 @@ Duplicates reach the validator. INVALID / NO_AFFORDABLE_HOTEL are HTTP 200. Test
 what-ifs, INVALID matrix (budget, importance, selection), overridden catalogs (missing/extra key, shared ID), malformed body, 404, CORS.
 Save real responses as samples for T09. Method: Step 0 questions, Step 1 table + wait, tests first, implement, run, live calls, docs. No commit.
 ```
+
+## Entry 7: T09 Frontend foundation
+| Field | Content |
+|---|---|
+| Date | 2026-11-02 |
+| Task | T09: typed contracts, fetch client, `useComparator` + context, currency and wire-value helpers, layout shell with stubs, temporary DevPanel, Vitest setup |
+| Prompt | Summarised below |
+| What was wrong or missing | The brief said the default inspected hotel is "the first hotel in the response" when nothing is recommended; the API provides `default_inspected_hotel_id` (lowest hotel ID) and the two differ. The user chose the API field (D-20). The brief and `CLAUDE.md` disagreed on `Intl` and on `Name/Name.tsx` vs `index.tsx`; the brief won and the docs were corrected (D-22, D-24). The brief did not say what happens to data while a recompute is in flight; resolved with `isStale` (D-25) |
+| Refined prompt | Step 0/1: table of types, hook state/actions, stub approach, test list; five answers from the user, one addition (`isStale` plus a hook test) |
+| Result | Tests written first; the first run failed with 6 failed files, "Failed to resolve import" for the missing modules (no individual test ran). After implementing: 55 tests pass, lint, typecheck, format check and build clean; proxy checked with the real backend. The first Prettier check flagged `CLAUDE.md`; fixed by excluding Markdown, not by reformatting docs |
+
+**Prompt (summary):**
+```text
+Task T09: Frontend foundation. Contracts, API client, central state hook, currency helper, layout shell with stub components. No real UI
+features (T10-T13). contracts.ts mirrors the API spec; RawValue for loose request fields; no any. formatRupees by hand (no Intl);
+toWireValue forwards raw input and never decides validity. fetch client (no axios): ApiError, AbortError, VITE_API_BASE. useComparator is
+the only state: loadDemo/setBudgetText/setImportanceText/inspectHotel/reset, request sequence numbers + AbortController, stale responses
+ignored, INVALID clears derived data. Context provider. CSS-grid shell with tokens, six stubs + temporary DevPanel. Tests first (currency,
+wireValue, client with real samples, hook incl. stale-response race, App smoke). Method: Step 0/1 table and wait, install, failing tests,
+implement, run npm test/lint/typecheck/format:check/build, smoke test with both servers, docs. Do not touch Backend/. No commit.
+```

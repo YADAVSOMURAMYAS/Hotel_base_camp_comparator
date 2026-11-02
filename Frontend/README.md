@@ -1,32 +1,19 @@
-# React + TypeScript + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+**Purpose:** React + Vite + TypeScript UI that renders the backend comparison result. It never calculates (see `CLAUDE.md`).
 
-Currently, two official plugins are available:
+| Command | What |
+|---|---|
+| `npm run dev` | dev server on http://localhost:5173 (`/api` is proxied to http://127.0.0.1:8000) |
+| `npm test` / `npm run test:watch` | Vitest (jsdom + React Testing Library) |
+| `npm run lint` | oxlint |
+| `npm run typecheck` | `tsc -b` |
+| `npm run format` / `format:check` | Prettier on code (Markdown is excluded) |
+| `npm run build` | type-check + production build |
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+`VITE_API_BASE` overrides the API base URL (default: same origin via the proxy).
 
-## React Compiler
+## Layout
+`src/types` contracts · `src/api` fetch client · `src/state` the one hook + context · `src/utils` formatting only · `src/components` one folder per UI part · `src/__tests__` tests · `src/test` test setup and sample API responses.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Status: T09 foundation done. Components are stubs until T10-T13; `DevPanel` is temporary (remove in T14).

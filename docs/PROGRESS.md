@@ -17,7 +17,7 @@ Status values: Done · In progress · Pending. One task = one session. Definitio
 | T06 | Engine and ranking | T04 | `app/domain/engine.py`, `tests/unit/test_engine.py`, `test_ranking_ties.py`, `tests/fixtures/small_scenarios.py` (see D-12) | Done | Backend | A |
 | T07 | Demo story tests (what-ifs) | T03, T06 | `tests/scenario/test_demo_story.py` | Done | Backend | A |
 | T08 | API core (health, city, preset, compare) | T03, T05, T06 | `app/api/routes.py`, `app/api/schemas.py`, `app/data/loader.py`, `app/domain/compare.py`, `app/main.py` (unchanged: router already wired), `tests/api/*` | Done | Backend | A |
-| T09 | Frontend scaffold, contracts, client, state hook | T01 | `Frontend/src/types/contracts.ts`, `api/client.ts`, `state/useComparator.ts`, `utils/currency.ts`, `App.tsx`, mocks, tests | Pending | Frontend | A |
+| T09 | Frontend scaffold, contracts, client, state hook | T01 | `Frontend/src/types/contracts.ts`, `api/client.ts`, `state/useComparator.ts`, `utils/currency.ts`, `App.tsx`, mocks, tests | Done | Frontend | A |
 | T10 | Controls and status banner | T09 | `components/Controls/*`, `components/StatusBanner/*` | Pending | Frontend | A |
 | T11 | Ranking view | T09 | `components/HotelRanking/*` | Pending | Frontend | A |
 | T12 | City map (SVG) | T09 | `components/CityMap/*` | Pending | Frontend | A |
@@ -32,9 +32,11 @@ Parallel groups: see [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md). T05 ‖
 
 ## Current state
 - Docs, folder READMEs and `verification/README.md` are being written (T01). The three `CLAUDE.md` files exist.
-- `Backend/` has a runnable FastAPI app (`GET /api/health` only), the domain models and the integer rounding function (T04). `engine.py` has `compare(scenario)` (T06: contributions, totals, ranks, recommendation, `NO_AFFORDABLE_HOTEL`). `schemas.py` is still an empty stub. `Frontend/` has the stock Vite + React scaffold (`dev`, `build`, `lint`, `preview`; no test setup yet). No Demo data exists. No Git repository yet.
+- `Backend/` has a runnable FastAPI app (`GET /api/health` only), the domain models and the integer rounding function (T04). `engine.py` has `compare(scenario)` (T06: contributions, totals, ranks, recommendation, `NO_AFFORDABLE_HOTEL`). `schemas.py` is still an empty stub. `Frontend/` was the stock Vite scaffold here (see the T09 line below for its current state). No Demo data exists. No Git repository yet.
 
 - T08 done: `GET /api/cities/{id}`, `GET .../presets/demo` and `POST /api/compare` work on Surmapur (loader, `domain/compare.py`, 65 API tests, real sample responses in `tests/api/samples/`).
+
+- T09 done: `Frontend/` has typed contracts, the fetch client, `useComparator` + context (request sequencing, `isStale`), `formatRupees`, `toWireValue`, stub components for T10-T13, a temporary `DevPanel` and the Vite `/api` proxy (done here, not in T14). 55 Vitest tests. **T14 cleanup:** remove `components/DevPanel`, its `App.tsx` line and the `dev-panel` assertion in `App.test.tsx`; fix the `Name/Name.tsx` / `index.css` wording in `CODING_STANDARDS.md` (D-24).
 
 ## Next up
 1. Review T01 output, especially "Assumptions to confirm" in [DECISIONS.md](DECISIONS.md).
@@ -50,3 +52,4 @@ Parallel groups: see [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md). T05 ‖
 | 2026-11-02 | `domain/validation.py` (`validate_scenario`, `validate`, `ValidationOutcome`) and `tests/unit/test_validation.py` (116 tests); API spec path note | T05 |
 | 2026-11-02 | `tests/scenario/conftest.py` + `test_demo_story.py` (35 tests): engine vs `expected_demo.py` for all 10 hotels, independent contributions, C1–C6, N1–N3, what-ifs, reset, boundary, budget 0, independence guard. Mutation check done on a scratch copy; no app files changed | T07 |
 | 2026-11-02 | `data/loader.py` (cached, injectable), `domain/compare.py` (catalog + selection -> result, unknown-ID check), `api/schemas.py`, three new routes, `tests/api/` (65 tests) and `tests/api/samples/` | T08 |
+| 2026-11-02 | Frontend foundation: contracts, client, `useComparator`, context, currency and wire-value helpers, layout shell with stubs, DevPanel, Vitest setup (55 tests), Prettier; D-20 to D-26 | T09 |

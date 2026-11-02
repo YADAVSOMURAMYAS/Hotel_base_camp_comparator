@@ -120,3 +120,44 @@ H_GHANTA OVER_BUDGET shortfall 36500 | H_HAVELI OVER_BUDGET 30800 | H_GARDEN OVE
 --- GET /api/cities/nowhere  -> 404
 --- POST /api/compare with body {bad  -> 422
 ```
+
+### T09 run (2026-11-02), Frontend foundation
+```text
+Command: npm test            (from Frontend/, before implementation)
+Output:  FAIL src/__tests__/*.test.ts(x)   Error: Failed to resolve import "../api/client" / "../utils/wireValue" ... Does the file exist?
+         Test Files  6 failed (6)
+         Tests  no tests
+
+Command: npm test            (after implementation)
+Output:  RUN  v5.0.5
+         Test Files  6 passed (6)
+              Tests  55 passed (55)
+           Duration  3.75s
+
+Command: npm run lint
+Output:  (no output: clean; one react/only-export-components warning silenced with a stated reason in ComparatorContext.tsx)
+
+Command: npm run typecheck   (tsc -b)
+Output:  (no output: clean)
+
+Command: npm run format:check
+Output:  Checking formatting...
+         All matched files use Prettier code style!
+
+Command: npm run build
+Output:  vite v8.3.5 building client environment for production...
+         ✓ 27 modules transformed.
+         dist/index.html                   0.47 kB │ gzip:  0.30 kB
+         dist/assets/index-CGfLKjqg.css    1.81 kB │ gzip:  0.74 kB
+         dist/assets/index-Bm3d4I-p.js   226.18 kB │ gzip: 70.63 kB
+         ✓ built in 313ms
+```
+Smoke test through the Vite proxy (backend :8000, `npm run dev`):
+```text
+GET  http://localhost:5173/api/health                   -> {"status":"ok"}
+GET  http://localhost:5173/api/cities/surmapur/presets/demo -> {"city_id":"surmapur","hotel_ids":["H_GHANTA",...
+POST http://localhost:5173/api/compare (demo preset)   -> {"status":"OK",...,"recommended_hotel_id":"H_GARDEN","default_inspected_hotel_id":"H_GARDEN",...
+POST http://localhost:5173/api/compare (budget -5)     -> {"status":"INVALID","errors":[{"field":"budget","code":"BUDGET_INVALID",...
+```
+Note: `http://127.0.0.1:5173` refuses connections (Vite binds `localhost`); both servers were stopped afterwards. The browser click-through of the DevPanel Load button was not run by me.
+Frontend tests by area: currency 13, wireValue 11, client 10, useComparator 19, ComparatorContext 1, App 1 (stale-response race, `isStale`, abort, raw wire values `-5` / `12.5` / `abc`, inspect without API call, reset).
