@@ -8,7 +8,7 @@ import {
   loadedComparator,
   noHotelResult,
   okResult,
-} from '../Controls/renderWithComparator'
+} from '../../test/renderWithComparator'
 import StatusBanner from './index'
 
 vi.mock('../../state/ComparatorContext', () => ({ useComparatorContext: vi.fn() }))

@@ -11,7 +11,7 @@ import {
   noHotelResult,
   okResult,
   sampleCity,
-} from '../Controls/renderWithComparator'
+} from '../../test/renderWithComparator'
 import CityMap from '.'
 
 vi.mock('../../state/ComparatorContext', () => ({ useComparatorContext: vi.fn() }))

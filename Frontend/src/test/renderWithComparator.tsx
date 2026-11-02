@@ -1,14 +1,14 @@
-// Local test helper (T10). T14 should consolidate it into src/test/ (see docs/DECISIONS.md).
+// Shared test helper: a typed Comparator with spies, typed samples, and a real-provider render.
 import { render } from '@testing-library/react'
 import type { ReactElement } from 'react'
-import { ComparatorProvider } from '../../state/ComparatorContext'
-import type { Comparator } from '../../state/useComparator'
-import type { City, ComparisonResult, DemoPreset } from '../../types/contracts'
-import cityJson from '../../test/samples/city_surmapur.json'
-import invalidJson from '../../test/samples/compare_invalid.json'
-import noHotelJson from '../../test/samples/compare_no_affordable_hotel.json'
-import okJson from '../../test/samples/compare_ok.json'
-import presetJson from '../../test/samples/preset_demo.json'
+import { ComparatorProvider } from '../state/ComparatorContext'
+import type { Comparator } from '../state/useComparator'
+import type { City, ComparisonResult, DemoPreset } from '../types/contracts'
+import cityJson from './samples/city_surmapur.json'
+import invalidJson from './samples/compare_invalid.json'
+import noHotelJson from './samples/compare_no_affordable_hotel.json'
+import okJson from './samples/compare_ok.json'
+import presetJson from './samples/preset_demo.json'
 
 export const sampleCity = cityJson as unknown as City
 export const samplePreset = presetJson as unknown as DemoPreset

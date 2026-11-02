@@ -2,15 +2,12 @@ import { useComparatorContext } from '../../state/ComparatorContext'
 import { formatRupees } from '../../utils/currency'
 import './StatusBanner.css'
 
-// data-testid is temporary: keeps App smoke test green until T14 removes stub test IDs.
-const TEST_ID = 'status-banner-stub'
-
 export default function StatusBanner() {
   const { phase, result, error, isStale } = useComparatorContext()
 
   if (phase === 'error') {
     return (
-      <div role="alert" className="statusbanner statusbanner-error" data-testid={TEST_ID}>
+      <div role="alert" className="statusbanner statusbanner-error">
         <p>✕ The comparison service is unavailable</p>
         <p>{error}</p>
       </div>
@@ -19,12 +16,7 @@ export default function StatusBanner() {
 
   if (isStale) {
     return (
-      <div
-        role="status"
-        aria-busy="true"
-        className="statusbanner statusbanner-neutral"
-        data-testid={TEST_ID}
-      >
+      <div role="status" aria-busy="true" className="statusbanner statusbanner-neutral">
         Updating…
       </div>
     )
@@ -32,11 +24,7 @@ export default function StatusBanner() {
 
   if (phase === 'loading') {
     return (
-      <div
-        role="status"
-        className="statusbanner statusbanner-neutral"
-        data-testid={TEST_ID}
-      >
+      <div role="status" className="statusbanner statusbanner-neutral">
         Loading…
       </div>
     )
@@ -44,7 +32,7 @@ export default function StatusBanner() {
 
   if (result?.status === 'INVALID') {
     return (
-      <div role="alert" className="statusbanner statusbanner-error" data-testid={TEST_ID}>
+      <div role="alert" className="statusbanner statusbanner-error">
         <p>✕ Cannot compare: fix the highlighted inputs</p>
         <ul>
           {result.errors.map((e, i) => (
@@ -59,11 +47,7 @@ export default function StatusBanner() {
 
   if (result?.status === 'NO_AFFORDABLE_HOTEL') {
     return (
-      <div
-        role="status"
-        className="statusbanner statusbanner-warning"
-        data-testid={TEST_ID}
-      >
+      <div role="status" className="statusbanner statusbanner-warning">
         ⚠ No hotel fits this budget. Nothing is recommended.
       </div>
     )
@@ -72,7 +56,7 @@ export default function StatusBanner() {
   if (result?.status === 'OK') {
     const hotel = result.hotels.find((h) => h.id === result.recommended_hotel_id)
     return (
-      <div role="status" className="statusbanner statusbanner-ok" data-testid={TEST_ID}>
+      <div role="status" className="statusbanner statusbanner-ok">
         <p>✓ Recommended: {hotel?.name ?? result.recommended_hotel_id}</p>
         {hotel?.remaining_budget != null && (
           <p>{`Remaining budget: ${formatRupees(hotel.remaining_budget)}`}</p>
@@ -82,11 +66,7 @@ export default function StatusBanner() {
   }
 
   return (
-    <div
-      role="status"
-      className="statusbanner statusbanner-neutral"
-      data-testid={TEST_ID}
-    >
+    <div role="status" className="statusbanner statusbanner-neutral">
       Load the Demo trip to begin.
     </div>
   )

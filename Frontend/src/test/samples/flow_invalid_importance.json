@@ -1,0 +1,1 @@
+{"status":"INVALID","errors":[{"field":"importances.MUSEUM","code":"IMPORTANCE_INVALID","message":"Importance for MUSEUM must be a whole number from 1 to 5"}],"importance_total":null,"budget":null,"recommended_hotel_id":null,"default_inspected_hotel_id":null,"hotels":[]}

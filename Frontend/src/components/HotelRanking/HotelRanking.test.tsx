@@ -4,12 +4,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useComparatorContext } from '../../state/ComparatorContext'
 import type { ComparisonResult } from '../../types/contracts'
 import HotelRanking from '.'
-import { makeComparator, noHotelResult, okResult } from './renderRanking'
+import {
+  loadedComparator,
+  noHotelResult,
+  okResult,
+} from '../../test/renderWithComparator'
 
 vi.mock('../../state/ComparatorContext', () => ({ useComparatorContext: vi.fn() }))
 
 function show(overrides = {}) {
-  const comparator = makeComparator(overrides)
+  const comparator = loadedComparator(overrides)
   vi.mocked(useComparatorContext).mockReturnValue(comparator)
   render(<HotelRanking />)
   return comparator

@@ -1,9 +1,6 @@
 import { useComparatorContext } from '../../state/ComparatorContext'
-import { statusShort, TYPE_SYMBOL, TYPE_TEXT } from '../ExplanationPanel/hotelStatus'
+import { statusShort, typeChip } from '../../utils/hotelLabels'
 import './TravelMatrixTable.css'
-
-// data-testid is temporary: keeps App smoke test green until T14 removes stub test IDs.
-const TEST_ID = 'travel-matrix-stub'
 
 export default function TravelMatrixTable() {
   const { city, selection, result, inspectedHotelId, inspectHotel, isStale } =
@@ -13,12 +10,7 @@ export default function TravelMatrixTable() {
 
   if (!city) {
     return (
-      <section
-        className={className}
-        aria-label="Travel times"
-        aria-busy={busy}
-        data-testid={TEST_ID}
-      >
+      <section className={className} aria-label="Travel times" aria-busy={busy}>
         <h2>Travel times</h2>
         <p className="muted">Load the Demo trip to see the travel-time table.</p>
       </section>
@@ -34,12 +26,7 @@ export default function TravelMatrixTable() {
   )
 
   return (
-    <section
-      className={className}
-      aria-label="Travel times"
-      aria-busy={busy}
-      data-testid={TEST_ID}
-    >
+    <section className={className} aria-label="Travel times" aria-busy={busy}>
       <h2>Travel times</h2>
       <div
         className="traveltable-scroll"
@@ -59,9 +46,7 @@ export default function TravelMatrixTable() {
                   <th scope="col" key={pid}>
                     {place?.name ?? pid}
                     {place && (
-                      <span className="traveltable-type">
-                        {TYPE_SYMBOL[place.type]} {TYPE_TEXT[place.type]}
-                      </span>
+                      <span className="traveltable-type">{typeChip(place.type)}</span>
                     )}
                   </th>
                 )

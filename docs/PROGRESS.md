@@ -22,7 +22,7 @@ Status values: Done · In progress · Pending. One task = one session. Definitio
 | T11 | Ranking view | T09 | `components/HotelRanking/*` | Done | Frontend | A |
 | T12 | City map (SVG) | T09 | `components/CityMap/*` | Done | Frontend | A |
 | T13 | Explanation panel and travel table | T09 | `components/ExplanationPanel/*`, `components/TravelMatrixTable/*` | Done | Frontend | A |
-| T14 | Integration and Phase A demo-ready checkpoint | T08, T10–T13 | `Frontend/src/App.tsx`, `Frontend/vite.config.ts`, integration tests, `docs/COMMANDS.md` | Pending | Integration | A |
+| T14 | Integration and Phase A demo-ready checkpoint | T08, T10–T13 | `Frontend/src/App.tsx`, `Frontend/vite.config.ts`, integration tests, `docs/COMMANDS.md` | Done (merge and tag `v0.1-phase-a` pending) | Integration | A |
 | T15 | Catalog data (2 cities), generator, catalog API, selection limits | T14 | `Backend/scripts/design_helper.py`, `app/data/cities/*.json`, `app/api/routes.py`, `app/domain/validation.py`, tests, docs | Pending | Backend | B |
 | T16 | Selection UI (list and map click) | T15 | `components/Selection/*`, small edits to `CityMap`, `Controls`, `useComparator`, tests | Pending | Frontend | B |
 | T17 | Evidence, review, interview docs, live-change rehearsal | T14 (T16 if done) | `docs/interview/*`, `docs/PROGRESS.md`, screenshots | Pending | Wrap-up | B |
@@ -42,8 +42,10 @@ Parallel groups: see [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md). T05 ‖
 - T11 done: `HotelRanking` renders one card per hotel in API order (rank or Unranked, status symbol + text, money line, importance-minutes / average / longest trip, CSS price bar vs budget marker with a text equivalent, Inspecting tag, `inspectHotel` on click). 17 new Vitest tests (102 total). Stub test ID `hotel-ranking-stub` kept on the root until T14 (D-27).
 - T12 done: `CityMap` draws the 25 selected markers (square H hotels, circle attractions, diamond food) with halo labels, ★ / ✕ status badges from `label`, a ring on the inspected hotel, and 15 dashed comparison links for the inspected hotel only, each labelled `<minutes> min · <contribution>` from the API. Legend and the "not routes" caption included. 24 new Vitest tests (126 total). Stub test ID `city-map-stub` kept on the root until T14 (D-27).
 - T13 done: `ExplanationPanel` (header with symbol + text status, plain-language reason from API values, per-place calculation table `3 × 40 = 120`, weighted total and average line as templates, CSS contribution bars with printed values) and `TravelMatrixTable` (caption, `scope` headers, sticky first column, importance row, status column, inspected row marked, hotel button calls `inspectHotel`). 27 new Vitest tests (153 total). Shared status wording lives in `ExplanationPanel/hotelStatus.ts` (D-32); stub test IDs kept until T14.
+- T14 done (Phase A checkpoint): DevPanel and all `*-stub` test IDs removed; status/type wording consolidated in `utils/hotelLabels.ts` and test helpers in `src/test/renderWithComparator.tsx` (D-33); `<main>` wraps the workspace (D-35); `vite preview` proxies `/api` (D-36); 8 real flow samples captured and checked against `expected_demo.py` (D-34); `integration.workflow.test.tsx` walks steps a–i with 23 tests; 180 Vitest tests in 16 files, 267 pytest, nothing under `Backend/app` changed. Manual demo checklist and traceability table finalised in `TESTING.md`. Open: D-37 (`EXPECTED_RESULTS.md` empty), D-38 (9 intentional a11y lint warnings). Playwright deferred to T17.
 
 ## Next up
+0. After T14: commit on `feature/T14-integration`, merge into `development`, then into `main`, tag `v0.1-phase-a` (commands in the T14 report). Then T15 (catalog data, generator, catalog API).
 1. Review T01 output, especially "Assumptions to confirm" in [DECISIONS.md](DECISIONS.md).
 2. T06 (engine; T05 validation is done and returns the validated `Scenario`, D-13/D-17). T09 (frontend scaffold) is independent.
 
@@ -62,3 +64,4 @@ Parallel groups: see [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md). T05 ‖
 | 2026-11-02 | HotelRanking cards, price bar, empty/invalid/stale states; 17 new Vitest tests (102 total); D-30 | T11 |
 | 2026-11-02 | CityMap SVG (markers, label layout, inspected hotel links, legend, a11y); 24 new Vitest tests (126 total); D-31 | T12 |
 | 2026-11-02 | ExplanationPanel + TravelMatrixTable, empty/invalid/stale states; 27 new Vitest tests (153 total); D-32 | T13 |
+| 2026-11-02 | Phase A integration: scaffolding removed, helpers consolidated (`hotelLabels.ts`, shared `renderWithComparator`), `<main>` landmark fixed, preview proxy, 8 real flow samples, 23-test integration workflow, `TESTING.md` checklist and traceability, root and folder READMEs; D-33 to D-38 | T14 |

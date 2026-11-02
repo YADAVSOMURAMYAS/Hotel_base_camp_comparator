@@ -1,6 +1,7 @@
 import type { KeyboardEvent } from 'react'
 import { useComparatorContext } from '../../state/ComparatorContext'
 import type { CatalogHotel, CatalogPlace, HotelResult } from '../../types/contracts'
+import { STATUS_SYMBOL, STATUS_TEXT, statusLabel } from '../../utils/hotelLabels'
 import { FONT_SIZE, placeLabels, type LabelSpot } from './labelLayout'
 import './CityMap.css'
 
@@ -9,9 +10,8 @@ const LINK_CHAR_WIDTH = 6.5
 
 function statusText(hotel: HotelResult | undefined): string {
   if (!hotel) return ''
-  if (hotel.label === 'RECOMMENDED') return 'Recommended'
-  if (hotel.label === 'OVER_BUDGET') return 'Over budget'
-  return `Rank ${hotel.rank}`
+  if (hotel.label === 'RANKED') return `Rank ${hotel.rank}`
+  return STATUS_TEXT[hotel.label]
 }
 
 function Label({ spot, name, bold }: { spot: LabelSpot; name: string; bold?: boolean }) {
@@ -38,7 +38,9 @@ function HotelMarker(props: {
   const { x, y } = hotel.position
   const status = statusText(result)
   const symbol =
-    result?.label === 'RECOMMENDED' ? '★' : result?.label === 'OVER_BUDGET' ? '✕' : null
+    result?.label === 'RECOMMENDED' || result?.label === 'OVER_BUDGET'
+      ? STATUS_SYMBOL[result.label]
+      : null
   const tone =
     result?.label === 'RECOMMENDED'
       ? 'citymap-hotel-best'
@@ -140,8 +142,8 @@ function Legend() {
         </svg>
         Food
       </li>
-      <li>★ Recommended</li>
-      <li>✕ Over budget</li>
+      <li>{statusLabel('RECOMMENDED')}</li>
+      <li>{statusLabel('OVER_BUDGET')}</li>
     </ul>
   )
 }
@@ -152,7 +154,7 @@ export default function CityMap() {
 
   if (!city) {
     return (
-      <section className="panel" aria-label="City map" data-testid="city-map-stub">
+      <section className="panel" aria-label="City map">
         <h2>City map</h2>
         <p className="muted">
           {phase === 'loading' ? 'Loading map…' : 'Load the Demo trip to see the map.'}
@@ -180,12 +182,7 @@ export default function CityMap() {
   const placeById = new Map(places.map((p) => [p.id, p]))
 
   return (
-    <section
-      className="panel citymap"
-      aria-label="City map"
-      aria-busy={isStale}
-      data-testid="city-map-stub"
-    >
+    <section className="panel citymap" aria-label="City map" aria-busy={isStale}>
       <h2>City map</h2>
       <svg
         className="citymap-svg"

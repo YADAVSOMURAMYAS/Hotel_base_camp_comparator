@@ -1,6 +1,5 @@
 import CityMap from './components/CityMap'
 import Controls from './components/Controls'
-import DevPanel from './components/DevPanel'
 import ExplanationPanel from './components/ExplanationPanel'
 import HotelRanking from './components/HotelRanking'
 import StatusBanner from './components/StatusBanner'
@@ -14,25 +13,24 @@ export default function App() {
         <header className="app-header">
           <h1>Hotel Base-Camp Comparator</h1>
         </header>
-        <div className="area-controls">
-          <Controls />
-          <StatusBanner />
-        </div>
-        <main className="area-map">
-          <CityMap />
+        <main className="app-workspace">
+          <div className="area-controls">
+            <Controls />
+            <StatusBanner />
+          </div>
+          <div className="area-map">
+            <CityMap />
+          </div>
+          <div className="area-ranking">
+            <HotelRanking />
+          </div>
+          <div className="area-explanation">
+            <ExplanationPanel />
+          </div>
+          <div className="area-table">
+            <TravelMatrixTable />
+          </div>
         </main>
-        <div className="area-ranking">
-          <HotelRanking />
-        </div>
-        <div className="area-explanation">
-          <ExplanationPanel />
-        </div>
-        <div className="area-table">
-          <TravelMatrixTable />
-        </div>
-        <div className="area-dev">
-          <DevPanel />
-        </div>
       </div>
     </ComparatorProvider>
   )

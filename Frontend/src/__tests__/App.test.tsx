@@ -9,21 +9,21 @@ vi.mock('../api/client', async (importOriginal) => ({
 }))
 
 describe('App shell', () => {
-  it('renders all six stubs and the temporary DevPanel inside the provider', () => {
+  it('renders every panel, found by role and label, inside the provider', () => {
     render(<App />)
-    for (const id of [
-      'controls-stub',
-      'status-banner-stub',
-      'hotel-ranking-stub',
-      'city-map-stub',
-      'explanation-panel-stub',
-      'travel-matrix-stub',
-      'dev-panel',
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      'Hotel Base-Camp Comparator',
+    )
+    for (const name of [
+      'Controls',
+      'City map',
+      'Ranked hotels',
+      'Explanation',
+      'Travel times',
     ]) {
-      expect(screen.getByTestId(id)).toBeInTheDocument()
+      expect(screen.getByRole('region', { name })).toBeInTheDocument()
     }
-    expect(
-      screen.getAllByRole('button', { name: /load/i }).length,
-    ).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText('Load the Demo trip to begin.')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Load Demo trip' })).toBeEnabled()
   })
 })

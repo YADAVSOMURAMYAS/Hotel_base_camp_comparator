@@ -214,3 +214,87 @@ npm run build         36 modules transformed; dist/assets/index-CB_16hkl.css 11.
 ```
 New tests: `ExplanationPanel.test.tsx` 15, `TravelMatrixTable.test.tsx` 12. Covered: reason sentence for RECOMMENDED, RANKED (differing total, equal total, equal cost via small hand-built results), OVER_BUDGET and NO_AFFORDABLE_HOTEL; 15 walk-through rows equal to the sample; footer total and average line equal the API; 15 chart items with printed values; mocked odd totals (777, 9, "86.3") shown verbatim; empty states (idle, INVALID, error, unknown inspected id); `aria-busy` when stale; table caption, `scope` col/row, labelled focusable scroll region; every cell equals `city.round_trip_minutes`; inspected row marked and clicking another row header calls `inspectHotel`; status column and importance row, blank / "-" on INVALID with times still visible.
 Smoke: backend :8000 was already running and `npx vite --port 5175` served `/` and the proxied `POST /api/compare` with 200. The visual check in a browser was not run by me.
+
+### T14 run (2026-11-02), Integration and the Phase A checkpoint
+**Baseline before any change** (Backend venv active; Frontend from `Frontend\`):
+```text
+pytest -q             267 passed, 1 warning in 2.36s
+ruff check .          All checks passed!
+ruff format --check . 43 files already formatted
+npm test              Test Files  14 passed (14)   Tests  153 passed (153)
+npm run lint          (no output: clean)
+npm run typecheck     (no output: clean)
+npm run format:check  All matched files use Prettier code style!
+npm run build         36 modules transformed; dist/assets/index-tIKM5LBv.js 244.33 kB, gzip 75.65 kB; built in 228ms
+```
+**Test first.** `src/__tests__/integration.workflow.test.tsx` was written before the cleanup and run against the T13 tree:
+```text
+ ❯ src/__tests__/integration.workflow.test.tsx (23 tests | 23 failed)
+ FAIL ... > page structure > has one h1, a header outside <main>, and every workspace panel inside <main>
+ FAIL ... > page structure > has no temporary scaffolding
+ FAIL ... > a. before loading > enables only Load and shows an empty state in every panel
+   TestingLibraryElementError: Found multiple elements with the role "button" and name "Load Demo trip"
+```
+(The temporary DevPanel had a second Load button, so every test that renders the app failed at its first query; the landmark and scaffolding tests failed on their own assertions.)
+
+**Flow samples** were captured from the running backend and compared with `Backend/tests/fixtures/expected_demo.py` (nothing disagreed):
+```text
+flow_budget_at_best_cost budget 36500 rec_ok=True order_ok=True rem_ok=True short_ok=True
+flow_budget_one_less budget 36499 rec_ok=True order_ok=True rem_ok=True short_ok=True
+flow_importance_whatif budget 30000 rec_ok=True order_ok=True totals_ok=True imp_total_ok=True
+flow_exact_budget_hotel 29500 rank 5 rem 0 short None label RANKED ranked ['H_GARDEN', 'H_STEPWELL', 'H_CIVIL', 'H_RIVERBRZ', 'H_NEELGHAT', 'H_HILLTOP']
+flow_one_over_budget_hotel 29499 rank None rem None short 1 label OVER_BUDGET ranked ['H_GARDEN', 'H_STEPWELL', 'H_CIVIL', 'H_RIVERBRZ', 'H_HILLTOP']
+compare_ok ranked == EXPECTED_RANK_ORDER: True
+```
+Re-running the regeneration snippet from `src/test/samples/README.md` reproduced every `flow_*.json` byte for byte (SHA-256 compared).
+
+**Mutation check.** Replacing `result.hotels.map` in `HotelRanking` by a copy sorted on `stay_cost`:
+```text
+ Test Files  1 failed (1)
+      Tests  7 failed | 16 passed (23)
+```
+The file was restored afterwards.
+
+**Final verification after the cleanup** (full output of every command):
+```text
+pytest -q             267 passed, 1 warning in 2.19s
+ruff check .          All checks passed!
+ruff format --check . 43 files already formatted
+npm test              Test Files  16 passed (16)   Tests  180 passed (180)
+npm run lint          (no output: clean)
+npm run typecheck     (no output: clean)
+npm run format:check  All matched files use Prettier code style!
+npm run build         dist/assets/index-CS2HZBVn.js 243.20 kB, gzip 75.45 kB; built in 170ms
+git status --short -- Backend verification    only " M Backend/README.md" (no change under Backend/app, Backend/tests or verification/)
+```
+New tests: `integration.workflow.test.tsx` 23, `hotelLabels.test.ts` 4; `App.test.tsx` now asserts by role and label.
+
+**Production preview** (`npm run build; npm run preview`, backend on :8000):
+```text
+http://localhost:4173/api/health          {"status":"ok"}
+http://localhost:4173/                    200
+http://localhost:4173/api/cities/surmapur/presets/demo   budget 30000
+http://127.0.0.1:4173/api/health          FAILED: Unable to connect to the remote server   (preview listens on IPv6 localhost only, see D-36)
+```
+**Backend smoke test** with `Invoke-RestMethod` against :8000:
+```text
+1) GET /api/health                          {"status":"ok"}
+2) GET /api/cities/surmapur/presets/demo    budget=30000 hotels=10 places=15
+3) OK (budget 30000)                        status=OK recommended=H_GARDEN inspected=H_GARDEN importance_total=40
+   ranks: 1=H_GARDEN, 2=H_STEPWELL, 3=H_CIVIL, 4=H_RIVERBRZ, 5=H_NEELGHAT, 6=H_HILLTOP
+   unranked: H_GHANTA(+6500), H_HAVELI(+800), H_MAHAL(+22000), H_LAKEVIEW(+3000)
+4) INVALID (budget -5)                      status=INVALID errors=budget:BUDGET_INVALID hotels=0 recommended= importance_total=
+5) NO_AFFORDABLE_HOTEL (budget 0)           status=NO_AFFORDABLE_HOTEL recommended= ranked=0 hotels=10 min_shortfall=12400
+extra: budget 1000001 -> INVALID: Budget must be a whole number from 0 to 1,000,000
+extra: importance 0 -> INVALID: importances.MUSEUM Importance for MUSEUM must be a whole number from 1 to 5
+```
+**Text contrast** (WCAG 2.x relative luminance computed with a short Python script over the `styles.css` tokens; 4.5:1 needed for text):
+```text
+text on bg 14.45 | text on surface 15.65 | muted on bg 6.97 | muted on surface 7.55 | muted on #eff4ff 6.85 | muted on #dbeafe 6.19
+accent on surface 6.70 | accent on #eff4ff 6.08 | accent on #dbeafe 5.49 | white on accent 6.70
+success on surface 5.02 | success on bg 4.63 | warning on surface 7.09 | warning on bg 6.54 | error on surface 6.47 | error on bg 5.97
+panel border on surface 1.54 (decorative; inputs use muted at 7.55)
+```
+**Accessibility lint:** `npx oxlint --jsx-a11y-plugin` reports 9 warnings (8 `prefer-tag-over-role`, 1 `no-noninteractive-tabindex`), all intentional (D-38). Checks in code: one `h1`, headings never skip a level, no duplicate ids, exactly one live region (the banner), all in `integration.workflow.test.tsx::page structure`.
+
+Not run by me: a visual check of the layout in a browser at 1440, 1280, 1024 and 900 px, and the manual demo checklist in `docs/TESTING.md`.

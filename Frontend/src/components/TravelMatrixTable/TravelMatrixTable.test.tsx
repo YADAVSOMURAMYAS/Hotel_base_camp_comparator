@@ -8,7 +8,7 @@ import {
   okResult,
   sampleCity,
   samplePreset,
-} from '../Controls/renderWithComparator'
+} from '../../test/renderWithComparator'
 import TravelMatrixTable from './index'
 
 vi.mock('../../state/ComparatorContext', () => ({ useComparatorContext: vi.fn() }))

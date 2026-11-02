@@ -11,7 +11,7 @@ import {
   okResult,
   sampleCity,
   samplePreset,
-} from './renderWithComparator'
+} from '../../test/renderWithComparator'
 
 vi.mock('../../state/ComparatorContext', () => ({ useComparatorContext: vi.fn() }))
 

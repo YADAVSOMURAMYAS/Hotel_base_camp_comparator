@@ -4,12 +4,11 @@
 
 | Folder | Task | Status |
 |---|---|---|
-| Controls | T10 | stub |
-| StatusBanner | T10 | stub |
-| HotelRanking | T11 | stub |
-| CityMap | T12 | stub |
-| ExplanationPanel | T13 | stub |
-| TravelMatrixTable | T13 | stub |
-| DevPanel | T09, remove in T14 | temporary |
+| Controls | T10 | done |
+| StatusBanner | T10 | done |
+| HotelRanking | T11 | done |
+| CityMap | T12 | done |
+| ExplanationPanel | T13 | done |
+| TravelMatrixTable | T13 | done |
 
-Each later task edits only its own folder.
+Shared status and place-type wording lives in `../utils/hotelLabels.ts`; the shared test helper is `../test/renderWithComparator.tsx`. Later tasks edit only their own folder.

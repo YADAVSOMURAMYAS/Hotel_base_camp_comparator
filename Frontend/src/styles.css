@@ -71,26 +71,34 @@ button:focus-visible {
   color: var(--color-error);
 }
 
-/* Layout: named grid areas, stacked below 900px. */
+/* Layout: the header sits above <main>; <main> is the workspace grid. Controls and banner
+   on top, map beside the ranking, then explanation and table. Stacked below 900px. */
 .app {
-  display: grid;
-  gap: var(--space-3);
   padding: var(--space-3);
   max-width: 1400px;
   margin: 0 auto;
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas:
-    'header header'
-    'controls controls'
-    'map ranking'
-    'explanation explanation'
-    'table table'
-    'dev dev';
 }
 
 .app-header {
-  grid-area: header;
+  margin-bottom: var(--space-3);
 }
+
+.app-workspace {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    'controls controls'
+    'map ranking'
+    'explanation explanation'
+    'table table';
+}
+
+/* min-width: 0 lets a wide child (the table) scroll inside its panel instead of stretching the column. */
+.app-workspace > * {
+  min-width: 0;
+}
+
 .area-controls {
   grid-area: controls;
   display: grid;
@@ -108,9 +116,6 @@ button:focus-visible {
 .area-table {
   grid-area: table;
 }
-.area-dev {
-  grid-area: dev;
-}
 
 .panel {
   background: var(--color-surface);
@@ -119,36 +124,14 @@ button:focus-visible {
   padding: var(--space-3);
 }
 
-.panel.dev {
-  border-style: dashed;
-  border-color: var(--color-warning);
-}
-
-dl {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: var(--space-1) var(--space-3);
-  margin: var(--space-3) 0 0;
-}
-
-dt {
-  color: var(--color-muted);
-}
-
-dd {
-  margin: 0;
-}
-
 @media (max-width: 900px) {
-  .app {
+  .app-workspace {
     grid-template-columns: 1fr;
     grid-template-areas:
-      'header'
       'controls'
       'map'
       'ranking'
       'explanation'
-      'table'
-      'dev';
+      'table';
   }
 }

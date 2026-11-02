@@ -11,4 +11,6 @@
 | Belongs | Python code, JSON city data, backend tests |
 | Does not belong | Frontend code, expected results (`../verification/`), docs |
 
-Run and test commands: [../docs/COMMANDS.md](../docs/COMMANDS.md). Rules: [CLAUDE.md](CLAUDE.md).
+From this folder (PowerShell, Python 3.10+): `python -m venv .venv; .\.venv\Scripts\Activate.ps1; pip install -e ".[dev]"`, then `uvicorn app.main:app --reload` (http://127.0.0.1:8000) and `pytest -q; ruff check .; ruff format --check .`. The frontend dev and preview servers proxy `/api` to port 8000.
+
+All commands: [../docs/COMMANDS.md](../docs/COMMANDS.md). Rules: [CLAUDE.md](CLAUDE.md).

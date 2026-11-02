@@ -27,11 +27,11 @@ Non-negotiable behaviour rules live in [CRITICAL_RULES.md](CRITICAL_RULES.md). K
 |---|---|
 | Strictness | `strict: true`; **no `any`** (use `unknown` and narrow) |
 | Components | Functional components and hooks only; props typed with an interface |
-| Files | `components/Name/Name.tsx` plus `Name.css` and `Name.test.tsx` as needed; hooks `useThing.ts`; helpers `camelCase.ts` |
+| Files | `components/Name/index.tsx` (default export) plus `Name.css` and `Name.test.tsx` as needed; hooks `useThing.ts`; helpers `camelCase.ts` |
 | Logic | No business logic in components: no totals, ranks, rounding, sorting, affordability. Show API values as given |
 | Allowed transform | Format integer rupees with the hand-written Indian grouping in `utils/currency.ts` (₹1,25,000); no `Intl`/`toLocaleString` |
 | State | Plain React state in one hook; no state/UI/map/chart libraries |
-| CSS | Plain CSS files with CSS variables (`--color-…`) in `index.css`; no CSS framework |
+| CSS | Plain CSS files with CSS variables (`--color-…`) in `src/styles.css`; no CSS framework |
 | Lint | `npm run lint` (oxlint) clean; `npm run build` type-checks |
 | Tests | Vitest + React Testing Library; query by role, label and text, never CSS class; mock `src/api/` |
 

@@ -9,7 +9,7 @@ import {
   noHotelResult,
   okResult,
   sampleCity,
-} from '../Controls/renderWithComparator'
+} from '../../test/renderWithComparator'
 import ExplanationPanel from './index'
 
 vi.mock('../../state/ComparatorContext', () => ({ useComparatorContext: vi.fn() }))

@@ -1,17 +1,9 @@
 import type { CSSProperties } from 'react'
 import { useComparatorContext } from '../../state/ComparatorContext'
-import type { HotelLabel, HotelResult } from '../../types/contracts'
+import type { HotelResult } from '../../types/contracts'
 import { formatRupees } from '../../utils/currency'
+import { overBudgetBy, statusLabel } from '../../utils/hotelLabels'
 import './HotelRanking.css'
-
-// data-testid is temporary: keeps the App smoke test green until T14 removes stub test IDs.
-const TEST_ID = 'hotel-ranking-stub'
-
-const STATUS_TEXT: Record<HotelLabel, string> = {
-  RECOMMENDED: '★ Recommended',
-  RANKED: '✓ Within budget',
-  OVER_BUDGET: '✕ Over budget',
-}
 
 // Bar geometry is presentation only: one shared scale so cards are comparable.
 // Nothing here decides affordability, rank or recommendation.
@@ -66,10 +58,10 @@ function HotelCard({ hotel, budget, scale, inspected, onInspect }: CardProps) {
         <span className="ranking-price">
           Complete stay: {formatRupees(hotel.stay_cost)}
         </span>
-        <span className="ranking-status">{STATUS_TEXT[hotel.label]}</span>
+        <span className="ranking-status">{statusLabel(hotel.label)}</span>
         <span className="ranking-money">
           {hotel.shortfall !== null
-            ? `Over budget by ${formatRupees(hotel.shortfall)}`
+            ? overBudgetBy(hotel.shortfall)
             : hotel.remaining_budget !== null
               ? `${formatRupees(hotel.remaining_budget)} left in budget`
               : null}
@@ -141,7 +133,6 @@ export default function HotelRanking() {
       className={`panel ranking-panel${isStale ? ' ranking-stale' : ''}`}
       aria-label="Ranked hotels"
       aria-busy={isStale}
-      data-testid={TEST_ID}
     >
       <h2>Ranked hotels</h2>
       {body}

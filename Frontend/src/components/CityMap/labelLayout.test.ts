@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { sampleCity, samplePreset } from '../Controls/renderWithComparator'
+import { sampleCity, samplePreset } from '../../test/renderWithComparator'
 import { boxOf, placeLabels, type LabelBox, type LabelMarker } from './labelLayout'
 
 const markers: LabelMarker[] = [

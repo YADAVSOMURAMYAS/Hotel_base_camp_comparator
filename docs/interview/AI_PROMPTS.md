@@ -480,3 +480,21 @@ per-place calculation table "3 x 40 = 120" with footer total and average line, C
 Table: semantic <table> with caption, scope headers, scrollable focusable region with sticky first column, importance row, status column from the API
 label, inspected row marked, hotel button calls inspectHotel, times stay visible when INVALID. Same Step 0-6 method as T10.
 ```
+
+### T14: Integration and the Phase A checkpoint
+| Field | Content |
+|---|---|
+| Prompt | Summarised below |
+| What was wrong or missing | Three things the brief assumed were not true: `verification/EXPECTED_RESULTS.md` was empty (values came from `expected_demo.py`, D-37); the repo had no `development` or `feature/T14-integration` branch when work started; `flow_exact_budget_hotel` would have duplicated `flow_budget_at_best_cost`, so the case was changed to a mid-ranked hotel (D-34). A hash check later showed two more duplicate invalid-budget samples, which were deleted |
+| Refined prompt | Step 0: baseline of all checks before any change, plus open questions (Playwright deferred to T17, branches, one-line `CODING_STANDARDS.md` fix). Step 1: consolidation table and integration-test outline approved before code. Step 2: test written first, 23 of 23 failed (the DevPanel's second Load button), then cleanup. Step 3: full verification and `Backend/app` diff. Steps 4-5: smoke test, evidence, commands and acceptance table, no git commands run |
+| Result | 180 Vitest tests (16 files), 267 pytest, lint, typecheck, format and build clean. A mutation check (`HotelRanking` sorting by cost) failed 7 integration tests and was reverted |
+
+**Prompt (summary):**
+```text
+Task T14: Integration and the Phase A checkpoint; no new features. Run the whole suite first and report. Remove DevPanel and the *-stub test IDs; consolidate
+duplicated helpers (hotelLabels.ts, shared renderWithComparator) and show a table; capture REAL flow samples from the running backend and compare them with
+expected_demo.py; write src/__tests__/integration.workflow.test.tsx (real App and provider, fake client replying from samples) for steps a-i with an
+out-of-order sample; accessibility pass (one h1, main wraps the workspace, one live region, focus, contrast); layout check at 1440/1280/1024/900 and stacked
+below; vite preview proxy; finalise TESTING.md checklist and traceability, COMMANDS.md and READMEs; do not touch Backend/app, data, fixtures or verification;
+do not commit, merge or tag; print the commands and a PROVEN / NOT YET acceptance table. Ask before adding Playwright.
+```

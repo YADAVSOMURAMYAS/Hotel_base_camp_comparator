@@ -8,6 +8,6 @@
 - `CityMap.test.tsx`, `labelLayout.test.ts`: Vitest tests using the real sample JSON.
 
 **Responsibilities:** read state via `useComparatorContext()`; draw API values as given (`<minutes> min · <contribution>`, ★ / ✕ from `label`); hotel markers call `inspectHotel(id)` on click, Enter or Space.
-**Dependencies:** `state/ComparatorContext`, `types/contracts`. Tests also import `../Controls/renderWithComparator` (D-28).
+**Dependencies:** `state/ComparatorContext`, `types/contracts`. `utils/hotelLabels` (status symbols and wording). Tests import `src/test/renderWithComparator`.
 **Belongs here:** drawing and label layout. **Does not belong here:** totals, ranks, affordability or anything derived from coordinates (positions are layout-only), place selection, map-point creation.
-**Notes:** the root keeps `data-testid="city-map-stub"` until T14 (D-27). Link labels sit at 60% along each line and are not collision-checked.
+**Notes:** link labels sit at 60% along each line and are not collision-checked.

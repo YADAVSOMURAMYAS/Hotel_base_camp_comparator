@@ -1,12 +1,8 @@
 import { useComparatorContext } from '../../state/ComparatorContext'
-import type { PlaceType, ValidationError } from '../../types/contracts'
+import type { ValidationError } from '../../types/contracts'
 import { formatRupees } from '../../utils/currency'
+import { typeChip } from '../../utils/hotelLabels'
 import './Controls.css'
-
-const TYPE_CHIP: Record<PlaceType, string> = {
-  attraction: '◆ Attraction',
-  food: '● Food',
-}
 
 /** The API message for one field, shown beside the input it belongs to. */
 function FieldError({ id, error }: { id: string; error?: ValidationError }) {
@@ -44,8 +40,7 @@ export default function Controls() {
   })
 
   return (
-    // data-testid is temporary: keeps App smoke test green until T14 removes stub test IDs
-    <section className="panel controls" aria-label="Controls" data-testid="controls-stub">
+    <section className="panel controls" aria-label="Controls">
       <h2>Controls</h2>
 
       <div className="controls-actions">
@@ -96,7 +91,7 @@ export default function Controls() {
               <li key={place.id} className="controls-row">
                 <span className="controls-place-name">{place.name}</span>
                 <span className={`controls-chip controls-chip-${place.type}`}>
-                  {TYPE_CHIP[place.type]}
+                  {typeChip(place.type)}
                 </span>
                 <label htmlFor={inputId}>Importance for {place.name}</label>
                 <input

@@ -7,7 +7,7 @@ import {
   renderWithProvider,
   sampleCity,
   samplePreset,
-} from './renderWithComparator'
+} from '../../test/renderWithComparator'
 
 vi.mock('../../api/client', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../api/client')>()),

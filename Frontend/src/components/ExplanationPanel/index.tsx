@@ -2,11 +2,8 @@ import type { CSSProperties } from 'react'
 import { useComparatorContext } from '../../state/ComparatorContext'
 import type { ComparisonResult, HotelResult } from '../../types/contracts'
 import { formatRupees } from '../../utils/currency'
-import { statusLong, TYPE_SYMBOL, TYPE_TEXT } from './hotelStatus'
+import { overBudgetBy, statusLong, typeChip } from '../../utils/hotelLabels'
 import './ExplanationPanel.css'
-
-// data-testid is temporary: keeps App smoke test green until T14 removes stub test IDs.
-const TEST_ID = 'explanation-panel-stub'
 
 const rupees = (n: number | null) => (n === null ? '–' : formatRupees(n))
 
@@ -27,7 +24,7 @@ function reasons(hotel: HotelResult, result: ComparisonResult): string[] {
     return lines
   }
   const lines = [
-    `Over budget by ${rupees(hotel.shortfall)} (stay ${rupees(hotel.stay_cost)}, budget ${rupees(result.budget)}). Over-budget hotels are never ranked or recommended.`,
+    `${overBudgetBy(hotel.shortfall)} (stay ${rupees(hotel.stay_cost)}, budget ${rupees(result.budget)}). Over-budget hotels are never ranked or recommended.`,
   ]
   if (result.status === 'NO_AFFORDABLE_HOTEL') {
     lines.push('No hotel fits this budget, so nothing is recommended.')
@@ -100,11 +97,7 @@ export default function ExplanationPanel() {
                 return (
                   <tr key={c.place_id}>
                     <th scope="row">{place?.name ?? c.place_id}</th>
-                    <td>
-                      {place
-                        ? `${TYPE_SYMBOL[place.type]} ${TYPE_TEXT[place.type]}`
-                        : '–'}
-                    </td>
+                    <td>{place ? typeChip(place.type) : '–'}</td>
                     <td>{c.importance}</td>
                     <td>{c.minutes}</td>
                     <td>{`${c.importance} × ${c.minutes} = ${c.contribution}`}</td>
@@ -151,7 +144,6 @@ export default function ExplanationPanel() {
       className={isStale ? 'panel explain explain-stale' : 'panel explain'}
       aria-label="Explanation"
       aria-busy={isStale ? 'true' : undefined}
-      data-testid={TEST_ID}
     >
       <h2>Explanation</h2>
       {body}
