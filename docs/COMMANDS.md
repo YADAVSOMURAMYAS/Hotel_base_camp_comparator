@@ -11,13 +11,13 @@ PowerShell is primary; bash equivalents are given where they differ. Items marke
 |---|---|---|
 | Create venv | `python -m venv .venv` | same |
 | Activate | `.\.venv\Scripts\Activate.ps1` | `source .venv/Scripts/activate` (Git Bash) |
-| Install | `pip install fastapi uvicorn pydantic pytest httpx ruff` **(after T04: `pip install -e ".[dev]"` once `pyproject.toml` defines extras)** | same |
-| Run server **(after T04)** | `uvicorn app.main:app --reload` → http://127.0.0.1:8000 (docs at `/docs`) | same |
+| Install | `pip install -e ".[dev]"` (reads `pyproject.toml`; pydantic arrives with FastAPI) | same |
+| Run server | `uvicorn app.main:app --reload` → http://127.0.0.1:8000 (docs at `/docs`) | same |
 | Tests | `pytest -q` | same |
 | One folder | `pytest -q tests/scenario` | same |
 | Lint / format check | `ruff check .; ruff format --check .` | `ruff check . && ruff format --check .` |
 | Format | `ruff format .` | same |
-| Call API **(after T08)** | `Invoke-RestMethod http://127.0.0.1:8000/api/health` | `curl http://127.0.0.1:8000/api/health` |
+| Call API (`/api/health` works since T04; other endpoints after T08) | `Invoke-RestMethod http://127.0.0.1:8000/api/health` | `curl http://127.0.0.1:8000/api/health` |
 | Regenerate matrix **(after T15)** | `python scripts/design_helper.py` | same |
 
 ## Frontend (from `Frontend\`)
@@ -41,7 +41,14 @@ cd Backend; .\.venv\Scripts\Activate.ps1; uvicorn app.main:app --reload
 # Terminal 2
 cd Frontend; npm run dev
 ```
-Single-shell alternative: `Start-Process powershell -ArgumentList '-NoExit','-Command','cd Backend; .\.venv\Scripts\Activate.ps1; uvicorn app.main:app --reload'` then `cd Frontend; npm run dev` **(after T04, T09)**.
+Single-shell alternative: `Start-Process powershell -ArgumentList '-NoExit','-Command','cd Backend; .\.venv\Scripts\Activate.ps1; uvicorn app.main:app --reload'` then `cd Frontend; npm run dev` **(Backend works since T04; Frontend after T09)**.
+
+## Calling the API by hand (Backend running on port 8000)
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/api/cities/surmapur/presets/demo
+$p = Invoke-RestMethod http://127.0.0.1:8000/api/cities/surmapur/presets/demo
+Invoke-RestMethod http://127.0.0.1:8000/api/compare -Method Post -ContentType 'application/json' -Body ($p | ConvertTo-Json -Depth 5)
+```
 
 ## Logs
 Backend request logs print in the uvicorn terminal; frontend logs in the Vite terminal and the browser console. No log files are written.

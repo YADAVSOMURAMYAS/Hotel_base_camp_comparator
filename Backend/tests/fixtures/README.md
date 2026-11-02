@@ -4,7 +4,7 @@
 
 | Item | Detail |
 |---|---|
-| Contents | `__init__.py`; *(planned)* `small_scenarios.py` (tie, equality and invalid-case scenarios, T06); `expected_demo.py` (T03) |
+| Contents | `__init__.py`; `small_scenarios.py` (already-valid tie, equality and ranking scenarios built from the models, T06); `expected_demo.py` (T03) |
 | Responsibilities | Small readable scenarios (ties, budget equality, duplicate ID, missing/unknown mapping); hand-typed expected Demo results |
 | Dependencies | None (plain Python data) |
 | Naming | `snake_case.py`; scenario names describe the case (`tie_on_cost`) |

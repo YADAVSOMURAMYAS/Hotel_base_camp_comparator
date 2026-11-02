@@ -19,7 +19,7 @@ Non-negotiable behaviour rules live in [CRITICAL_RULES.md](CRITICAL_RULES.md). K
 | Naming | `snake_case` functions/variables, `PascalCase` classes, `UPPER_CASE` constants; error codes `UPPER_SNAKE` |
 | Errors | Domain returns error lists (`field`, `code`, `message`); never raises for invalid user data. Raise only for programmer errors. Routes translate: unknown city → 404 |
 | Docstrings | One line on public domain functions saying what, not how. No docstring if the name says it all |
-| Lint/format | `ruff check .` and `ruff format --check .` clean; config in `Backend/pyproject.toml` (planned, T04): line length 100, rules `E,F,I,UP,B` |
+| Lint/format | `ruff check .` and `ruff format --check .` clean; config in `Backend/pyproject.toml`: line length 100, rules `E,F,I,B,UP,N,SIM` |
 | Tests | `pytest`, one behaviour per test, names like `test_budget_equality_is_affordable` |
 
 ## TypeScript / React (Frontend)

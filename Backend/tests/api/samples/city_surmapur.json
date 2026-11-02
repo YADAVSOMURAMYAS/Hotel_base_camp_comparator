@@ -1,0 +1,472 @@
+{
+  "city_id": "surmapur",
+  "name": "Surmapur",
+  "map": {
+    "width": 1000,
+    "height": 600
+  },
+  "districts": [
+    {
+      "id": "FORT",
+      "name": "Old Fort Quarter"
+    },
+    {
+      "id": "BAZAAR",
+      "name": "Clocktower Bazaar"
+    },
+    {
+      "id": "GHAT",
+      "name": "Neelganga Ghats"
+    },
+    {
+      "id": "CIVIL",
+      "name": "Civil Lines"
+    },
+    {
+      "id": "LAKE",
+      "name": "Meghna Lakeside"
+    }
+  ],
+  "hotels": [
+    {
+      "id": "H_GHANTA",
+      "name": "Ghantaghar Grand",
+      "stay_cost": 36500,
+      "district_id": "BAZAAR",
+      "position": {
+        "x": 450,
+        "y": 310
+      }
+    },
+    {
+      "id": "H_HAVELI",
+      "name": "Bazaar Haveli",
+      "stay_cost": 30800,
+      "district_id": "BAZAAR",
+      "position": {
+        "x": 570,
+        "y": 330
+      }
+    },
+    {
+      "id": "H_MAHAL",
+      "name": "Lion Gate Mahal",
+      "stay_cost": 52000,
+      "district_id": "FORT",
+      "position": {
+        "x": 80,
+        "y": 100
+      }
+    },
+    {
+      "id": "H_STEPWELL",
+      "name": "Stepwell Heritage Inn",
+      "stay_cost": 27500,
+      "district_id": "FORT",
+      "position": {
+        "x": 290,
+        "y": 200
+      }
+    },
+    {
+      "id": "H_NEELGHAT",
+      "name": "Neelganga Ghat Residency",
+      "stay_cost": 29500,
+      "district_id": "GHAT",
+      "position": {
+        "x": 260,
+        "y": 380
+      }
+    },
+    {
+      "id": "H_RIVERBRZ",
+      "name": "River Breeze Lodge",
+      "stay_cost": 19800,
+      "district_id": "GHAT",
+      "position": {
+        "x": 110,
+        "y": 540
+      }
+    },
+    {
+      "id": "H_CIVIL",
+      "name": "Civil Lines Suites",
+      "stay_cost": 24200,
+      "district_id": "CIVIL",
+      "position": {
+        "x": 900,
+        "y": 160
+      }
+    },
+    {
+      "id": "H_GARDEN",
+      "name": "Garden Court Hotel",
+      "stay_cost": 16500,
+      "district_id": "CIVIL",
+      "position": {
+        "x": 880,
+        "y": 300
+      }
+    },
+    {
+      "id": "H_LAKEVIEW",
+      "name": "Lakeview Resort",
+      "stay_cost": 33000,
+      "district_id": "LAKE",
+      "position": {
+        "x": 820,
+        "y": 380
+      }
+    },
+    {
+      "id": "H_HILLTOP",
+      "name": "Hilltop Hostel",
+      "stay_cost": 12400,
+      "district_id": "LAKE",
+      "position": {
+        "x": 640,
+        "y": 540
+      }
+    }
+  ],
+  "places": [
+    {
+      "id": "CLOCK",
+      "name": "Ghantaghar Clock Tower",
+      "type": "attraction",
+      "default_importance": 5,
+      "district_id": "BAZAAR",
+      "position": {
+        "x": 530,
+        "y": 230
+      }
+    },
+    {
+      "id": "FORTGATE",
+      "name": "Lion Gate Fort",
+      "type": "attraction",
+      "default_importance": 4,
+      "district_id": "FORT",
+      "position": {
+        "x": 230,
+        "y": 60
+      }
+    },
+    {
+      "id": "MUSEUM",
+      "name": "Surmapur Heritage Museum",
+      "type": "attraction",
+      "default_importance": 3,
+      "district_id": "CIVIL",
+      "position": {
+        "x": 760,
+        "y": 80
+      }
+    },
+    {
+      "id": "NIGHTMKT",
+      "name": "Moonlight Night Market",
+      "type": "attraction",
+      "default_importance": 4,
+      "district_id": "BAZAAR",
+      "position": {
+        "x": 650,
+        "y": 240
+      }
+    },
+    {
+      "id": "RIVERWALK",
+      "name": "Neelganga Riverside Walk",
+      "type": "attraction",
+      "default_importance": 3,
+      "district_id": "GHAT",
+      "position": {
+        "x": 150,
+        "y": 450
+      }
+    },
+    {
+      "id": "STEPWELL",
+      "name": "Rani's Stepwell",
+      "type": "attraction",
+      "default_importance": 1,
+      "district_id": "FORT",
+      "position": {
+        "x": 130,
+        "y": 230
+      }
+    },
+    {
+      "id": "VIEWPOINT",
+      "name": "Sunset Point over Meghna Lake",
+      "type": "attraction",
+      "default_importance": 2,
+      "district_id": "LAKE",
+      "position": {
+        "x": 760,
+        "y": 470
+      }
+    },
+    {
+      "id": "GARDEN",
+      "name": "Rosewood Botanical Garden",
+      "type": "attraction",
+      "default_importance": 1,
+      "district_id": "CIVIL",
+      "position": {
+        "x": 770,
+        "y": 230
+      }
+    },
+    {
+      "id": "KACHORI",
+      "name": "Pandit Kachori Corner",
+      "type": "food",
+      "default_importance": 2,
+      "district_id": "BAZAAR",
+      "position": {
+        "x": 500,
+        "y": 410
+      }
+    },
+    {
+      "id": "BIRYANI",
+      "name": "Nawabi Biryani House",
+      "type": "food",
+      "default_importance": 4,
+      "district_id": "FORT",
+      "position": {
+        "x": 380,
+        "y": 110
+      }
+    },
+    {
+      "id": "CHAI",
+      "name": "Sunrise Kulhad Chai",
+      "type": "food",
+      "default_importance": 1,
+      "district_id": "GHAT",
+      "position": {
+        "x": 230,
+        "y": 520
+      }
+    },
+    {
+      "id": "JALEBI",
+      "name": "Jalebi Gali",
+      "type": "food",
+      "default_importance": 3,
+      "district_id": "BAZAAR",
+      "position": {
+        "x": 690,
+        "y": 370
+      }
+    },
+    {
+      "id": "FISHCURRY",
+      "name": "Riverbank Fish Curry Shack",
+      "type": "food",
+      "default_importance": 3,
+      "district_id": "GHAT",
+      "position": {
+        "x": 370,
+        "y": 480
+      }
+    },
+    {
+      "id": "THALI",
+      "name": "Maharaja Thali Bhavan",
+      "type": "food",
+      "default_importance": 2,
+      "district_id": "CIVIL",
+      "position": {
+        "x": 900,
+        "y": 60
+      }
+    },
+    {
+      "id": "KULFI",
+      "name": "Lakeside Matka Kulfi",
+      "type": "food",
+      "default_importance": 2,
+      "district_id": "LAKE",
+      "position": {
+        "x": 900,
+        "y": 540
+      }
+    }
+  ],
+  "round_trip_minutes": {
+    "H_GHANTA": {
+      "CLOCK": 33,
+      "FORTGATE": 47,
+      "MUSEUM": 56,
+      "NIGHTMKT": 27,
+      "RIVERWALK": 52,
+      "STEPWELL": 46,
+      "VIEWPOINT": 87,
+      "GARDEN": 59,
+      "KACHORI": 29,
+      "BIRYANI": 50,
+      "CHAI": 59,
+      "JALEBI": 22,
+      "FISHCURRY": 63,
+      "THALI": 64,
+      "KULFI": 89
+    },
+    "H_HAVELI": {
+      "CLOCK": 37,
+      "FORTGATE": 51,
+      "MUSEUM": 60,
+      "NIGHTMKT": 31,
+      "RIVERWALK": 56,
+      "STEPWELL": 50,
+      "VIEWPOINT": 91,
+      "GARDEN": 63,
+      "KACHORI": 33,
+      "BIRYANI": 54,
+      "CHAI": 63,
+      "JALEBI": 26,
+      "FISHCURRY": 67,
+      "THALI": 68,
+      "KULFI": 93
+    },
+    "H_MAHAL": {
+      "CLOCK": 64,
+      "FORTGATE": 33,
+      "MUSEUM": 107,
+      "NIGHTMKT": 58,
+      "RIVERWALK": 73,
+      "STEPWELL": 32,
+      "VIEWPOINT": 133,
+      "GARDEN": 110,
+      "KACHORI": 60,
+      "BIRYANI": 36,
+      "CHAI": 80,
+      "JALEBI": 53,
+      "FISHCURRY": 84,
+      "THALI": 115,
+      "KULFI": 135
+    },
+    "H_STEPWELL": {
+      "CLOCK": 50,
+      "FORTGATE": 19,
+      "MUSEUM": 93,
+      "NIGHTMKT": 44,
+      "RIVERWALK": 59,
+      "STEPWELL": 18,
+      "VIEWPOINT": 119,
+      "GARDEN": 96,
+      "KACHORI": 46,
+      "BIRYANI": 22,
+      "CHAI": 66,
+      "JALEBI": 39,
+      "FISHCURRY": 70,
+      "THALI": 101,
+      "KULFI": 121
+    },
+    "H_NEELGHAT": {
+      "CLOCK": 66,
+      "FORTGATE": 70,
+      "MUSEUM": 104,
+      "NIGHTMKT": 60,
+      "RIVERWALK": 30,
+      "STEPWELL": 69,
+      "VIEWPOINT": 130,
+      "GARDEN": 107,
+      "KACHORI": 62,
+      "BIRYANI": 73,
+      "CHAI": 37,
+      "JALEBI": 55,
+      "FISHCURRY": 41,
+      "THALI": 112,
+      "KULFI": 132
+    },
+    "H_RIVERBRZ": {
+      "CLOCK": 56,
+      "FORTGATE": 60,
+      "MUSEUM": 94,
+      "NIGHTMKT": 50,
+      "RIVERWALK": 20,
+      "STEPWELL": 59,
+      "VIEWPOINT": 120,
+      "GARDEN": 97,
+      "KACHORI": 52,
+      "BIRYANI": 63,
+      "CHAI": 27,
+      "JALEBI": 45,
+      "FISHCURRY": 31,
+      "THALI": 102,
+      "KULFI": 122
+    },
+    "H_CIVIL": {
+      "CLOCK": 53,
+      "FORTGATE": 85,
+      "MUSEUM": 26,
+      "NIGHTMKT": 47,
+      "RIVERWALK": 82,
+      "STEPWELL": 84,
+      "VIEWPOINT": 67,
+      "GARDEN": 29,
+      "KACHORI": 49,
+      "BIRYANI": 88,
+      "CHAI": 89,
+      "JALEBI": 42,
+      "FISHCURRY": 93,
+      "THALI": 34,
+      "KULFI": 69
+    },
+    "H_GARDEN": {
+      "CLOCK": 46,
+      "FORTGATE": 78,
+      "MUSEUM": 19,
+      "NIGHTMKT": 40,
+      "RIVERWALK": 75,
+      "STEPWELL": 77,
+      "VIEWPOINT": 60,
+      "GARDEN": 22,
+      "KACHORI": 42,
+      "BIRYANI": 81,
+      "CHAI": 82,
+      "JALEBI": 35,
+      "FISHCURRY": 86,
+      "THALI": 27,
+      "KULFI": 62
+    },
+    "H_LAKEVIEW": {
+      "CLOCK": 89,
+      "FORTGATE": 118,
+      "MUSEUM": 72,
+      "NIGHTMKT": 83,
+      "RIVERWALK": 118,
+      "STEPWELL": 117,
+      "VIEWPOINT": 38,
+      "GARDEN": 75,
+      "KACHORI": 85,
+      "BIRYANI": 121,
+      "CHAI": 125,
+      "JALEBI": 78,
+      "FISHCURRY": 129,
+      "THALI": 80,
+      "KULFI": 40
+    },
+    "H_HILLTOP": {
+      "CLOCK": 79,
+      "FORTGATE": 108,
+      "MUSEUM": 62,
+      "NIGHTMKT": 73,
+      "RIVERWALK": 108,
+      "STEPWELL": 107,
+      "VIEWPOINT": 28,
+      "GARDEN": 65,
+      "KACHORI": 75,
+      "BIRYANI": 111,
+      "CHAI": 115,
+      "JALEBI": 68,
+      "FISHCURRY": 119,
+      "THALI": 70,
+      "KULFI": 30
+    }
+  },
+  "has_demo_preset": true
+}

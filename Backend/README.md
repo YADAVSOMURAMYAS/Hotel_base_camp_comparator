@@ -4,9 +4,9 @@
 
 | Item | Detail |
 |---|---|
-| Contents | `app/` (service code), `scripts/` (one-time generator), `tests/`, `pyproject.toml` *(planned, T04)*, `CLAUDE.md` |
+| Contents | `app/` (service code), `scripts/` (one-time generator), `tests/`, `pyproject.toml` (deps, ruff, pytest config), `CLAUDE.md` |
 | Responsibilities | Own all calculation, validation and city data |
-| Dependencies | FastAPI, uvicorn, pydantic, pytest, httpx, ruff (see [../docs/TECH_STACK.md](../docs/TECH_STACK.md)) |
+| Dependencies | FastAPI (brings pydantic), uvicorn; dev extras: pytest, httpx, ruff, openpyxl (see [../docs/TECH_STACK.md](../docs/TECH_STACK.md)) |
 | Naming | `snake_case` modules; tests `test_*.py` |
 | Belongs | Python code, JSON city data, backend tests |
 | Does not belong | Frontend code, expected results (`../verification/`), docs |

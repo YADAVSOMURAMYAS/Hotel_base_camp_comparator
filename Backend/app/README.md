@@ -4,7 +4,7 @@
 
 | Item | Detail |
 |---|---|
-| Contents | `main.py` (app + CORS), `api/`, `domain/`, `data/` |
+| Contents | `main.py` (`create_app()` + CORS for the Vite origins; `app` instance), `api/`, `domain/`, `data/` |
 | Responsibilities | `main.py` only creates the app and wires routers |
 | Dependencies | Layers point down: `api` → `data`, `domain`; `domain` imports nothing outside stdlib |
 | Naming | `snake_case` |

@@ -1,0 +1,1060 @@
+{
+  "status": "NO_AFFORDABLE_HOTEL",
+  "errors": [],
+  "importance_total": 40,
+  "budget": 0,
+  "recommended_hotel_id": null,
+  "default_inspected_hotel_id": "H_CIVIL",
+  "hotels": [
+    {
+      "id": "H_GHANTA",
+      "name": "Ghantaghar Grand",
+      "stay_cost": 36500,
+      "affordable": false,
+      "rank": null,
+      "remaining_budget": null,
+      "shortfall": 36500,
+      "label": "OVER_BUDGET",
+      "weighted_total": 1942,
+      "weighted_average_display": "48.6",
+      "longest_trip": 89,
+      "contributions": [
+        {
+          "place_id": "CLOCK",
+          "minutes": 33,
+          "importance": 5,
+          "contribution": 165
+        },
+        {
+          "place_id": "FORTGATE",
+          "minutes": 47,
+          "importance": 4,
+          "contribution": 188
+        },
+        {
+          "place_id": "MUSEUM",
+          "minutes": 56,
+          "importance": 3,
+          "contribution": 168
+        },
+        {
+          "place_id": "NIGHTMKT",
+          "minutes": 27,
+          "importance": 4,
+          "contribution": 108
+        },
+        {
+          "place_id": "RIVERWALK",
+          "minutes": 52,
+          "importance": 3,
+          "contribution": 156
+        },
+        {
+          "place_id": "STEPWELL",
+          "minutes": 46,
+          "importance": 1,
+          "contribution": 46
+        },
+        {
+          "place_id": "VIEWPOINT",
+          "minutes": 87,
+          "importance": 2,
+          "contribution": 174
+        },
+        {
+          "place_id": "GARDEN",
+          "minutes": 59,
+          "importance": 1,
+          "contribution": 59
+        },
+        {
+          "place_id": "KACHORI",
+          "minutes": 29,
+          "importance": 2,
+          "contribution": 58
+        },
+        {
+          "place_id": "BIRYANI",
+          "minutes": 50,
+          "importance": 4,
+          "contribution": 200
+        },
+        {
+          "place_id": "CHAI",
+          "minutes": 59,
+          "importance": 1,
+          "contribution": 59
+        },
+        {
+          "place_id": "JALEBI",
+          "minutes": 22,
+          "importance": 3,
+          "contribution": 66
+        },
+        {
+          "place_id": "FISHCURRY",
+          "minutes": 63,
+          "importance": 3,
+          "contribution": 189
+        },
+        {
+          "place_id": "THALI",
+          "minutes": 64,
+          "importance": 2,
+          "contribution": 128
+        },
+        {
+          "place_id": "KULFI",
+          "minutes": 89,
+          "importance": 2,
+          "contribution": 178
+        }
+      ]
+    },
+    {
+      "id": "H_HAVELI",
+      "name": "Bazaar Haveli",
+      "stay_cost": 30800,
+      "affordable": false,
+      "rank": null,
+      "remaining_budget": null,
+      "shortfall": 30800,
+      "label": "OVER_BUDGET",
+      "weighted_total": 2102,
+      "weighted_average_display": "52.6",
+      "longest_trip": 93,
+      "contributions": [
+        {
+          "place_id": "CLOCK",
+          "minutes": 37,
+          "importance": 5,
+          "contribution": 185
+        },
+        {
+          "place_id": "FORTGATE",
+          "minutes": 51,
+          "importance": 4,
+          "contribution": 204
+        },
+        {
+          "place_id": "MUSEUM",
+          "minutes": 60,
+          "importance": 3,
+          "contribution": 180
+        },
+        {
+          "place_id": "NIGHTMKT",
+          "minutes": 31,
+          "importance": 4,
+          "contribution": 124
+        },
+        {
+          "place_id": "RIVERWALK",
+          "minutes": 56,
+          "importance": 3,
+          "contribution": 168
+        },
+        {
+          "place_id": "STEPWELL",
+          "minutes": 50,
+          "importance": 1,
+          "contribution": 50
+        },
+        {
+          "place_id": "VIEWPOINT",
+          "minutes": 91,
+          "importance": 2,
+          "contribution": 182
+        },
+        {
+          "place_id": "GARDEN",
+          "minutes": 63,
+          "importance": 1,
+          "contribution": 63
+        },
+        {
+          "place_id": "KACHORI",
+          "minutes": 33,
+          "importance": 2,
+          "contribution": 66
+        },
+        {
+          "place_id": "BIRYANI",
+          "minutes": 54,
+          "importance": 4,
+          "contribution": 216
+        },
+        {
+          "place_id": "CHAI",
+          "minutes": 63,
+          "importance": 1,
+          "contribution": 63
+        },
+        {
+          "place_id": "JALEBI",
+          "minutes": 26,
+          "importance": 3,
+          "contribution": 78
+        },
+        {
+          "place_id": "FISHCURRY",
+          "minutes": 67,
+          "importance": 3,
+          "contribution": 201
+        },
+        {
+          "place_id": "THALI",
+          "minutes": 68,
+          "importance": 2,
+          "contribution": 136
+        },
+        {
+          "place_id": "KULFI",
+          "minutes": 93,
+          "importance": 2,
+          "contribution": 186
+        }
+      ]
+    },
+    {
+      "id": "H_GARDEN",
+      "name": "Garden Court Hotel",
+      "stay_cost": 16500,
+      "affordable": false,
+      "rank": null,
+      "remaining_budget": null,
+      "shortfall": 16500,
+      "label": "OVER_BUDGET",
+      "weighted_total": 2234,
+      "weighted_average_display": "55.9",
+      "longest_trip": 86,
+      "contributions": [
+        {
+          "place_id": "CLOCK",
+          "minutes": 46,
+          "importance": 5,
+          "contribution": 230
+        },
+        {
+          "place_id": "FORTGATE",
+          "minutes": 78,
+          "importance": 4,
+          "contribution": 312
+        },
+        {
+          "place_id": "MUSEUM",
+          "minutes": 19,
+          "importance": 3,
+          "contribution": 57
+        },
+        {
+          "place_id": "NIGHTMKT",
+          "minutes": 40,
+          "importance": 4,
+          "contribution": 160
+        },
+        {
+          "place_id": "RIVERWALK",
+          "minutes": 75,
+          "importance": 3,
+          "contribution": 225
+        },
+        {
+          "place_id": "STEPWELL",
+          "minutes": 77,
+          "importance": 1,
+          "contribution": 77
+        },
+        {
+          "place_id": "VIEWPOINT",
+          "minutes": 60,
+          "importance": 2,
+          "contribution": 120
+        },
+        {
+          "place_id": "GARDEN",
+          "minutes": 22,
+          "importance": 1,
+          "contribution": 22
+        },
+        {
+          "place_id": "KACHORI",
+          "minutes": 42,
+          "importance": 2,
+          "contribution": 84
+        },
+        {
+          "place_id": "BIRYANI",
+          "minutes": 81,
+          "importance": 4,
+          "contribution": 324
+        },
+        {
+          "place_id": "CHAI",
+          "minutes": 82,
+          "importance": 1,
+          "contribution": 82
+        },
+        {
+          "place_id": "JALEBI",
+          "minutes": 35,
+          "importance": 3,
+          "contribution": 105
+        },
+        {
+          "place_id": "FISHCURRY",
+          "minutes": 86,
+          "importance": 3,
+          "contribution": 258
+        },
+        {
+          "place_id": "THALI",
+          "minutes": 27,
+          "importance": 2,
+          "contribution": 54
+        },
+        {
+          "place_id": "KULFI",
+          "minutes": 62,
+          "importance": 2,
+          "contribution": 124
+        }
+      ]
+    },
+    {
+      "id": "H_STEPWELL",
+      "name": "Stepwell Heritage Inn",
+      "stay_cost": 27500,
+      "affordable": false,
+      "rank": null,
+      "remaining_budget": null,
+      "shortfall": 27500,
+      "label": "OVER_BUDGET",
+      "weighted_total": 2327,
+      "weighted_average_display": "58.2",
+      "longest_trip": 121,
+      "contributions": [
+        {
+          "place_id": "CLOCK",
+          "minutes": 50,
+          "importance": 5,
+          "contribution": 250
+        },
+        {
+          "place_id": "FORTGATE",
+          "minutes": 19,
+          "importance": 4,
+          "contribution": 76
+        },
+        {
+          "place_id": "MUSEUM",
+          "minutes": 93,
+          "importance": 3,
+          "contribution": 279
+        },
+        {
+          "place_id": "NIGHTMKT",
+          "minutes": 44,
+          "importance": 4,
+          "contribution": 176
+        },
+        {
+          "place_id": "RIVERWALK",
+          "minutes": 59,
+          "importance": 3,
+          "contribution": 177
+        },
+        {
+          "place_id": "STEPWELL",
+          "minutes": 18,
+          "importance": 1,
+          "contribution": 18
+        },
+        {
+          "place_id": "VIEWPOINT",
+          "minutes": 119,
+          "importance": 2,
+          "contribution": 238
+        },
+        {
+          "place_id": "GARDEN",
+          "minutes": 96,
+          "importance": 1,
+          "contribution": 96
+        },
+        {
+          "place_id": "KACHORI",
+          "minutes": 46,
+          "importance": 2,
+          "contribution": 92
+        },
+        {
+          "place_id": "BIRYANI",
+          "minutes": 22,
+          "importance": 4,
+          "contribution": 88
+        },
+        {
+          "place_id": "CHAI",
+          "minutes": 66,
+          "importance": 1,
+          "contribution": 66
+        },
+        {
+          "place_id": "JALEBI",
+          "minutes": 39,
+          "importance": 3,
+          "contribution": 117
+        },
+        {
+          "place_id": "FISHCURRY",
+          "minutes": 70,
+          "importance": 3,
+          "contribution": 210
+        },
+        {
+          "place_id": "THALI",
+          "minutes": 101,
+          "importance": 2,
+          "contribution": 202
+        },
+        {
+          "place_id": "KULFI",
+          "minutes": 121,
+          "importance": 2,
+          "contribution": 242
+        }
+      ]
+    },
+    {
+      "id": "H_CIVIL",
+      "name": "Civil Lines Suites",
+      "stay_cost": 24200,
+      "affordable": false,
+      "rank": null,
+      "remaining_budget": null,
+      "shortfall": 24200,
+      "label": "OVER_BUDGET",
+      "weighted_total": 2514,
+      "weighted_average_display": "62.9",
+      "longest_trip": 93,
+      "contributions": [
+        {
+          "place_id": "CLOCK",
+          "minutes": 53,
+          "importance": 5,
+          "contribution": 265
+        },
+        {
+          "place_id": "FORTGATE",
+          "minutes": 85,
+          "importance": 4,
+          "contribution": 340
+        },
+        {
+          "place_id": "MUSEUM",
+          "minutes": 26,
+          "importance": 3,
+          "contribution": 78
+        },
+        {
+          "place_id": "NIGHTMKT",
+          "minutes": 47,
+          "importance": 4,
+          "contribution": 188
+        },
+        {
+          "place_id": "RIVERWALK",
+          "minutes": 82,
+          "importance": 3,
+          "contribution": 246
+        },
+        {
+          "place_id": "STEPWELL",
+          "minutes": 84,
+          "importance": 1,
+          "contribution": 84
+        },
+        {
+          "place_id": "VIEWPOINT",
+          "minutes": 67,
+          "importance": 2,
+          "contribution": 134
+        },
+        {
+          "place_id": "GARDEN",
+          "minutes": 29,
+          "importance": 1,
+          "contribution": 29
+        },
+        {
+          "place_id": "KACHORI",
+          "minutes": 49,
+          "importance": 2,
+          "contribution": 98
+        },
+        {
+          "place_id": "BIRYANI",
+          "minutes": 88,
+          "importance": 4,
+          "contribution": 352
+        },
+        {
+          "place_id": "CHAI",
+          "minutes": 89,
+          "importance": 1,
+          "contribution": 89
+        },
+        {
+          "place_id": "JALEBI",
+          "minutes": 42,
+          "importance": 3,
+          "contribution": 126
+        },
+        {
+          "place_id": "FISHCURRY",
+          "minutes": 93,
+          "importance": 3,
+          "contribution": 279
+        },
+        {
+          "place_id": "THALI",
+          "minutes": 34,
+          "importance": 2,
+          "contribution": 68
+        },
+        {
+          "place_id": "KULFI",
+          "minutes": 69,
+          "importance": 2,
+          "contribution": 138
+        }
+      ]
+    },
+    {
+      "id": "H_RIVERBRZ",
+      "name": "River Breeze Lodge",
+      "stay_cost": 19800,
+      "affordable": false,
+      "rank": null,
+      "remaining_budget": null,
+      "shortfall": 19800,
+      "label": "OVER_BUDGET",
+      "weighted_total": 2517,
+      "weighted_average_display": "62.9",
+      "longest_trip": 122,
+      "contributions": [
+        {
+          "place_id": "CLOCK",
+          "minutes": 56,
+          "importance": 5,
+          "contribution": 280
+        },
+        {
+          "place_id": "FORTGATE",
+          "minutes": 60,
+          "importance": 4,
+          "contribution": 240
+        },
+        {
+          "place_id": "MUSEUM",
+          "minutes": 94,
+          "importance": 3,
+          "contribution": 282
+        },
+        {
+          "place_id": "NIGHTMKT",
+          "minutes": 50,
+          "importance": 4,
+          "contribution": 200
+        },
+        {
+          "place_id": "RIVERWALK",
+          "minutes": 20,
+          "importance": 3,
+          "contribution": 60
+        },
+        {
+          "place_id": "STEPWELL",
+          "minutes": 59,
+          "importance": 1,
+          "contribution": 59
+        },
+        {
+          "place_id": "VIEWPOINT",
+          "minutes": 120,
+          "importance": 2,
+          "contribution": 240
+        },
+        {
+          "place_id": "GARDEN",
+          "minutes": 97,
+          "importance": 1,
+          "contribution": 97
+        },
+        {
+          "place_id": "KACHORI",
+          "minutes": 52,
+          "importance": 2,
+          "contribution": 104
+        },
+        {
+          "place_id": "BIRYANI",
+          "minutes": 63,
+          "importance": 4,
+          "contribution": 252
+        },
+        {
+          "place_id": "CHAI",
+          "minutes": 27,
+          "importance": 1,
+          "contribution": 27
+        },
+        {
+          "place_id": "JALEBI",
+          "minutes": 45,
+          "importance": 3,
+          "contribution": 135
+        },
+        {
+          "place_id": "FISHCURRY",
+          "minutes": 31,
+          "importance": 3,
+          "contribution": 93
+        },
+        {
+          "place_id": "THALI",
+          "minutes": 102,
+          "importance": 2,
+          "contribution": 204
+        },
+        {
+          "place_id": "KULFI",
+          "minutes": 122,
+          "importance": 2,
+          "contribution": 244
+        }
+      ]
+    },
+    {
+      "id": "H_MAHAL",
+      "name": "Lion Gate Mahal",
+      "stay_cost": 52000,
+      "affordable": false,
+      "rank": null,
+      "remaining_budget": null,
+      "shortfall": 52000,
+      "label": "OVER_BUDGET",
+      "weighted_total": 2887,
+      "weighted_average_display": "72.2",
+      "longest_trip": 135,
+      "contributions": [
+        {
+          "place_id": "CLOCK",
+          "minutes": 64,
+          "importance": 5,
+          "contribution": 320
+        },
+        {
+          "place_id": "FORTGATE",
+          "minutes": 33,
+          "importance": 4,
+          "contribution": 132
+        },
+        {
+          "place_id": "MUSEUM",
+          "minutes": 107,
+          "importance": 3,
+          "contribution": 321
+        },
+        {
+          "place_id": "NIGHTMKT",
+          "minutes": 58,
+          "importance": 4,
+          "contribution": 232
+        },
+        {
+          "place_id": "RIVERWALK",
+          "minutes": 73,
+          "importance": 3,
+          "contribution": 219
+        },
+        {
+          "place_id": "STEPWELL",
+          "minutes": 32,
+          "importance": 1,
+          "contribution": 32
+        },
+        {
+          "place_id": "VIEWPOINT",
+          "minutes": 133,
+          "importance": 2,
+          "contribution": 266
+        },
+        {
+          "place_id": "GARDEN",
+          "minutes": 110,
+          "importance": 1,
+          "contribution": 110
+        },
+        {
+          "place_id": "KACHORI",
+          "minutes": 60,
+          "importance": 2,
+          "contribution": 120
+        },
+        {
+          "place_id": "BIRYANI",
+          "minutes": 36,
+          "importance": 4,
+          "contribution": 144
+        },
+        {
+          "place_id": "CHAI",
+          "minutes": 80,
+          "importance": 1,
+          "contribution": 80
+        },
+        {
+          "place_id": "JALEBI",
+          "minutes": 53,
+          "importance": 3,
+          "contribution": 159
+        },
+        {
+          "place_id": "FISHCURRY",
+          "minutes": 84,
+          "importance": 3,
+          "contribution": 252
+        },
+        {
+          "place_id": "THALI",
+          "minutes": 115,
+          "importance": 2,
+          "contribution": 230
+        },
+        {
+          "place_id": "KULFI",
+          "minutes": 135,
+          "importance": 2,
+          "contribution": 270
+        }
+      ]
+    },
+    {
+      "id": "H_NEELGHAT",
+      "name": "Neelganga Ghat Residency",
+      "stay_cost": 29500,
+      "affordable": false,
+      "rank": null,
+      "remaining_budget": null,
+      "shortfall": 29500,
+      "label": "OVER_BUDGET",
+      "weighted_total": 2917,
+      "weighted_average_display": "72.9",
+      "longest_trip": 132,
+      "contributions": [
+        {
+          "place_id": "CLOCK",
+          "minutes": 66,
+          "importance": 5,
+          "contribution": 330
+        },
+        {
+          "place_id": "FORTGATE",
+          "minutes": 70,
+          "importance": 4,
+          "contribution": 280
+        },
+        {
+          "place_id": "MUSEUM",
+          "minutes": 104,
+          "importance": 3,
+          "contribution": 312
+        },
+        {
+          "place_id": "NIGHTMKT",
+          "minutes": 60,
+          "importance": 4,
+          "contribution": 240
+        },
+        {
+          "place_id": "RIVERWALK",
+          "minutes": 30,
+          "importance": 3,
+          "contribution": 90
+        },
+        {
+          "place_id": "STEPWELL",
+          "minutes": 69,
+          "importance": 1,
+          "contribution": 69
+        },
+        {
+          "place_id": "VIEWPOINT",
+          "minutes": 130,
+          "importance": 2,
+          "contribution": 260
+        },
+        {
+          "place_id": "GARDEN",
+          "minutes": 107,
+          "importance": 1,
+          "contribution": 107
+        },
+        {
+          "place_id": "KACHORI",
+          "minutes": 62,
+          "importance": 2,
+          "contribution": 124
+        },
+        {
+          "place_id": "BIRYANI",
+          "minutes": 73,
+          "importance": 4,
+          "contribution": 292
+        },
+        {
+          "place_id": "CHAI",
+          "minutes": 37,
+          "importance": 1,
+          "contribution": 37
+        },
+        {
+          "place_id": "JALEBI",
+          "minutes": 55,
+          "importance": 3,
+          "contribution": 165
+        },
+        {
+          "place_id": "FISHCURRY",
+          "minutes": 41,
+          "importance": 3,
+          "contribution": 123
+        },
+        {
+          "place_id": "THALI",
+          "minutes": 112,
+          "importance": 2,
+          "contribution": 224
+        },
+        {
+          "place_id": "KULFI",
+          "minutes": 132,
+          "importance": 2,
+          "contribution": 264
+        }
+      ]
+    },
+    {
+      "id": "H_HILLTOP",
+      "name": "Hilltop Hostel",
+      "stay_cost": 12400,
+      "affordable": false,
+      "rank": null,
+      "remaining_budget": null,
+      "shortfall": 12400,
+      "label": "OVER_BUDGET",
+      "weighted_total": 3327,
+      "weighted_average_display": "83.2",
+      "longest_trip": 119,
+      "contributions": [
+        {
+          "place_id": "CLOCK",
+          "minutes": 79,
+          "importance": 5,
+          "contribution": 395
+        },
+        {
+          "place_id": "FORTGATE",
+          "minutes": 108,
+          "importance": 4,
+          "contribution": 432
+        },
+        {
+          "place_id": "MUSEUM",
+          "minutes": 62,
+          "importance": 3,
+          "contribution": 186
+        },
+        {
+          "place_id": "NIGHTMKT",
+          "minutes": 73,
+          "importance": 4,
+          "contribution": 292
+        },
+        {
+          "place_id": "RIVERWALK",
+          "minutes": 108,
+          "importance": 3,
+          "contribution": 324
+        },
+        {
+          "place_id": "STEPWELL",
+          "minutes": 107,
+          "importance": 1,
+          "contribution": 107
+        },
+        {
+          "place_id": "VIEWPOINT",
+          "minutes": 28,
+          "importance": 2,
+          "contribution": 56
+        },
+        {
+          "place_id": "GARDEN",
+          "minutes": 65,
+          "importance": 1,
+          "contribution": 65
+        },
+        {
+          "place_id": "KACHORI",
+          "minutes": 75,
+          "importance": 2,
+          "contribution": 150
+        },
+        {
+          "place_id": "BIRYANI",
+          "minutes": 111,
+          "importance": 4,
+          "contribution": 444
+        },
+        {
+          "place_id": "CHAI",
+          "minutes": 115,
+          "importance": 1,
+          "contribution": 115
+        },
+        {
+          "place_id": "JALEBI",
+          "minutes": 68,
+          "importance": 3,
+          "contribution": 204
+        },
+        {
+          "place_id": "FISHCURRY",
+          "minutes": 119,
+          "importance": 3,
+          "contribution": 357
+        },
+        {
+          "place_id": "THALI",
+          "minutes": 70,
+          "importance": 2,
+          "contribution": 140
+        },
+        {
+          "place_id": "KULFI",
+          "minutes": 30,
+          "importance": 2,
+          "contribution": 60
+        }
+      ]
+    },
+    {
+      "id": "H_LAKEVIEW",
+      "name": "Lakeview Resort",
+      "stay_cost": 33000,
+      "affordable": false,
+      "rank": null,
+      "remaining_budget": null,
+      "shortfall": 33000,
+      "label": "OVER_BUDGET",
+      "weighted_total": 3727,
+      "weighted_average_display": "93.2",
+      "longest_trip": 129,
+      "contributions": [
+        {
+          "place_id": "CLOCK",
+          "minutes": 89,
+          "importance": 5,
+          "contribution": 445
+        },
+        {
+          "place_id": "FORTGATE",
+          "minutes": 118,
+          "importance": 4,
+          "contribution": 472
+        },
+        {
+          "place_id": "MUSEUM",
+          "minutes": 72,
+          "importance": 3,
+          "contribution": 216
+        },
+        {
+          "place_id": "NIGHTMKT",
+          "minutes": 83,
+          "importance": 4,
+          "contribution": 332
+        },
+        {
+          "place_id": "RIVERWALK",
+          "minutes": 118,
+          "importance": 3,
+          "contribution": 354
+        },
+        {
+          "place_id": "STEPWELL",
+          "minutes": 117,
+          "importance": 1,
+          "contribution": 117
+        },
+        {
+          "place_id": "VIEWPOINT",
+          "minutes": 38,
+          "importance": 2,
+          "contribution": 76
+        },
+        {
+          "place_id": "GARDEN",
+          "minutes": 75,
+          "importance": 1,
+          "contribution": 75
+        },
+        {
+          "place_id": "KACHORI",
+          "minutes": 85,
+          "importance": 2,
+          "contribution": 170
+        },
+        {
+          "place_id": "BIRYANI",
+          "minutes": 121,
+          "importance": 4,
+          "contribution": 484
+        },
+        {
+          "place_id": "CHAI",
+          "minutes": 125,
+          "importance": 1,
+          "contribution": 125
+        },
+        {
+          "place_id": "JALEBI",
+          "minutes": 78,
+          "importance": 3,
+          "contribution": 234
+        },
+        {
+          "place_id": "FISHCURRY",
+          "minutes": 129,
+          "importance": 3,
+          "contribution": 387
+        },
+        {
+          "place_id": "THALI",
+          "minutes": 80,
+          "importance": 2,
+          "contribution": 160
+        },
+        {
+          "place_id": "KULFI",
+          "minutes": 40,
+          "importance": 2,
+          "contribution": 80
+        }
+      ]
+    }
+  ]
+}

@@ -275,3 +275,115 @@ matrix, per-hotel results, condition proofs, what-if tables) and the design meth
 append this prompt and any refinement to docs/interview/AI_PROMPTS.md. Do NOT create JSON, Python or TypeScript files; T03 does that.
 Do not commit; show me git status.
 ````
+
+---
+
+## Entry 4: T04 Backend skeleton, models, rounding
+| Field | Content |
+|---|---|
+| Date | 2026-11-02 |
+| Task | T04: runnable FastAPI app with `GET /api/health`, domain models, integer rounding with tests (no validation or engine) |
+| Prompt | Summarised below (the full text is in the T04 task message) |
+| What was wrong or missing | The prompt's `ComparisonResult` field list omitted `default_inspected_hotel_id`, which `API_SPECIFICATION.md` requires (and INVALID must clear). The "no `/`" static check would also match `//` and slashes in docstrings. Raw vs validated modelling was left to the assistant. `CODING_STANDARDS.md` listed ruff rules without `N,SIM` |
+| Refined prompt | Step 0/1 plan reviewed and approved with "approved": include `default_inspected_hotel_id`, `pip install -e ".[dev]"`, add `tests/unit/test_models.py`, raw (`Any`) vs validated (strict) model split (D-13) |
+| Result | Tests were written first and failed on import errors; then 32 pass in about 1.4 s, `ruff check` and `ruff format --check` clean; live `GET /api/health` returned `{"status":"ok"}`. Decisions D-13, D-14 |
+
+**Prompt (summary):**
+````text
+Task T04: Backend skeleton, domain models, rounding. NO validation or engine logic (T05, T06).
+Python 3.10 (no tomllib/StrEnum/Self). Files: pyproject.toml (fastapi, uvicorn; dev: pytest, httpx, ruff, openpyxl;
+ruff line 100, rules E,F,I,B,UP,N,SIM; pytest testpaths/pythonpath), app/main.py (create_app, CORS for :5173 on
+localhost and 127.0.0.1), app/api/routes.py (health only), domain/models.py (frozen dataclasses, Status/PlaceType enums,
+raw vs validated input, result models exactly as the API spec, INVALID factory clearing all derived fields),
+domain/rounding.py (rounded_tenths = (20*T+I)//(2*I), format_average, ValueError on I<=0 or negative; no float/round/Decimal),
+tests first: spec example 140/5 -> "28.0", hand-computed half-up boundaries, repeating decimals, maximum total,
+Fraction cross-check for I in 1..75 and T in 0..2000, invalid inputs, static source check; health test.
+Method: Step 0 ambiguities, Step 1 plan and wait for approval, Step 2 failing tests shown, Step 3 implement and paste real
+pytest/ruff output, Step 4 start the server once and call /api/health, Step 5 docs, git status/diff --stat, no commit.
+````
+
+## Entry 5: T05 Validation
+
+| Field | Content |
+|---|---|
+| Date | 2026-11-02 |
+| Task | T05: `validate` / `validate_scenario` in `domain/validation.py` plus unit tests; domain code only |
+| Prompt | Summarised below |
+| What was wrong or missing | The prompt asked for codes and paths the API spec lacked (hotel/place ID, name and type paths) and for "missing/extra hotel row" tests that cannot occur because each `RawHotel` carries its own row. D-13 specified a tuple result; the prompt wanted an unmistakable result type. The first test run also exposed an unhashable place type crash in the validator, and two test-helper bugs |
+| Refined prompt | After Step 0/1: index-form paths accepted (and documented in the API spec), ID errors must not hide other errors on the same record, drop the hotel-row tests (D-18), result type `ValidationOutcome` (D-17), read `surmapur.json` directly in the sanity test |
+| Result | Tests first (import failure shown), then 116 validation tests pass in about 0.2 s; full suite 169 pass; ruff clean. Decisions D-17, D-18 |
+
+**Prompt (summary):**
+````text
+Task T05: Validation. Domain code and unit tests only. validate(raw) -> list[ValidationError] plus validated models,
+so the whole scenario is checked before any ranking; never a partial result. Rules: hotel 2-10 / place 3-15 counts; IDs by
+re.fullmatch, str, ASCII, unique across hotels and places; names non-blank str; place type attraction|food; numbers must be
+real ints (reject bool, float, str, None) within ranges; round-trip rows exactly match place IDs; one importance per place;
+structural problems are errors, the validator never raises. Collect all errors in a stable order. Tests first (parametrised
+per rule, garbage inputs, INVALID result cleared, Demo trip sanity, immutability). Method: Step 0 ambiguities, Step 1 table
+and wait, Step 2 failing tests, Step 3 implement and paste real output, Step 4 docs, git status/diff --stat, no commit.
+````
+
+---
+
+## Entry 5: T06 Engine and ranking
+| Field | Content |
+|---|---|
+| Date | 2026-11-02 |
+| Task | T06: pure `compare(scenario)` returning contributions, totals, display averages, affordability, ranks, recommendation and `NO_AFFORDABLE_HOTEL`; unit tests only |
+| Prompt | Summarised below (the full text is in the T06 task message) |
+| What was wrong or missing | The task text named `Backend/app/data/small_scenarios.py`, against D-12. It did not name the entry point. The "no `/`" check needed an AST rule so docstrings do not trip it. Output order was specified only in the API spec (A-06) |
+| Refined prompt | Step 0/1 plan reviewed and approved with "approved": entry point `compare`, hand-calculated scenarios (CLOCK, GRID, FINE, FLIP, GAPS and four tie cases), AST-based static test |
+| Result | Tests written first and failed on `ImportError: cannot import name 'compare'`; then 21 pass in 0.07 s; `ruff check` and `ruff format --check` clean. Decision D-15 |
+
+**Prompt (summary):**
+```text
+Task T06: Engine and ranking. Domain code and unit tests only. A pure function takes an already validated Scenario and returns a
+ComparisonResult. Integers only (no float, no round(), no /). Affordable iff stay_cost <= budget. Sort affordable hotels by
+(weighted_total, stay_cost, hotel_id); ranks 1..n; rank 1 is recommended. Over-budget hotels keep shortfall, rank None, label
+OVER_BUDGET. No affordable hotel -> NO_AFFORDABLE_HOTEL. Output order and field semantics follow docs/API_SPECIFICATION.md.
+Tests first with hand-calculated literals (CLOCK/MARKET example, 3x3 arithmetic, exact ranking despite equal display averages,
+budget equality and +/-1, budget-only vs importance change, ties by cost then ASCII ID, input-order independence, no mutation,
+static source checks). Do not touch models.py, rounding.py, validation.py; do not import the validator or read verification/.
+Method: Step 0/1 plan and wait, Step 2 failing tests, Step 3 implement and paste real output, Step 4 docs, git status. No commit.
+```
+
+
+| Field | Content |
+|---|---|
+| Date | 2026-11-02 |
+| Task | T07: Demo story tests. Tests only; engine, validation, models, data, fixtures and spreadsheet untouched |
+| Prompt | Summarised below |
+| What was wrong or missing | `verification/EXPECTED_RESULTS.md` is empty, so N2/N3 were taken from `DEMO_DESIGN_NOTES.md` section 8. `TESTING.md` named the tests `s1..s6`; the task used C1..C6, so the traceability rows were renamed. The Demo trip has no ties, so tie-break mutations cannot be caught here |
+| Refined prompt | Step 1 test list mapped to AC IDs reviewed and approved with "approve" |
+| Result | 35 scenario tests pass in 0.13 s; mutation check: reordered sort key caught by 14 tests, `<` affordability by 3, ranking by rounded average by 6; dropping the cost or ID tie-break was not caught (expected, see N3) |
+
+**Prompt (summary):**
+```text
+Task T07: Demo story tests. Tests only. Prove the real engine on the real frozen Demo trip reproduces tests/fixtures/expected_demo.py
+(per-hotel totals, averages, affordability, remaining/shortfall, rank, longest trip, rank order, recommendation), recompute contributions
+independently from the JSON, one named test per story condition C1-C6 and N1-N3 computed from engine output, what-if scenarios,
+budget-only vs importance change, engine-level reset, boundary equality and minus one, budget 0, and a static independence guard.
+Method: Step 1 plan and wait; Step 2 run; Step 3 mutation check on a scratch copy (tie-break order, < vs <=, rank by rounded average);
+Step 4 full suite, docs, git status. If engine and fixtures disagree, stop and report. No commit.
+```
+
+## Entry 6: T08 API core
+| Field | Content |
+|---|---|
+| Date | 2026-11-02 |
+| Task | T08: `GET /api/cities/{id}`, `GET /api/cities/{id}/presets/demo`, `POST /api/compare`; loader, `domain/compare.py`, schemas, API tests, real sample responses |
+| Prompt | Summarised below |
+| What was wrong or missing | The spec gave no field path for unknown IDs, no 404 text for a city without a preset, and its prose says `FIELD_TYPE` is reported on `hotel_ids` while the validator reports `hotels`. Step 0 raised six points; all were approved as proposed (D-19). The Surmapur catalog has only 10 hotels, so "11 hotels" is built from a duplicate ID |
+| Refined prompt | Step 1 endpoint table and module responsibilities approved with "approved" |
+| Result | Tests written first; the first run failed at collection (`ModuleNotFoundError: No module named 'app.data.loader'`). I did not capture a per-test failing list. After implementing, 65 API tests pass; full suite 267 passed; ruff clean after fixing B008 and UP033 |
+
+**Prompt (summary):**
+```text
+Task T08: API core. Wire validation and engine behind HTTP, backend only. Endpoints exactly as docs/API_SPECIFICATION.md. Thin routes;
+data/loader.py is the only JSON reader (cached, injectable dependency); domain/compare.py is pure orchestration raw request ->
+validate_scenario -> engine. Request fields reach the validator unchanged (Any, no pydantic coercion). Unknown IDs -> INVALID, never 500.
+Duplicates reach the validator. INVALID / NO_AFFORDABLE_HOTEL are HTTP 200. Tests first: demo vs fixtures, key sets, budget boundary,
+what-ifs, INVALID matrix (budget, importance, selection), overridden catalogs (missing/extra key, shared ID), malformed body, 404, CORS.
+Save real responses as samples for T09. Method: Step 0 questions, Step 1 table + wait, tests first, implement, run, live calls, docs. No commit.
+```

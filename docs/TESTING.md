@@ -21,12 +21,12 @@ Small hand-written scenarios (ties, equality, invalid) live in `Backend/tests/fi
 | AC | Test (file :: name) | Evidence |
 |---|---|---|
 | AC-01 | `unit/test_city_data.py::test_demo_counts_types_importances_matrix_complete`; `api/test_compare_api.py::test_demo_preset_endpoint` | pytest output |
-| AC-02 | `scenario/test_demo_story.py::test_story_s1_…` to `…_s6_…` (one per condition) | pytest output + `verification/EXPECTED_RESULTS.md` |
-| AC-03 | `scenario/test_demo_story.py::test_engine_matches_expected_for_every_hotel` (total, average, affordability, remaining/shortfall, rank) | pytest output; spreadsheet screenshot |
+| AC-02 | `scenario/test_demo_story.py::test_story_c1_…` to `…_c6_…` (one per condition), `::test_story_n1_…`, `::test_story_n2_…`, `::test_story_n3_…` | pytest output + `verification/EXPECTED_RESULTS.md` |
+| AC-03 | `scenario/test_demo_story.py::test_engine_matches_expected_for_every_hotel`, `::test_summary_matches_expected`, `::test_contributions_match_independent_recompute` (total, average, affordability, remaining/shortfall, rank) | pytest output; spreadsheet screenshot |
 | AC-04 | Frontend `CityMap.test.tsx::renders_25_markers`, `::highlights_only_inspected_hotel_links`, `::link_labels_show_minutes_and_contribution` | vitest output; screenshot |
 | AC-05 | Frontend `HotelRanking.test.tsx::recommended_label`, `::over_budget_label_and_no_rank`; `ExplanationPanel.test.tsx::each_eligibility_reason` | vitest output; screenshot |
-| AC-06 | `scenario/test_demo_story.py::test_story_s5_budget_boundary`; manual checklist step 6 | pytest output; screenshot |
-| AC-07 | `scenario/test_demo_story.py::test_story_s6_importance_flips_recommendation`; manual step 7 | pytest output; screenshot |
+| AC-06 | `scenario/test_demo_story.py::test_story_c5_budget_boundary_at_most_accessible_hotel`, `::test_whatif_budget`; manual checklist step 6 | pytest output; screenshot |
+| AC-07 | `scenario/test_demo_story.py::test_story_c6_importance_change_flips_the_recommendation`, `::test_whatif_importance_change`; manual step 7 | pytest output; screenshot |
 | AC-08 | `scenario/test_demo_story.py::test_reset_inputs_restore_original_recommendation`; Frontend `Controls.test.tsx::reset_restores_demo_trip`, `useComparator.test.ts::reset` | pytest + vitest output; screenshot |
 | AC-09 | `unit/test_engine.py::test_budget_equality_is_affordable`, `::test_budget_plus_one_over_is_unranked` | pytest output |
 | AC-10 | `unit/test_ranking_ties.py::test_equal_total_resolved_by_lower_stay_cost` | pytest output |

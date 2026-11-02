@@ -222,6 +222,8 @@ No ranks, recommendation, totals, contributions or highlights are returned. Erro
 | `MAPPING_MISSING_PLACE` | A hotel's `round_trip_minutes` lacks a selected place ID |
 | `MAPPING_UNKNOWN_PLACE` | A hotel's `round_trip_minutes` has a place ID that is not selected |
 
+**Path convention for hotel and place records.** `hotels.<id>.stay_cost` and `hotels.<id>.round_trip_minutes[.<place_id>]` use the hotel's ID when it is valid and not a duplicate; otherwise (and always for `id`, `name`, `type`) the input position is used: `hotels[0].id`, `hotels[0].stay_cost`, `places[2].type`. Count errors use `hotel_ids` / `place_ids`. An ID error never hides other errors on the same record. A scenario that is not an object is `FIELD_TYPE` on `scenario`.
+
 Structural codes (`NAME_BLANK`, `PLACE_TYPE`, `STAY_COST_INVALID`, `MINUTES_INVALID`, `MAPPING_*`, `ID_FORMAT` on data) cannot come from the shipped catalog; they are exercised by test scenarios built directly against the domain.
 
 ## GET /api/cities/{city_id}/timeline  *(Optional, T18, deferred)*
