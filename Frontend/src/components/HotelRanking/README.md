@@ -1,5 +1,8 @@
 # HotelRanking
 
-**Status:** stub (T09). `index.tsx` shows the component name and the current phase, proving the context wiring.
-**T11 will build:** ranked rows from `result.hotels` (never re-sorted), Recommended badge, Over budget text; `inspectHotel` on click.
-**Rules:** read state via `useComparatorContext()`; no calculation; keep the folder layout (`index.tsx`, `README.md`, tests beside it as `HotelRanking.test.tsx`).
+**Purpose:** the "Ranked hotels" panel. One card per hotel from `result.hotels`, in exactly the order the API returns them (never re-sorted).
+**Contents:** `index.tsx` (panel + `HotelCard`), `HotelRanking.css` (`ranking-` classes, tokens from `styles.css`), `HotelRanking.test.tsx`, `renderRanking.tsx` (test helper: typed `Comparator` with spies; T14 may consolidate it).
+**Shows per card:** rank `#n` or "–"/Unranked, name and ID, complete-stay price, status (`★ Recommended` / `✓ Within budget` / `✕ Over budget`), money line (`₹X left in budget` / `Over budget by ₹X`), weighted total, average, longest trip, a CSS price bar against a budget marker with a text equivalent, and an "Inspecting" tag.
+**States:** idle, loading without result, INVALID or request error, stale (dimmed, `aria-busy`), NO_AFFORDABLE_HOTEL ("No hotel fits this budget", no star, no ranks).
+**Rules:** state only from `useComparatorContext()`; no totals, ranks, affordability or shortfalls computed here. Bar percentages are presentation only on one shared scale. Each card is a native button; `inspectHotel(id)` on click, Enter or Space; the inspected card has `aria-current="true"`.
+**Does not belong here:** sorting, explanation details, map code.

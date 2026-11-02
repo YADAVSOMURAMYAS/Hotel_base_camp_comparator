@@ -18,8 +18,8 @@ Status values: Done · In progress · Pending. One task = one session. Definitio
 | T07 | Demo story tests (what-ifs) | T03, T06 | `tests/scenario/test_demo_story.py` | Done | Backend | A |
 | T08 | API core (health, city, preset, compare) | T03, T05, T06 | `app/api/routes.py`, `app/api/schemas.py`, `app/data/loader.py`, `app/domain/compare.py`, `app/main.py` (unchanged: router already wired), `tests/api/*` | Done | Backend | A |
 | T09 | Frontend scaffold, contracts, client, state hook | T01 | `Frontend/src/types/contracts.ts`, `api/client.ts`, `state/useComparator.ts`, `utils/currency.ts`, `App.tsx`, mocks, tests | Done | Frontend | A |
-| T10 | Controls and status banner | T09 | `components/Controls/*`, `components/StatusBanner/*` | Pending | Frontend | A |
-| T11 | Ranking view | T09 | `components/HotelRanking/*` | Pending | Frontend | A |
+| T10 | Controls and status banner | T09 | `components/Controls/*`, `components/StatusBanner/*` | Done | Frontend | A |
+| T11 | Ranking view | T09 | `components/HotelRanking/*` | Done | Frontend | A |
 | T12 | City map (SVG) | T09 | `components/CityMap/*` | Pending | Frontend | A |
 | T13 | Explanation panel and travel table | T09 | `components/ExplanationPanel/*`, `components/TravelMatrixTable/*` | Pending | Frontend | A |
 | T14 | Integration and Phase A demo-ready checkpoint | T08, T10–T13 | `Frontend/src/App.tsx`, `Frontend/vite.config.ts`, integration tests, `docs/COMMANDS.md` | Pending | Integration | A |
@@ -38,6 +38,9 @@ Parallel groups: see [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md). T05 ‖
 
 - T09 done: `Frontend/` has typed contracts, the fetch client, `useComparator` + context (request sequencing, `isStale`), `formatRupees`, `toWireValue`, stub components for T10-T13, a temporary `DevPanel` and the Vite `/api` proxy (done here, not in T14). 55 Vitest tests. **T14 cleanup:** remove `components/DevPanel`, its `App.tsx` line and the `dev-panel` assertion in `App.test.tsx`; fix the `Name/Name.tsx` / `index.css` wording in `CODING_STANDARDS.md` (D-24).
 
+- T10 done: `Controls` and `StatusBanner` render from `useComparatorContext()` only; 85 Vitest tests. Stub test IDs `controls-stub` / `status-banner-stub` are kept on the new roots until T14 (D-27).
+- T11 done: `HotelRanking` renders one card per hotel in API order (rank or Unranked, status symbol + text, money line, importance-minutes / average / longest trip, CSS price bar vs budget marker with a text equivalent, Inspecting tag, `inspectHotel` on click). 17 new Vitest tests (102 total). Stub test ID `hotel-ranking-stub` kept on the root until T14 (D-27).
+
 ## Next up
 1. Review T01 output, especially "Assumptions to confirm" in [DECISIONS.md](DECISIONS.md).
 2. T06 (engine; T05 validation is done and returns the validated `Scenario`, D-13/D-17). T09 (frontend scaffold) is independent.
@@ -53,3 +56,5 @@ Parallel groups: see [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md). T05 ‖
 | 2026-11-02 | `tests/scenario/conftest.py` + `test_demo_story.py` (35 tests): engine vs `expected_demo.py` for all 10 hotels, independent contributions, C1–C6, N1–N3, what-ifs, reset, boundary, budget 0, independence guard. Mutation check done on a scratch copy; no app files changed | T07 |
 | 2026-11-02 | `data/loader.py` (cached, injectable), `domain/compare.py` (catalog + selection -> result, unknown-ID check), `api/schemas.py`, three new routes, `tests/api/` (65 tests) and `tests/api/samples/` | T08 |
 | 2026-11-02 | Frontend foundation: contracts, client, `useComparator`, context, currency and wire-value helpers, layout shell with stubs, DevPanel, Vitest setup (55 tests), Prettier; D-20 to D-26 | T09 |
+| 2026-11-02 | Controls (Load/Reset, text budget input, 15 importance rows, field-level `aria-invalid`) and StatusBanner (idle/loading/stale/OK/NO_AFFORDABLE_HOTEL/INVALID/error); 30 new Vitest tests (85 total); D-27 to D-29 | T10 |
+| 2026-11-02 | HotelRanking cards, price bar, empty/invalid/stale states; 17 new Vitest tests (102 total); D-30 | T11 |

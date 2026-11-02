@@ -161,3 +161,30 @@ POST http://localhost:5173/api/compare (budget -5)     -> {"status":"INVALID","e
 ```
 Note: `http://127.0.0.1:5173` refuses connections (Vite binds `localhost`); both servers were stopped afterwards. The browser click-through of the DevPanel Load button was not run by me.
 Frontend tests by area: currency 13, wireValue 11, client 10, useComparator 19, ComparatorContext 1, App 1 (stale-response race, `isStale`, abort, raw wire values `-5` / `12.5` / `abc`, inspect without API call, reset).
+
+### T10 run (2026-11-02), Controls and StatusBanner
+Tests first, against the T09 stubs: `Test Files 3 failed (3)`, `Tests 29 failed | 1 passed (30)` (the pass was "hides applied budget when result.budget is null", vacuous on a stub).
+After implementing and fixing one over-strict assertion (the field message is read with its "✕" prefix):
+```text
+npm test              Test Files  9 passed (9)   Tests  85 passed (85)
+npm run lint          (no output: clean)
+npm run typecheck     (no output: clean)
+npm run format:check  All matched files use Prettier code style!
+npm run build         ✓ 30 modules transformed; dist/assets/index-CEkvnxUS.js 230.01 kB │ gzip: 71.81 kB; ✓ built in 219ms
+```
+New tests: `Controls.test.tsx` 20, `ControlsLoad.test.tsx` 2 (real provider, mocked client), `StatusBanner.test.tsx` 8; `App.test.tsx` has one changed assertion (D-27).
+Covered: Load flow and disabled states; budget `-5` / `12.5` / `abc` forwarded exactly as typed; importance `0` / `6`; 15 importance rows in selection order with chips and "original: N"; `aria-invalid` + `aria-describedby` on budget and on one importance input only; banner idle / loading / stale (`aria-busy`, no old text) / OK / NO_AFFORDABLE_HOTEL / INVALID (all errors listed) / service error; no "Recommended" text for INVALID or NO_AFFORDABLE_HOTEL; Reset calls `reset()`.
+Smoke: backend :8000 and `npm run dev` :5173 started; `GET http://localhost:5173/api/cities/surmapur/presets/demo` -> 200 through the proxy. The browser click-through was not run by me.
+
+### T11 run (2026-11-02), HotelRanking
+Tests first, against the T09 stub: `Test Files 1 failed (1)`, `Tests 17 failed (17)`.
+After implementing (Prettier applied):
+```text
+npm test              Test Files  10 passed (10)   Tests  102 passed (102)
+npm run lint          (no output: clean)
+npm run typecheck     (no output: clean)
+npm run format:check  All matched files use Prettier code style!
+npm run build         ✓ 31 modules transformed; dist/assets/index-CHH_MJXf.js 232.92 kB │ gzip: 72.66 kB; ✓ built in 154ms
+```
+New tests (`HotelRanking.test.tsx`, 17): API order; shuffled input keeps input order (no sorting); recommended is `#1` with `★ Recommended`; ranked `#2` with `✓ Within budget`; four over-budget cards with `✕ Over budget`, exact `Over budget by ₹…`, no rank and `Unranked`; `₹0 left in budget` (sample hotel overridden to 0) and `₹13,500 left in budget`; price and the three numbers; bar text equivalents (within / over); click, Enter and Space call `inspectHotel`; only the inspected card has `aria-current` and `Inspecting`; summary `6 of 10 hotels fit the budget`; NO_AFFORDABLE_HOTEL (no star, no `#n`, `No hotel fits this budget`, shortfalls); idle, INVALID and error messages; `aria-busy` true when stale and false when fresh.
+Smoke: backend :8000 and `npm run dev` :5173 started; `/` and `/api/cities/surmapur/presets/demo` returned 200 through the proxy; both servers stopped. The visual check was not run by me.

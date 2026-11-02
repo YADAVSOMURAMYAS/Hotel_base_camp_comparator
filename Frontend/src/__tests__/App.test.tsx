@@ -22,6 +22,8 @@ describe('App shell', () => {
     ]) {
       expect(screen.getByTestId(id)).toBeInTheDocument()
     }
-    expect(screen.getByRole('button', { name: /load/i })).toBeInTheDocument()
+    expect(
+      screen.getAllByRole('button', { name: /load/i }).length,
+    ).toBeGreaterThanOrEqual(1)
   })
 })

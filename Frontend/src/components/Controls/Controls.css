@@ -1,0 +1,116 @@
+.controls-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.controls button:disabled {
+  background: var(--color-border);
+  border-color: var(--color-border);
+  color: var(--color-text);
+  cursor: not-allowed;
+}
+
+.controls button.controls-secondary:not(:disabled) {
+  background: var(--color-surface);
+  color: var(--color-accent);
+}
+
+.controls-budget {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin: var(--space-3) 0;
+}
+
+.controls input[type='text'] {
+  font: inherit;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-muted);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.controls input[type='text']:disabled {
+  background: var(--color-bg);
+  color: var(--color-muted);
+}
+
+.controls input[type='text']:focus-visible {
+  outline: 3px solid var(--color-warning);
+  outline-offset: 2px;
+}
+
+.controls input[aria-invalid='true'] {
+  border: 2px solid var(--color-error);
+}
+
+.controls-budget input {
+  width: 9rem;
+}
+
+.controls-importances {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+}
+
+.controls-importances ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+  gap: var(--space-2) var(--space-3);
+}
+
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+
+.controls-place-name {
+  font-weight: 600;
+  min-width: 8rem;
+}
+
+.controls-chip {
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0 var(--space-2);
+  font-size: 0.85rem;
+}
+
+.controls-chip-attraction {
+  color: var(--color-accent);
+}
+
+.controls-chip-food {
+  color: var(--color-warning);
+}
+
+.controls-row label {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.controls-row input {
+  width: 3.5rem;
+}
+
+.controls-field-error {
+  flex-basis: 100%;
+  color: var(--color-error);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .controls-importances ul {
+    grid-template-columns: 1fr;
+  }
+}

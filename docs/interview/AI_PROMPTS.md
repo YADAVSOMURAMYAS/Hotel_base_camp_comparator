@@ -408,3 +408,41 @@ ignored, INVALID clears derived data. Context provider. CSS-grid shell with toke
 wireValue, client with real samples, hook incl. stale-response race, App smoke). Method: Step 0/1 table and wait, install, failing tests,
 implement, run npm test/lint/typecheck/format:check/build, smoke test with both servers, docs. Do not touch Backend/. No commit.
 ```
+
+## Entry 8: T10 Controls + StatusBanner
+| Field | Content |
+|---|---|
+| Date | 2026-11-02 |
+| Task | T10: `Controls` (Load, Reset, budget text input, importance editor) and `StatusBanner` (all states) |
+| Prompt | Summarised below |
+| What was wrong or missing | The brief did not foresee that replacing the stubs breaks `App.test.tsx` (stub test IDs, and two "Load" buttons with DevPanel). User chose: keep the stub test IDs on the new roots and change only the one button query (D-27). The brief's test-file location (`src/App.test.tsx`) was actually `src/__tests__/App.test.tsx` |
+| Refined prompt | Step 0/1: design with elements, states and a 14-item test list; user answered two questions (test IDs, stale display) |
+| Result | Tests first: 29 of 30 failed against the stubs (the one pass was vacuous). After implementing: one test was too strict about the "✕" symbol in the accessible description and was corrected. Final: 85 tests pass, lint, typecheck, format check and build clean |
+
+**Prompt (summary):**
+```text
+Task T10: Controls + StatusBanner, editing only those two component folders. Data only from useComparatorContext(); no computation.
+Controls: "Load Demo trip" (disabled while loading), plain text budget input (type=text, inputMode=numeric) with the backend-applied budget
+via formatRupees, importance editor (one row per selected place: name, text+symbol type chip, text input, "original: N"), Reset (disabled
+before load), field-level aria-invalid/aria-describedby for "budget" and "importances.<ID>", labels on every input, fieldset+legend.
+StatusBanner: idle / loading / Updating… (aria-busy) / OK with recommended name + remaining budget / NO_AFFORDABLE_HOTEL / INVALID
+(role=alert, every error listed, no previous result) / service error. Tests with real sample JSON and a mocked client. Method: Step 0
+questions, Step 1 design and wait, failing tests first, implement, run test/lint/typecheck/format:check/build, run the app, update docs.
+```
+
+### T11: HotelRanking
+| Field | Content |
+|---|---|
+| Prompt | Summarised below |
+| What was wrong or missing | The brief left open the bar scale, the loading-with-no-result state and how INVALID (non-null result, empty hotels) differs from a request error. Claude proposed defaults in Step 1 (shared scale, extra "Loading…" line, both invalid cases share one message); user approved |
+| Refined prompt | Step 0/1: element tree, states and a test list; two open choices answered "approved" |
+| Result | Tests first: 17 of 17 failed against the stub. After implementing: 102 tests pass, lint, typecheck, format check and build clean |
+
+**Prompt (summary):**
+```text
+Task T11: HotelRanking, editing only components/HotelRanking/. One card per hotel in the exact API order (no sorting): rank "#n" or "–"+Unranked,
+name+ID, price via formatRupees, status "★ Recommended" / "✓ Within budget" / "✕ Over budget", money line ("₹X left in budget" / "Over budget by ₹X"),
+weighted total, average, longest trip, CSS-only price bar vs a budget marker with a text equivalent, inspected card marked (aria-current + tag),
+click/Enter/Space calls inspectHotel. States: idle, INVALID/error, stale (aria-busy, dimmed), NO_AFFORDABLE_HOTEL (no star, no ranks).
+Tests use the real sample JSON; a shuffled list proves no sorting. Same Step 0-6 method as T10.
+```

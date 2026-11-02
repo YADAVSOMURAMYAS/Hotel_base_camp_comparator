@@ -1,5 +1,6 @@
-# StatusBanner
+﻿# StatusBanner
 
-**Status:** stub (T09). `index.tsx` shows the component name and the current phase, proving the context wiring.
-**T10 will build:** OK / NO_AFFORDABLE_HOTEL / INVALID message and the `errors[]` list (`role="alert"`).
-**Rules:** read state via `useComparatorContext()`; no calculation; keep the folder layout (`index.tsx`, `README.md`, tests beside it as `StatusBanner.test.tsx`).
+**Status:** done (T10). Reads `phase`, `result`, `error`, `isStale` from `useComparatorContext()`; no calculation.
+**States:** idle; Loading…; Updating… (`aria-busy`, never the old status); OK (`✓ Recommended: <name>` + remaining budget from the API); NO_AFFORDABLE_HOTEL (`⚠`, no winner); INVALID (`✕`, `role="alert"`, every error as field · code · message); service error (`✕`, `role="alert"`, the readable `ApiError` message).
+**Files:** `index.tsx`, `StatusBanner.css` (classes prefixed `statusbanner-`), `StatusBanner.test.tsx`.
+**Temporary:** `data-testid="status-banner-stub"` stays on the root until T14 (D-27).

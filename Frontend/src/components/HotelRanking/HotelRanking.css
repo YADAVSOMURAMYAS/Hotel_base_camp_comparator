@@ -1,0 +1,168 @@
+.ranking-stale .ranking-list,
+.ranking-stale .ranking-summary {
+  opacity: 0.5;
+}
+
+.ranking-summary {
+  margin: 0 0 var(--space-3);
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.ranking-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.ranking-card {
+  border: 1px solid var(--color-border);
+  border-left-width: 6px;
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.ranking-card-recommended {
+  border-left-color: var(--color-success);
+}
+
+.ranking-card-over {
+  border-left-color: var(--color-error);
+}
+
+.ranking-card-inspected {
+  border-color: var(--color-accent);
+  border-width: 2px 2px 2px 6px;
+  background: #eff4ff;
+}
+
+/* The whole card is one native button; it overrides the global filled-button look. */
+.ranking-button {
+  display: grid;
+  gap: var(--space-1);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  text-align: left;
+}
+
+.ranking-button > span,
+.ranking-numbers > span {
+  display: block;
+}
+
+.ranking-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.ranking-rank {
+  min-width: 2.5ch;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.ranking-name {
+  font-weight: 700;
+}
+
+.ranking-id {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.ranking-tag {
+  margin-left: auto;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius);
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.ranking-status {
+  font-weight: 700;
+}
+
+.ranking-card-recommended .ranking-status,
+.ranking-card .ranking-money {
+  color: var(--color-success);
+}
+
+.ranking-card-over .ranking-status,
+.ranking-card-over .ranking-money {
+  color: var(--color-error);
+}
+
+.ranking-numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+/* Price bar: fill = stay cost, vertical line = budget. Presentation only. */
+.ranking-bar {
+  position: relative;
+  height: 0.75rem;
+  margin-top: var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-bg);
+}
+
+.ranking-bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--ranking-fill);
+  background: var(--color-success);
+  border-radius: 3px 0 0 3px;
+}
+
+.ranking-card-over .ranking-bar-fill {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--color-error),
+    var(--color-error) 4px,
+    #ffffff 4px,
+    #ffffff 7px
+  );
+}
+
+.ranking-bar-marker {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: var(--ranking-marker);
+  width: 3px;
+  margin-left: -1px;
+  background: var(--color-text);
+}
+
+.ranking-bar-text {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.ranking-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .ranking-numbers {
+    flex-direction: column;
+  }
+}

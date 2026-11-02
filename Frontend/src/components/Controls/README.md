@@ -1,5 +1,7 @@
-# Controls
+﻿# Controls
 
-**Status:** stub (T09). `index.tsx` shows the component name and the current phase, proving the context wiring.
-**T10 will build:** Load/Reset buttons, budget input and importance inputs (labelled; `setBudgetText`, `setImportanceText`).
-**Rules:** read state via `useComparatorContext()`; no calculation; keep the folder layout (`index.tsx`, `README.md`, tests beside it as `Controls.test.tsx`).
+**Status:** done (T10). Reads everything from `useComparatorContext()`; no calculation.
+**Renders:** Load Demo trip (disabled while loading), Reset (disabled before load), a plain text budget input (`type="text"`, `inputMode="numeric"`) with the backend-applied budget beside it, and a fieldset with one importance row per selected place (name, text+symbol type chip, text input, `original: N`).
+**Errors:** `budget` and `importances.<PLACE_ID>` entries of `result.errors` set `aria-invalid` + `aria-describedby` on that input and show the API message beside it. Other fields show only in `StatusBanner`.
+**Files:** `index.tsx`, `Controls.css` (classes prefixed `controls-`), `Controls.test.tsx`, `ControlsLoad.test.tsx`, `renderWithComparator.tsx` (test helper, also used by StatusBanner tests; T14 moves it to `src/test/`, D-28).
+**Temporary:** `data-testid="controls-stub"` stays on the root until T14 (D-27).
