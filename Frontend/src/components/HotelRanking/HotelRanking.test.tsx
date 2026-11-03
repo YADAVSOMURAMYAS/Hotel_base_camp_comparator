@@ -19,8 +19,15 @@ function show(overrides = {}) {
   return comparator
 }
 
-const cards = () => screen.getAllByRole('listitem')
-const cardOf = (id: string) => cards().find((c) => within(c).queryByText(id))!
+// An open card holds its own list (the contribution chart), so only the ranking's direct items count.
+const cards = () => {
+  const list = screen.getByRole('list', { name: 'Hotels in rank order' })
+  return within(list)
+    .getAllByRole('listitem')
+    .filter((li) => li.parentElement === list)
+}
+const cardOf = (id: string) =>
+  cards().find((c) => within(c).queryAllByText(id).length > 0)!
 
 beforeEach(() => vi.mocked(useComparatorContext).mockReset())
 
@@ -52,7 +59,7 @@ describe('HotelRanking', () => {
   it('marks the recommended hotel as #1 with a star', () => {
     show()
     const card = cardOf('H_GARDEN')
-    expect(within(card).getByText('★ Recommended')).toBeInTheDocument()
+    expect(within(card).getAllByText('★ Recommended').length).toBeGreaterThan(0)
     expect(within(card).getByText('#1')).toBeInTheDocument()
     expect(within(cardOf('H_STEPWELL')).getByText('#2')).toBeInTheDocument()
     expect(within(cardOf('H_STEPWELL')).getByText('✓ Within budget')).toBeInTheDocument()
@@ -97,7 +104,8 @@ describe('HotelRanking', () => {
     expect(
       within(card).getByText('Weighted total: 2234 importance-minutes'),
     ).toBeInTheDocument()
-    expect(within(card).getByText('Average: 55.9 min')).toBeInTheDocument()
+    expect(within(card).getByText('55.9')).toBeInTheDocument()
+    expect(within(card).getByText('min average')).toBeInTheDocument()
     expect(within(card).getByText('Longest round trip: 86 min')).toBeInTheDocument()
   })
 
@@ -113,13 +121,17 @@ describe('HotelRanking', () => {
 
   it('calls inspectHotel on click', async () => {
     const c = show()
-    await userEvent.click(within(cardOf('H_CIVIL')).getByRole('button'))
+    await userEvent.click(
+      within(cardOf('H_CIVIL')).getByRole('button', { name: /H_CIVIL/ }),
+    )
     expect(c.inspectHotel).toHaveBeenCalledWith('H_CIVIL')
   })
 
   it('calls inspectHotel on Enter and Space', async () => {
     const c = show()
-    within(cardOf('H_HILLTOP')).getByRole('button').focus()
+    within(cardOf('H_HILLTOP'))
+      .getByRole('button', { name: /H_HILLTOP/ })
+      .focus()
     await userEvent.keyboard('{Enter}')
     await userEvent.keyboard(' ')
     expect(c.inspectHotel).toHaveBeenCalledTimes(2)
@@ -149,24 +161,35 @@ describe('HotelRanking', () => {
     ).toBeInTheDocument()
   })
 
-  it('shows the load message before anything is loaded', () => {
+  it('renders nothing without a result (Results shows the empty state)', () => {
     show({ result: null, phase: 'idle', loaded: false })
-    expect(
-      screen.getByText('Load the Demo trip to see ranked hotels.'),
-    ).toBeInTheDocument()
-    expect(screen.queryByRole('list')).toBeNull()
+    expect(screen.queryByRole('region', { name: 'Ranked hotels' })).toBeNull()
   })
 
-  it('shows the invalid message for an INVALID result', () => {
-    const invalid = { ...okResult, status: 'INVALID', hotels: [] } as ComparisonResult
-    show({ result: invalid })
-    expect(screen.getByText('No ranking while inputs are invalid.')).toBeInTheDocument()
-    expect(screen.queryByRole('list')).toBeNull()
+  it('opens the explanation for the inspected card only, behind "Why this score?"', async () => {
+    show({ inspectedHotelId: 'H_GARDEN' })
+    expect(screen.getAllByRole('table', { name: /Calculation for/ })).toHaveLength(1)
+    const own = within(cardOf('H_GARDEN')).getByRole('button', { name: /Why this score/ })
+    expect(own).toHaveAttribute('aria-expanded', 'true')
+    const other = within(cardOf('H_CIVIL')).getByRole('button', {
+      name: /Why this score/,
+    })
+    expect(other).toHaveAttribute('aria-expanded', 'false')
+    await userEvent.click(own)
+    expect(screen.queryByRole('table', { name: /Calculation for/ })).toBeNull()
   })
 
-  it('shows the invalid message when the request failed', () => {
-    show({ result: null, phase: 'error', error: 'down' })
-    expect(screen.getByText('No ranking while inputs are invalid.')).toBeInTheDocument()
+  it('"Why this score?" on another card inspects it first', async () => {
+    const c = show({ inspectedHotelId: 'H_GARDEN' })
+    await userEvent.click(
+      within(cardOf('H_CIVIL')).getByRole('button', { name: /Why this score/ }),
+    )
+    expect(c.inspectHotel).toHaveBeenCalledWith('H_CIVIL')
+  })
+
+  it('shows the average as the large score', () => {
+    show()
+    expect(within(cardOf('H_STEPWELL')).getByText(/^\d+\.\d$/)).toBeInTheDocument()
   })
 
   it('is busy while stale', () => {

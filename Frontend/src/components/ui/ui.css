@@ -1,0 +1,102 @@
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.pill-secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+/* Small orange square arrow that nudges on hover. */
+.pill-arrow {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--radius-sm);
+  background: var(--orange);
+  color: #111111;
+  transition: transform var(--duration) var(--ease);
+}
+
+.pill:hover:not(:disabled) .pill-arrow {
+  transform: translateX(3px);
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-4);
+  transition:
+    box-shadow var(--duration) var(--ease),
+    transform var(--duration) var(--ease);
+}
+
+.card-hover:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.card-accent {
+  border-color: var(--orange);
+  box-shadow:
+    0 0 0 1px var(--orange),
+    var(--shadow-md);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.chip[aria-pressed='true'] {
+  background: var(--color-ink);
+  color: var(--color-on-ink);
+  border-color: var(--color-ink);
+}
+
+.pill {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Expanding ring from the point of the press. */
+.pill-ripple {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: currentcolor;
+  opacity: 0.35;
+  pointer-events: none;
+  animation: pill-ripple 600ms ease-out forwards;
+}
+
+@keyframes pill-ripple {
+  to {
+    transform: scale(30);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill-ripple {
+    display: none;
+  }
+}

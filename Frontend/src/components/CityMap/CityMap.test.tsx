@@ -18,7 +18,7 @@ vi.mock('../../state/ComparatorContext', () => ({ useComparatorContext: vi.fn() 
 
 function show(comparator: Comparator) {
   vi.mocked(useComparatorContext).mockReturnValue(comparator)
-  return render(<CityMap />)
+  return render(<CityMap selectable />)
 }
 
 const hotelMarkers = () => screen.getAllByTestId(/^marker-hotel-/)
@@ -135,7 +135,7 @@ describe('CityMap comparison links', () => {
     vi.mocked(useComparatorContext).mockReturnValue(
       loadedComparator({ inspectedHotelId: 'H_GHANTA' }),
     )
-    rerender(<CityMap />)
+    rerender(<CityMap selectable />)
     expect(links()).toHaveLength(15)
     for (const c of contributionsOf('H_GHANTA')) {
       expect(screen.getByTestId(`link-label-${c.place_id}`)).toHaveTextContent(
@@ -166,7 +166,7 @@ describe('CityMap comparison links', () => {
       })),
     }
     vi.mocked(useComparatorContext).mockReturnValue(loadedComparator({ city: moved }))
-    render(<CityMap />, { container })
+    render(<CityMap selectable />, { container })
     expect(links().map((l) => l.textContent)).toEqual(before)
   })
 

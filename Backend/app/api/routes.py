@@ -2,8 +2,8 @@ from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.api.schemas import CompareRequest, catalog_view, preset_view, result_view
-from app.data.loader import CatalogSource, UnknownCityError, get_catalog_source
+from app.api.schemas import CompareRequest, catalog_view, city_summary, preset_view, result_view
+from app.data.loader import CatalogSource, UnknownCityError, get_catalog_source, list_cities
 from app.domain.compare import compare_request
 
 router = APIRouter(prefix="/api")
@@ -20,6 +20,11 @@ def _city(source: CatalogSource, city_id: str) -> dict[str, Any]:
         return source(city_id)
     except UnknownCityError as error:
         raise HTTPException(status_code=404, detail=str(error)) from None
+
+
+@router.get("/cities")
+def city_list():
+    return {"cities": [city_summary(city) for city in list_cities()]}
 
 
 @router.get("/cities/{city_id}")

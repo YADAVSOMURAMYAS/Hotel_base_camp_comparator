@@ -15,7 +15,7 @@ Data files behind these endpoints: [DATABASE_DESIGN.md](DATABASE_DESIGN.md). Cal
 | Currency display | Backend returns integers. Frontend formats with hand-written Indian grouping (no `Intl`/`toLocaleString`), e.g. `₹1,25,000` |
 | Averages | `weighted_average_display` is a string like `"28.0"` produced by the backend; the frontend never recomputes it |
 | Calculation | Only the backend calculates (`Backend/app/domain/`) |
-| Availability | Phase A (T08): health, city detail, demo preset, compare. Phase B (T15): city list, selection subsets. Timeline: Optional (T18) |
+| Availability | Phase A (T08): health, city detail, demo preset, compare. Phase B (T15): city list (done), selection subsets (the compare endpoint already accepts any subset of the catalog). Timeline: Optional (T18) |
 
 ## Status values
 `OK` · `NO_AFFORDABLE_HOTEL` · `INVALID`
@@ -39,10 +39,11 @@ Response `200`:
 ```
 
 ## GET /api/cities  *(Phase B, T15)*
-Response `200`:
+Response `200`, cities sorted by `city_id`:
 ```json
-{ "cities": [ { "city_id": "example_city", "name": "Example City", "hotel_count": 30, "place_count": 50 } ] }
+{ "cities": [ { "city_id": "example_city", "name": "Example City", "hotel_count": 30, "place_count": 50, "has_demo_preset": true } ] }
 ```
+`has_demo_preset` is `true` only for the city that owns the Demo trip; the frontend uses it to enable Load/Reset. `hotel_count` / `place_count` are catalog sizes, not selection limits.
 
 ## GET /api/cities/{city_id}
 Full catalog: everything the map, lists and time table need. Positions are presentation data only.

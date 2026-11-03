@@ -1,9 +1,17 @@
 import { useComparatorContext } from '../../state/ComparatorContext'
 import { formatRupees } from '../../utils/currency'
+import {
+  MAX_HOTELS,
+  MAX_PLACES,
+  MIN_HOTELS,
+  MIN_PLACES,
+} from '../../utils/selectionLimits'
 import './StatusBanner.css'
 
+const plural = (n: number, noun: string) => `${n} ${noun}${n === 1 ? '' : 's'}`
+
 export default function StatusBanner() {
-  const { phase, result, error, isStale } = useComparatorContext()
+  const { phase, result, error, isStale, loaded, readiness } = useComparatorContext()
 
   if (phase === 'error') {
     return (
@@ -26,6 +34,22 @@ export default function StatusBanner() {
     return (
       <div role="status" className="statusbanner statusbanner-neutral">
         Loading…
+      </div>
+    )
+  }
+
+  if (loaded && !readiness.canCompare) {
+    const missing = [
+      readiness.hotelsNeeded > 0 && plural(readiness.hotelsNeeded, 'more hotel'),
+      readiness.placesNeeded > 0 && plural(readiness.placesNeeded, 'more place'),
+      readiness.budgetMissing && 'a budget',
+    ].filter(Boolean)
+    return (
+      <div role="status" className="statusbanner statusbanner-neutral">
+        <p>
+          {`Pick ${MIN_HOTELS}-${MAX_HOTELS} hotels (${readiness.hotelCount} selected) and ${MIN_PLACES}-${MAX_PLACES} places (${readiness.placeCount} selected), then enter a budget.`}
+        </p>
+        {missing.length > 0 && <p>{`Still needed: ${missing.join(', ')}.`}</p>}
       </div>
     )
   }

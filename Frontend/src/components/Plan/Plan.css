@@ -1,0 +1,315 @@
+.plan {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.plan-hero {
+  padding: var(--space-5) 0 var(--space-3);
+}
+
+.plan-headline {
+  font-size: clamp(2.4rem, 7vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  max-width: 14ch;
+  margin: 0 0 var(--space-3);
+}
+
+.plan-lede {
+  margin: 0;
+  max-width: 48ch;
+  color: var(--color-muted);
+  font-size: 1.05rem;
+}
+
+.plan-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.plan-card h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.plan-num {
+  display: inline-grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  background: var(--color-ink);
+  color: var(--color-on-ink);
+  font-size: 0.85rem;
+}
+
+.plan-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.plan-card select,
+.plan-card input[type='text'],
+.plan-card input[type='search'] {
+  font: inherit;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-width: 0;
+}
+
+.plan-pickers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.plan-picker {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  min-width: 0;
+}
+
+.plan-picker legend {
+  font-weight: 700;
+  padding: 0 var(--space-2);
+}
+
+.plan-counter {
+  margin: 0 0 var(--space-1);
+  font-weight: 600;
+}
+
+.plan-limit {
+  margin: 0 0 var(--space-1);
+  color: var(--color-warning);
+}
+
+.plan-search-label,
+.plan-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.plan-scroll {
+  max-height: 22rem;
+  overflow-y: auto;
+  margin-top: var(--space-2);
+}
+
+.plan-district h4 {
+  margin: var(--space-3) 0 var(--space-2);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.plan-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.plan-meta {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+.chip[aria-pressed='true'] .plan-meta {
+  color: inherit;
+  opacity: 0.8;
+}
+
+.chip:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.plan-map {
+  min-height: 24rem;
+}
+
+.plan-importances {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-3);
+}
+
+.plan-importance {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.plan-segments {
+  display: inline-flex;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  width: fit-content;
+}
+
+.plan-segment {
+  position: relative;
+}
+
+.plan-segment input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+
+.plan-segment span {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.2rem;
+  font-weight: 600;
+}
+
+.plan-segment input:checked + span {
+  background: var(--color-ink);
+  color: var(--color-on-ink);
+}
+
+.plan-segment input:focus-visible + span {
+  outline: 3px solid var(--color-ink);
+  outline-offset: -3px;
+}
+
+.plan-field-error,
+.plan-error {
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+.plan-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding-bottom: var(--space-5);
+}
+
+.plan-hints {
+  margin: 0;
+  padding-left: var(--space-4);
+  color: var(--color-muted);
+}
+
+.plan-cta .pill {
+  padding: var(--space-3) var(--space-4);
+}
+
+/* Step indicator, shown in the top bar. */
+.plan-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: var(--space-3);
+}
+
+.plan-step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.plan-step-dot {
+  display: inline-grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  font-size: 0.75rem;
+}
+
+.plan-step[aria-current='step'] {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.plan-step[aria-current='step'] .plan-step-dot {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #111111;
+}
+
+.plan-step-done .plan-step-dot {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-on-ink);
+}
+
+@media (max-width: 800px) {
+  .plan-pickers {
+    grid-template-columns: 1fr;
+  }
+  .plan-step-label {
+    display: none;
+  }
+  .plan-step[aria-current='step'] .plan-step-label {
+    display: inline;
+  }
+}
+
+/* Inside the Edit drawer: single column, compact, with the main button pinned to the bottom. */
+.plan-drawer {
+  gap: var(--space-3);
+}
+
+.plan-drawer .plan-card {
+  box-shadow: none;
+  padding: var(--space-3);
+}
+
+.plan-drawer .plan-pickers {
+  grid-template-columns: 1fr;
+}
+
+.plan-drawer .plan-scroll {
+  max-height: 14rem;
+}
+
+.plan-drawer .plan-cta {
+  position: sticky;
+  bottom: calc(-1 * var(--space-4));
+  margin: 0 calc(-1 * var(--space-4));
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-glass);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--color-border);
+}

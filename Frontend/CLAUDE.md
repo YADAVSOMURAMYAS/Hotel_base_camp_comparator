@@ -11,8 +11,11 @@ src/
   utils/        formatting only (₹ en-IN grouping, labels); no arithmetic on results
   components/
     CityMap/            hand-written SVG: markers, inspected hotel's links
-    Controls/           Load Demo trip, Reset, budget input, importance inputs, selection
-    ExplanationPanel/   selected hotel's contributions (CSS/SVG bars) and reasons
+    Plan/               Selection screen: city, Load Demo/Reset, hotel and place chips, budget, 1-5 importance
+    Results/            Results screen: summary chips, stat cards, map, ranked cards, time table (no inputs)
+    Drawer/             modal side drawer / bottom sheet (holds Plan on Results)
+    TopBar/ ui/         sticky bar with theme toggle; PillButton, Card, Chip
+    ExplanationPanel/   HotelExplanation: contributions (stacked CSS bar) and reasons, inside a ranked card
     HotelRanking/       ranked cards/rows, Recommended and Over budget labels
     StatusBanner/       OK / NO_AFFORDABLE_HOTEL / INVALID messages with errors
     TravelMatrixTable/  accessible hotel-by-place time table

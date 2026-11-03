@@ -298,3 +298,81 @@ panel border on surface 1.54 (decorative; inputs use muted at 7.55)
 **Accessibility lint:** `npx oxlint --jsx-a11y-plugin` reports 9 warnings (8 `prefer-tag-over-role`, 1 `no-noninteractive-tabindex`), all intentional (D-38). Checks in code: one `h1`, headings never skip a level, no duplicate ids, exactly one live region (the banner), all in `integration.workflow.test.tsx::page structure`.
 
 Not run by me: a visual check of the layout in a browser at 1440, 1280, 1024 and 900 px, and the manual demo checklist in `docs/TESTING.md`.
+
+## T15: Catalog, generator, cities list, selection limits
+
+**Failing run before implementation** (new tests written first; `test_demo_freeze.py` passed on the untouched file):
+```text
+tests/unit/test_demo_freeze.py ....                          4 passed
+full suite: 32 failed, 295 passed, 1 warning, 16 errors      (all 48 are new T15 tests; the 271 older tests passed)
+```
+**After implementation** (from `Backend\`, venv active):
+```text
+pytest -q                          344 passed, 1 warning in 3.47s     (267 older + 77 new)
+ruff check .                       All checks passed!
+ruff format --check .              49 files already formatted
+```
+From `Frontend\`: `npm test` 180 passed (16 files); `npm run lint` clean; `npm run typecheck` clean; `npm run build` built in 200 ms.
+
+**Generator:** two runs of `python scripts/design_helper.py` gave identical SHA-256 sums; the formatter reproduced the original T03 `surmapur.json` byte-for-byte before any change; minutes range 15..135 (Surmapur) and 9..110 (Shikharpur); closest marker pair 56.6 px and 69.5 px.
+
+**Real API responses** (uvicorn on port 8011):
+```text
+GET /api/cities
+{"cities":[{"city_id":"shikharpur","name":"Shikharpur","hotel_count":30,"place_count":50,"has_demo_preset":false},
+           {"city_id":"surmapur","name":"Surmapur","hotel_count":30,"place_count":50,"has_demo_preset":true}]}
+GET /api/cities/shikharpur (summary)
+districts 6, hotels 30, places 50, matrix_rows 30, cells_per_row {50}, has_demo_preset False
+GET /api/cities/shikharpur/presets/demo      404 {"detail":"City 'shikharpur' has no demo preset"}
+POST /api/compare  shikharpur, H_ROPEWAY/H_BARRACK/H_MALLROAD x TOYTRAIN 5/MONASTERY 2/FALLS 4/CHOLE 3, budget 13000
+status OK, importance_total 14, recommended H_MALLROAD
+  H_MALLROAD rank 1 RECOMMENDED T=501 avg 35.8 remaining 200
+  H_BARRACK  rank 2 RANKED      T=753 avg 53.8 remaining 6100
+  H_ROPEWAY  unranked OVER_BUDGET T=778 avg 55.6 shortfall 1400
+```
+The totals match the hand arithmetic in `test_second_city_selection_matches_hand_computed_totals` (501 = 75+74+268+84, 753, 778).
+
+**Frontend read-only check:** `CityMap` filters `city.hotels` / `city.places` by `selection` before drawing; `TravelMatrixTable` iterates `selection.hotel_ids` / `selection.place_ids`. Both already show only the selection. T16 selection mode needs all 80 markers without printing 80 labels (D-41).
+
+**Not done:** Frontend sample copies are refreshed in T16; nothing was committed.
+
+### T16 run (2026-11-02), Selection UI
+**Failing first** (new tests before implementation): `Tests 46 failed | 185 passed (231)`. One failure was an existing test (`CityMap.test.tsx` "gives every marker a visible name label") broken by the refreshed 30 x 50 sample; fixed in the fixture (D-43). After the hook and UI: two existing tests conflicted with the spec (empty budget, live regions); resolved by D-42 (rule, test kept) and D-44 (one test amended).
+
+**Final run:**
+```text
+npm test               Test Files 24 passed (24) | Tests 251 passed (251)
+npm run lint           oxlint, no findings
+npm run typecheck      tsc -b, no errors
+npm run format:check   All matched files use Prettier code style!
+npm run build          built in ~150ms
+pytest -q              344 passed, 1 warning
+```
+Hand-computed Shikharpur check (`Backend/tests/api/test_selection_api.py`): H_MALLROAD 501, H_BARRACK 753, H_ROPEWAY 778 (over by 1,400); asserted as literals in `integration.selection.test.tsx`.
+
+
+## T19 UI redesign (U1 to U7)
+
+**Automated** (last full run in the build session):
+```text
+npm test               Test Files 35 passed (35) | Tests 327 passed (327)
+npm run lint           oxlint, no findings
+npm run typecheck      tsc -b, no errors
+npm run format:check   All matched files use Prettier code style!
+npm run build          built in ~400ms
+```
+New coverage: Plan screen, Results screen, Edit drawer (focus trap, Esc, inert page behind), map viewport (camera maths, drag, wheel, pinch-free gestures, keyboard, buttons, fit, fullscreen fallback), marker hover/click effects with the two-way link to ranked cards, count-up, FLIP deltas, button ripple, and WCAG AA contrast of every colour pair in both themes. The Plan -> Results -> Edit -> Update flow, reset, INVALID and NO_AFFORDABLE_HOTEL are in `integration.workflow.test.tsx`.
+
+### T19 visual check (manual, NOT yet run: needs a real browser)
+Run `npm run dev` (Frontend) and `uvicorn app.main:app` (Backend), open http://localhost:5173, then tick and attach a screenshot for each:
+- [ ] Plan screen (light): headline, three step cards, step indicator in the top bar, black "Compare hotels" pill, orange accents only on step, arrows and pins.
+- [ ] Load Demo trip: one click lands on Results with the count-up, staggered cards and the map fitted to the 25 markers.
+- [ ] Results (light): stat cards, map at least 70% of the window height, glass ranking panel over the left, controls top-right, legend bottom-right, top-ranked card in orange.
+- [ ] Map: drag (inertia), wheel zoom toward the cursor, double-click, Shift+double-click and right-click zoom out, arrows and + / - / 0, Fit, Reset, Fullscreen (Esc exits).
+- [ ] Hover a marker (spring + card + ranked card lights), hover a ranked card (marker pulses), click a marker (ripple, fly-to, popup, card opens), click empty map (clears), dashed links thicker for important places.
+- [ ] Edit drawer: opens with the current values, Tab stays inside, Esc closes, Update results closes and the cards re-order with a slide.
+- [ ] Budget 0: no stat cards, shortfalls, no star. Invalid budget in the drawer: message at the field, Update disabled, Results shows the empty state.
+- [ ] Dark mode: toggle in the top bar; check text, cards, map, legend, drawer.
+- [ ] Narrow window (about 390 px): top bar fits, map above the ranking, ranking collapsible, drawer is a bottom sheet.
+- [ ] Reduced motion (OS setting): no ripples, no marching dashes, no slides or count-up.
+- [ ] Browser console shows no errors.

@@ -6,3 +6,5 @@
 - `wireValue.ts` `toWireValue(text)`: trimmed empty -> `null`; plain integers/decimals -> number; anything else -> the original string. The backend decides validity.
 
 **Does not belong here:** totals, ranks, averages, affordability.
+
+**T16:** `selectionLimits.ts` holds MIN/MAX hotels and places as UI hints mirrored from the API spec (the backend is the authority).

@@ -6,15 +6,6 @@
   border-radius: var(--radius);
 }
 
-.citymap-bg {
-  fill: var(--color-surface);
-}
-
-.citymap-grid-line {
-  fill: none;
-  stroke: var(--color-border);
-  stroke-width: 0.5;
-}
 
 .citymap-label {
   font-size: 13px;
@@ -119,14 +110,148 @@
 .citymap-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2) var(--space-3);
+  gap: var(--space-1) var(--space-3);
   list-style: none;
-  margin: var(--space-2) 0 0;
-  padding: 0;
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.85rem;
+  max-width: 22rem;
 }
 
 .citymap-legend li {
   display: flex;
   align-items: center;
   gap: var(--space-1);
+}
+
+.citymap-mode {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+}
+
+.citymap-mode-legend {
+  padding: 0;
+  font-weight: 600;
+}
+
+.citymap-mode label {
+  margin-right: var(--space-3);
+}
+
+.citymap-select {
+  cursor: pointer;
+}
+
+.citymap-select:focus-visible {
+  outline: none;
+}
+
+.citymap-select:focus-visible .citymap-hotel-shape,
+.citymap-select:focus-visible .citymap-attraction-shape,
+.citymap-select:focus-visible .citymap-food-shape {
+  stroke: var(--color-warning);
+  stroke-width: 4;
+}
+
+/* Unselected markers stay small and muted so 80 of them do not bury the chosen ones. */
+.citymap-select-off {
+  opacity: 0.6;
+}
+
+.citymap-notice {
+  min-height: 1.4em;
+  margin: var(--space-1) 0 0;
+  color: var(--color-warning);
+}
+
+/* Hover: the marker springs up (the overshoot easing is the spring). */
+.citymap-hotel-body,
+.citymap-place circle,
+.citymap-place polygon {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 380ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.citymap-hotel:hover .citymap-hotel-body,
+.citymap-hot .citymap-hotel-body {
+  transform: scale(1.35);
+}
+
+.citymap-place:hover circle,
+.citymap-place:hover polygon {
+  transform: scale(1.35);
+}
+
+/* Hovering the matching ranked card pulses the marker. */
+.citymap-pulse .citymap-hotel-body {
+  animation: citymap-pulse 900ms ease-in-out infinite;
+}
+
+@keyframes citymap-pulse {
+  50% {
+    transform: scale(1.6);
+  }
+}
+
+/* Click ripple (marker click and empty-map click). */
+.citymap-ripple {
+  fill: none;
+  stroke: var(--orange);
+  stroke-width: 3;
+  pointer-events: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: citymap-ripple 700ms ease-out forwards;
+}
+
+@keyframes citymap-ripple {
+  from {
+    transform: scale(0.3);
+    opacity: 0.95;
+  }
+  to {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+
+/* Links to the chosen places: marching dashes, thicker for a more important place. */
+.citymap-link {
+  stroke-width: calc(var(--w, 1) * 1px + 0.5px);
+  stroke-dasharray: 7 5;
+  animation: citymap-march 900ms linear infinite;
+}
+
+.citymap-links > g {
+  animation: citymap-link-in 400ms var(--ease);
+}
+
+@keyframes citymap-march {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes citymap-link-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .citymap-hotel-body,
+  .citymap-place circle,
+  .citymap-place polygon {
+    transition: none;
+  }
+  .citymap-pulse .citymap-hotel-body,
+  .citymap-ripple,
+  .citymap-link,
+  .citymap-links > g {
+    animation: none;
+  }
+  .citymap-ripple {
+    display: none;
+  }
 }

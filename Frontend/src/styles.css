@@ -1,21 +1,4 @@
-/* Tokens. Text colours meet WCAG AA (4.5:1) on --color-bg and --color-surface. */
-:root {
-  --color-bg: #f4f6f8;
-  --color-surface: #ffffff;
-  --color-text: #1b2430;
-  --color-muted: #4a5566;
-  --color-border: #c9d1db;
-  --color-accent: #1d4ed8;
-  --color-success: #15803d;
-  --color-warning: #92400e;
-  --color-error: #b91c1c;
-
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 1rem;
-  --space-4: 1.5rem;
-  --radius: 8px;
-}
+@import './styles/tokens.css';
 
 * {
   box-sizing: border-box;
@@ -23,28 +6,31 @@
 
 body {
   margin: 0;
-  background: var(--color-bg);
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 600px at 85% -10%, var(--color-bg-2), transparent 70%),
+    var(--color-bg);
   color: var(--color-text);
-  font-family:
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    Roboto,
-    sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1,
-h2 {
+h2,
+h3 {
   margin: 0 0 var(--space-2);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
 }
 
 h1 {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 }
 
 h2 {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
 }
 
 .muted {
@@ -52,18 +38,40 @@ h2 {
   margin: 0;
 }
 
+/* Default button = black pill. Components override colours locally where they need to. */
 button {
   font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--color-accent);
-  border-radius: var(--radius);
-  background: var(--color-accent);
-  color: #ffffff;
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius-pill);
+  background: var(--color-ink);
+  color: var(--color-on-ink);
   cursor: pointer;
+  transition:
+    transform var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease);
 }
 
-button:focus-visible {
-  outline: 3px solid var(--color-warning);
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-ink);
   outline-offset: 2px;
 }
 
@@ -71,67 +79,72 @@ button:focus-visible {
   color: var(--color-error);
 }
 
-/* Layout: the header sits above <main>; <main> is the workspace grid. Controls and banner
-   on top, map beside the ranking, then explanation and table. Stacked below 900px. */
-.app {
+/* Faint arcs behind everything; decoration only. */
+.app::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 92% 8%,
+      transparent 0 260px,
+      var(--color-arc) 261px 262px,
+      transparent 263px
+    ),
+    radial-gradient(
+      circle at 92% 8%,
+      transparent 0 380px,
+      var(--color-arc) 381px 382px,
+      transparent 383px
+    ),
+    radial-gradient(
+      circle at 4% 96%,
+      transparent 0 220px,
+      var(--color-arc) 221px 222px,
+      transparent 223px
+    );
+}
+
+/* Page container for both screens. */
+.app-main {
   padding: var(--space-3);
   max-width: 1400px;
   margin: 0 auto;
 }
 
-.app-header {
-  margin-bottom: var(--space-3);
-}
-
-.app-workspace {
-  display: grid;
-  gap: var(--space-3);
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas:
-    'controls controls'
-    'map ranking'
-    'explanation explanation'
-    'table table';
-}
-
-/* min-width: 0 lets a wide child (the table) scroll inside its panel instead of stretching the column. */
-.app-workspace > * {
-  min-width: 0;
-}
-
-.area-controls {
-  grid-area: controls;
-  display: grid;
-  gap: var(--space-3);
-}
-.area-map {
-  grid-area: map;
-}
-.area-ranking {
-  grid-area: ranking;
-}
-.area-explanation {
-  grid-area: explanation;
-}
-.area-table {
-  grid-area: table;
-}
-
 .panel {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-4);
 }
 
-@media (max-width: 900px) {
-  .app-workspace {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      'controls'
-      'map'
-      'ranking'
-      'explanation'
-      'table';
+/* A screen slides and fades in when the mode changes (about 350 ms, none under reduced motion). */
+.screen {
+  animation: screen-in calc(var(--duration) + 50ms) var(--ease);
+}
+
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen,
+  .ranking-card,
+  .results-stats > li {
+    animation: none;
   }
 }

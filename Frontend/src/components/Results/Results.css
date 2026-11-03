@@ -1,0 +1,199 @@
+.results {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  /* minmax(0, 1fr): a wide child (the travel table) must never stretch the page column. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.results > * {
+  min-width: 0;
+}
+
+.results-stale > :not(.results-summary) {
+  opacity: 0.6;
+  transition: opacity var(--duration) var(--ease);
+}
+
+.results-summary {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-3) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.results-stats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.results-stats > li {
+  animation: rise 450ms var(--ease) backwards;
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+
+.results-stat {
+  display: grid;
+  gap: var(--space-1);
+  height: 100%;
+}
+
+.results-stat-label {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.results-stat-value {
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.results-stat-value small {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--color-muted);
+}
+
+.results-stat-note {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+/* Ranking panel and map side by side; the panel takes the height its content needs. */
+.results-hero {
+  --side-w: clamp(320px, 28vw, 400px);
+  display: grid;
+  grid-template-columns: var(--side-w) minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.results-map {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  position: sticky;
+  top: var(--space-3);
+}
+
+.results-side {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+
+.results-table {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+}
+
+.results-table {
+  justify-items: stretch;
+}
+
+.results-table > button {
+  justify-self: start;
+}
+
+/* Height animation without measuring: 0fr -> 1fr. Only the table's own wrapper scrolls sideways. */
+.results-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  min-width: 0;
+  transition: grid-template-rows var(--duration) var(--ease);
+}
+
+.results-collapse.results-open {
+  grid-template-rows: 1fr;
+}
+
+.results-collapse-inner {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.results-empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.results-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--color-bg-2);
+  color: var(--orange);
+  font-size: 1.8rem;
+}
+
+.results-skeleton {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.results-skeleton-block {
+  height: 7rem;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-2) 25%,
+    var(--color-surface) 50%,
+    var(--color-bg-2) 75%
+  );
+  background-size: 200% 100%;
+  animation: results-shimmer 1.4s linear infinite;
+}
+
+.results-skeleton-tall {
+  height: 20rem;
+}
+
+@keyframes results-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .results-skeleton-block {
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .results-stats {
+    grid-template-columns: 1fr;
+  }
+  .results-hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .results-map,
+  .results-side {
+    grid-column: 1;
+    position: static;
+  }
+  .results-side {
+    grid-row: 2;
+  }
+}

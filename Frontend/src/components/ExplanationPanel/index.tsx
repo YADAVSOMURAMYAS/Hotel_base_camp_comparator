@@ -1,6 +1,4 @@
-import type { CSSProperties } from 'react'
-import { useComparatorContext } from '../../state/ComparatorContext'
-import type { ComparisonResult, HotelResult } from '../../types/contracts'
+import type { City, ComparisonResult, HotelResult } from '../../types/contracts'
 import { formatRupees } from '../../utils/currency'
 import { overBudgetBy, statusLong, typeChip } from '../../utils/hotelLabels'
 import './ExplanationPanel.css'
@@ -44,109 +42,87 @@ function whyNotAbove(hotel: HotelResult, above: HotelResult): string {
   return `Same weighted total and stay cost as ${label}, so it loses on hotel ID (${hotel.id} vs ${above.id}).`
 }
 
-export default function ExplanationPanel() {
-  const { city, result, inspectedHotelId, phase, isStale } = useComparatorContext()
-  const hotel = result?.hotels.find((h) => h.id === inspectedHotelId)
+interface Props {
+  hotel: HotelResult
+  result: ComparisonResult
+  city: City | null
+}
 
-  let body
-  if (phase === 'error' || result?.status === 'INVALID') {
-    body = <p className="muted">No explanation while inputs are invalid.</p>
-  } else if (!result) {
-    body = (
-      <p className="muted">
-        Load the Demo trip, then pick a hotel to see how its score is calculated.
-      </p>
-    )
-  } else if (!hotel) {
-    body = (
-      <p className="muted">
-        Pick a hotel in the ranking or table to see its explanation.
-      </p>
-    )
-  } else {
-    const places = new Map((city?.places ?? []).map((p) => [p.id, p]))
-    // Presentation only: the longest bar is the largest contribution of this hotel.
-    const longest = Math.max(1, ...hotel.contributions.map((c) => c.contribution))
-    body = (
-      <>
-        <h3 className="explain-hotel">
-          {hotel.name} <span className="muted">({hotel.id})</span>
-        </h3>
-        <p className="explain-status">{statusLong(hotel)}</p>
-        {reasons(hotel, result).map((line) => (
-          <p key={line} className="explain-reason">
-            {line}
-          </p>
-        ))}
-
-        <div className="explain-scroll">
-          <table className="explain-table">
-            <caption>Calculation for {hotel.name}</caption>
-            <thead>
-              <tr>
-                <th scope="col">Place</th>
-                <th scope="col">Type</th>
-                <th scope="col">Importance</th>
-                <th scope="col">Round-trip minutes</th>
-                <th scope="col">Contribution</th>
-              </tr>
-            </thead>
-            <tbody>
-              {hotel.contributions.map((c) => {
-                const place = places.get(c.place_id)
-                return (
-                  <tr key={c.place_id}>
-                    <th scope="row">{place?.name ?? c.place_id}</th>
-                    <td>{place ? typeChip(place.type) : '–'}</td>
-                    <td>{c.importance}</td>
-                    <td>{c.minutes}</td>
-                    <td>{`${c.importance} × ${c.minutes} = ${c.contribution}`}</td>
-                  </tr>
-                )
-              })}
-            </tbody>
-            <tfoot>
-              <tr>
-                <th scope="row" colSpan={5}>
-                  Weighted total = {hotel.weighted_total} importance-minutes
-                </th>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        <p className="explain-average">
-          {`${hotel.weighted_total} ÷ ${result.importance_total} (importance total) = ${hotel.weighted_average_display} min average`}
-        </p>
-
-        <h4>Contribution by place</h4>
-        <ul className="explain-chart" aria-label="Contribution chart">
-          {hotel.contributions.map((c) => (
-            <li key={c.place_id}>
-              <span className="explain-chart-name">
-                {places.get(c.place_id)?.name ?? c.place_id}
-              </span>
-              <span className="explain-bar-track" aria-hidden="true">
-                <span
-                  className="explain-bar"
-                  style={{ '--v': c.contribution, '--max': longest } as CSSProperties}
-                />
-              </span>
-              <span className="explain-chart-value">{c.contribution}</span>
-            </li>
-          ))}
-        </ul>
-      </>
-    )
-  }
-
+/** How one hotel's score is built, from API values only. Shown inside the ranked card's accordion. */
+export default function HotelExplanation({ hotel, result, city }: Props) {
+  const places = new Map((city?.places ?? []).map((p) => [p.id, p]))
+  const name = (id: string) => places.get(id)?.name ?? id
   return (
-    <section
-      className={isStale ? 'panel explain explain-stale' : 'panel explain'}
-      aria-label="Explanation"
-      aria-busy={isStale ? 'true' : undefined}
-    >
-      <h2>Explanation</h2>
-      {body}
-    </section>
+    <div className="explain">
+      <h3 className="explain-hotel">
+        {hotel.name} <span className="muted">({hotel.id})</span>
+      </h3>
+      <p className="explain-status">{statusLong(hotel)}</p>
+      {reasons(hotel, result).map((line) => (
+        <p key={line} className="explain-reason">
+          {line}
+        </p>
+      ))}
+
+      <h4>Contribution by place</h4>
+      {/* Segment width is the contribution itself (flex-grow); the list below is the accessible equivalent. */}
+      <div className="explain-stack" aria-hidden="true">
+        {hotel.contributions.map((c) => (
+          <span
+            key={c.place_id}
+            className="explain-segment"
+            style={{ flexGrow: c.contribution }}
+            data-tip={`${name(c.place_id)}: ${c.importance} × ${c.minutes} = ${c.contribution}`}
+          />
+        ))}
+      </div>
+      <ul className="explain-chart" aria-label="Contribution chart">
+        {hotel.contributions.map((c) => (
+          <li key={c.place_id}>
+            <span className="explain-chart-name">{name(c.place_id)}</span>
+            <span className="explain-chart-value">{c.contribution}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div className="explain-scroll">
+        <table className="explain-table">
+          <caption>Calculation for {hotel.name}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Place</th>
+              <th scope="col">Type</th>
+              <th scope="col">Importance</th>
+              <th scope="col">Round-trip minutes</th>
+              <th scope="col">Contribution</th>
+            </tr>
+          </thead>
+          <tbody>
+            {hotel.contributions.map((c) => {
+              const place = places.get(c.place_id)
+              return (
+                <tr key={c.place_id}>
+                  <th scope="row">{name(c.place_id)}</th>
+                  <td>{place ? typeChip(place.type) : '–'}</td>
+                  <td>{c.importance}</td>
+                  <td>{c.minutes}</td>
+                  <td>{`${c.importance} × ${c.minutes} = ${c.contribution}`}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row" colSpan={5}>
+                Weighted total = {hotel.weighted_total} importance-minutes
+              </th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <p className="explain-average">
+        {`${hotel.weighted_total} ÷ ${result.importance_total} (importance total) = ${hotel.weighted_average_display} min average`}
+      </p>
+    </div>
   )
 }

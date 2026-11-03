@@ -83,6 +83,14 @@ export interface City {
   has_demo_preset: boolean
 }
 
+export interface CitySummary {
+  city_id: string
+  name: string
+  hotel_count: number
+  place_count: number
+  has_demo_preset: boolean
+}
+
 export interface DemoPreset {
   city_id: string
   hotel_ids: string[]

@@ -23,8 +23,8 @@ Status values: Done · In progress · Pending. One task = one session. Definitio
 | T12 | City map (SVG) | T09 | `components/CityMap/*` | Done | Frontend | A |
 | T13 | Explanation panel and travel table | T09 | `components/ExplanationPanel/*`, `components/TravelMatrixTable/*` | Done | Frontend | A |
 | T14 | Integration and Phase A demo-ready checkpoint | T08, T10–T13 | `Frontend/src/App.tsx`, `Frontend/vite.config.ts`, integration tests, `docs/COMMANDS.md` | Done (merge and tag `v0.1-phase-a` pending) | Integration | A |
-| T15 | Catalog data (2 cities), generator, catalog API, selection limits | T14 | `Backend/scripts/design_helper.py`, `app/data/cities/*.json`, `app/api/routes.py`, `app/domain/validation.py`, tests, docs | Pending | Backend | B |
-| T16 | Selection UI (list and map click) | T15 | `components/Selection/*`, small edits to `CityMap`, `Controls`, `useComparator`, tests | Pending | Frontend | B |
+| T15 | Catalog data (2 cities), generator, catalog API, selection limits | T14 | `Backend/scripts/design_helper.py`, `app/data/cities/*.json`, `app/api/routes.py`, `app/domain/validation.py`, tests, docs | Done (uncommitted; `validation.py` not needed) | Backend | B |
+| T16 | Selection UI (list and map click) | T15 | `components/Selection/*`, small edits to `CityMap`, `Controls`, `useComparator`, tests | Done | Frontend | B |
 | T17 | Evidence, review, interview docs, live-change rehearsal | T14 (T16 if done) | `docs/interview/*`, `docs/PROGRESS.md`, screenshots | Pending | Wrap-up | B |
 | T18 | *Optional:* budget timeline | T07 | `app/domain/timeline.py`, timeline endpoint, `components/BudgetTimeline/*`, tests | Pending | Optional | B |
 
@@ -43,8 +43,11 @@ Parallel groups: see [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md). T05 ‖
 - T12 done: `CityMap` draws the 25 selected markers (square H hotels, circle attractions, diamond food) with halo labels, ★ / ✕ status badges from `label`, a ring on the inspected hotel, and 15 dashed comparison links for the inspected hotel only, each labelled `<minutes> min · <contribution>` from the API. Legend and the "not routes" caption included. 24 new Vitest tests (126 total). Stub test ID `city-map-stub` kept on the root until T14 (D-27).
 - T13 done: `ExplanationPanel` (header with symbol + text status, plain-language reason from API values, per-place calculation table `3 × 40 = 120`, weighted total and average line as templates, CSS contribution bars with printed values) and `TravelMatrixTable` (caption, `scope` headers, sticky first column, importance row, status column, inspected row marked, hotel button calls `inspectHotel`). 27 new Vitest tests (153 total). Shared status wording lives in `ExplanationPanel/hotelStatus.ts` (D-32); stub test IDs kept until T14.
 - T14 done (Phase A checkpoint): DevPanel and all `*-stub` test IDs removed; status/type wording consolidated in `utils/hotelLabels.ts` and test helpers in `src/test/renderWithComparator.tsx` (D-33); `<main>` wraps the workspace (D-35); `vite preview` proxies `/api` (D-36); 8 real flow samples captured and checked against `expected_demo.py` (D-34); `integration.workflow.test.tsx` walks steps a–i with 23 tests; 180 Vitest tests in 16 files, 267 pytest, nothing under `Backend/app` changed. Manual demo checklist and traceability table finalised in `TESTING.md`. Open: D-37 (`EXPECTED_RESULTS.md` empty), D-38 (9 intentional a11y lint warnings). Playwright deferred to T17.
+- T15 done (backend only): Surmapur grown to 30 hotels / 50 places with the Demo block frozen (two pinned SHA-256 hashes); second city `shikharpur` (30 x 50, no preset); `scripts/design_helper.py` + `catalog_design.py` regenerate both files byte-identically; `GET /api/cities` (with `has_demo_preset`); selection limits proven through `POST /api/compare` on both catalogs; one hand-computed second-city check. 344 pytest (267 + 77 new), ruff clean, 180 Vitest unchanged. Frontend not touched: `CityMap` and `TravelMatrixTable` draw/list only the selection (D-41). Design tables: `verification/CATALOG_DESIGN_NOTES.md`; D-39 to D-41.
 
 ## Next up
+000. T19 (UI redesign): run the visual checklist in a browser, fix what it shows, then T17 evidence (see `interview/IMPLEMENTATION_PLAN.md`).
+00. T17: evidence, review, interview docs, live-change rehearsal (T16 is done).
 0. After T14: commit on `feature/T14-integration`, merge into `development`, then into `main`, tag `v0.1-phase-a` (commands in the T14 report). Then T15 (catalog data, generator, catalog API).
 1. Review T01 output, especially "Assumptions to confirm" in [DECISIONS.md](DECISIONS.md).
 2. T06 (engine; T05 validation is done and returns the validated `Scenario`, D-13/D-17). T09 (frontend scaffold) is independent.
@@ -65,3 +68,23 @@ Parallel groups: see [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md). T05 ‖
 | 2026-11-02 | CityMap SVG (markers, label layout, inspected hotel links, legend, a11y); 24 new Vitest tests (126 total); D-31 | T12 |
 | 2026-11-02 | ExplanationPanel + TravelMatrixTable, empty/invalid/stale states; 27 new Vitest tests (153 total); D-32 | T13 |
 | 2026-11-02 | Phase A integration: scaffolding removed, helpers consolidated (`hotelLabels.ts`, shared `renderWithComparator`), `<main>` landmark fixed, preview proxy, 8 real flow samples, 23-test integration workflow, `TESTING.md` checklist and traceability, root and folder READMEs; D-33 to D-38 | T14 |
+| 2026-11-02 | Catalog: 2 cities x (30 hotels, 50 places), deterministic generator, `GET /api/cities`, selection-limit API tests, Demo freeze hashes; D-39 to D-41 | T15 |
+| 2026-11-02 | Selection UI: city picker, hotel/place pickers (district groups, search, counters, limits), map Inspect/Select modes (80 markers, labels on hover/focus), compare gating with `readiness`, `getCities`; 71 new Vitest tests (251 total); D-42 to D-46 | T16 |
+
+- T19 / U1 done: design tokens (`styles/tokens.css`, light + dark), restyled base (`styles.css`), sticky `TopBar` with theme toggle (`useTheme`), shared `components/ui` (PillButton, Card, Chip, ChipToggle), self-hosted Inter font. Old single-page layout still in place until U3-U4. 258 Vitest tests (7 new). Next: U2 view mode + persistence. D-47.
+
+- T19 / U2 done: `state/useViewMode.ts` (screen + drawer, saved as `hbc.view`), `state/savedTrip.ts` + `storage.ts` (trip saved as `hbc.trip`, restored on mount through the normal compare path), 11 new Vitest tests (269 total). Not yet used by the UI: `App` adopts `useViewMode` in U3. D-48. Next: U3 selection screen.
+
+- T19 / U3 done: `components/Plan/` (Plan screen, chip `Picker`, `StepIndicator`), `App` switches Plan/Results via `useViewMode` (Results is still the old workspace), Load Demo goes to Results. 9 new Vitest tests (278 total); `testTimeout` raised to 15 s (slow parallel runs of the 80-marker tests). D-49. Next: U4 Results screen.
+
+- T19 / U4 done: `components/Results/` (summary chips, stat cards, skeleton/empty states, collapsible time table), ranked cards with "Why this score?" accordion + stacked bar (`HotelExplanation`), `Controls`/`Selection` removed, `CityMap selectable` prop; both integration test files rewritten for Plan -> Results. 247 Vitest tests. Not yet seen in a browser (no browser tool in the session). D-50. Next: U5 Edit drawer.
+
+- T19 / U5 done: `components/Drawer/` (dialog, Esc, focus trap and restore, scroll lock, bottom sheet on narrow screens); `Plan` gets `variant="drawer"`; `App` opens it from Edit with the page behind `inert`; integration tests edit through the drawer. 256 Vitest tests. D-51. Next: U6 hero map (U6a viewport, U6b markers and links).
+
+- T19 / U6a done: `CityMap/MapViewport.tsx` + `camera.ts` (pan with inertia, wheel/pinch/double-click/right-click zoom, keyboard, Zoom/Fit/Reset/Fullscreen buttons, auto-fit, reduced motion); Results map is the 70vh hero with a floating glass ranking panel; legend on the map. 274 Vitest tests (18 new). D-52. Next: U6b marker hover/click effects, fly-to and animated links.
+
+- T19 / U6b done: `CityMap/MapCards.tsx` (hover tooltips, click popup), ripples, fly-to, click-empty-map clears the inspection, links with importance-based width and marching dashes, `state/linkedView.tsx` (two-way highlight between map and ranked cards), `inspectHotel(null)`. 289 Vitest tests (15 new + 1 hook test); the Vitest setup now stubs reduced motion. D-53. Next: U7 polish, mobile and the browser check.
+
+- T19 / U7 done (code): `ui/CountUp`, FLIP re-order (`HotelRanking/flip.ts`), staggered entrance, screen slide, button ripple, ink focus rings, top-bar truncation, `styles/tokens.test.ts` (AA contrast, both themes). 327 Vitest tests in 35 files. D-54. **Open:** the real-browser pass and the screenshots (Selection, Results, Edit drawer, mobile, dark) are not done; run the checklist in `interview/TEST_EVIDENCE.md` section "T19 visual check".
+
+- T19 / bug fixes (Results screen): (1) travel table no longer pushes the map: `.results` grid column is `minmax(0, 1fr)`; table opens with a height animation; (2) ranking panel is a fixed-width left column, no inner scrollbars, no hide button, summary lines on separate rows, contribution bar fits; (3) map grid is an unbounded layer on a plain surface background, pan clamped to the map. Checked in headless Chrome at 1920/1366/390 and light/dark. D-55.

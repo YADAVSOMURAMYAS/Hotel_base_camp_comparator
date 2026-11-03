@@ -14,84 +14,124 @@
   margin: 0;
   padding: 0;
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .ranking-card {
-  border: 1px solid var(--color-border);
-  border-left-width: 6px;
-  border-radius: var(--radius);
-  background: var(--color-surface);
+  animation: rise 450ms var(--ease) backwards;
+  animation-delay: calc(var(--i, 0) * 60ms);
 }
 
-.ranking-card-recommended {
-  border-left-color: var(--color-success);
+.ranking-card .card {
+  padding: var(--space-3) var(--space-4);
 }
 
-.ranking-card-over {
-  border-left-color: var(--color-error);
+.ranking-card-inspected .card:not(.card-accent) {
+  border-color: var(--color-ink);
 }
 
-.ranking-card-inspected {
-  border-color: var(--color-accent);
-  border-width: 2px 2px 2px 6px;
-  background: #eff4ff;
-}
-
-/* The whole card is one native button; it overrides the global filled-button look. */
+/* The summary part of a card is one native button; it overrides the global pill look. */
 .ranking-button {
   display: grid;
   gap: var(--space-1);
   width: 100%;
-  padding: var(--space-2) var(--space-3);
+  padding: 0;
   border: 0;
+  border-radius: var(--radius);
   background: transparent;
   color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
   text-align: left;
+  box-shadow: none;
 }
 
-.ranking-button > span,
-.ranking-numbers > span {
+.ranking-button:hover:not(:disabled) {
+  transform: none;
+  box-shadow: none;
+}
+
+.ranking-button > span {
   display: block;
 }
 
-.ranking-head {
+.ranking-button > .ranking-head {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-2);
+  align-items: center;
+  gap: var(--space-3);
 }
 
 .ranking-rank {
-  min-width: 2.5ch;
-  font-weight: 700;
-  font-size: 1.1rem;
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.ranking-card .card-accent .ranking-rank {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #111111;
+}
+
+.ranking-title {
+  flex: 1;
+  min-width: 0;
 }
 
 .ranking-name {
+  display: block;
+  font-size: 1.15rem;
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .ranking-id {
+  display: inline;
   color: var(--color-muted);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
 .ranking-tag {
-  margin-left: auto;
+  display: inline-block;
+  margin-left: var(--space-2);
   padding: 0 var(--space-2);
   border: 1px solid var(--color-accent);
-  border-radius: var(--radius);
+  border-radius: var(--radius-pill);
   color: var(--color-accent);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
+}
+
+.ranking-score {
+  text-align: right;
+}
+
+.ranking-score-value {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.ranking-score-unit {
+  color: var(--color-muted);
+  font-size: 0.75rem;
 }
 
 .ranking-status {
+  margin-top: var(--space-2);
   font-weight: 700;
 }
 
-.ranking-card-recommended .ranking-status,
+.ranking-card .card-accent .ranking-status,
 .ranking-card .ranking-money {
   color: var(--color-success);
 }
@@ -101,30 +141,33 @@
   color: var(--color-error);
 }
 
-.ranking-numbers {
+.ranking-button > .ranking-numbers {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-3);
+  flex-direction: column;
+  gap: var(--space-1);
   color: var(--color-muted);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
-/* Price bar: fill = stay cost, vertical line = budget. Presentation only. */
+/* Budget-fit bar: fill = stay cost, tick = budget. Lengths are CSS ratios of API numbers. */
 .ranking-bar {
   position: relative;
-  height: 0.75rem;
-  margin-top: var(--space-1);
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  background: var(--color-bg);
+  height: 0.6rem;
+  margin: var(--space-2) 0 var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-2);
 }
 
 .ranking-bar-fill {
   position: absolute;
   inset: 0 auto 0 0;
-  width: var(--ranking-fill);
-  background: var(--color-success);
-  border-radius: 3px 0 0 3px;
+  width: calc(var(--v) / var(--max) * 100%);
+  background: var(--color-ink);
+  border-radius: var(--radius-pill);
+}
+
+.ranking-card .card-accent .ranking-bar-fill {
+  background: var(--orange);
 }
 
 .ranking-card-over .ranking-bar-fill {
@@ -132,8 +175,8 @@
     45deg,
     var(--color-error),
     var(--color-error) 4px,
-    #ffffff 4px,
-    #ffffff 7px
+    transparent 4px,
+    transparent 7px
   );
 }
 
@@ -141,15 +184,50 @@
   position: absolute;
   top: -4px;
   bottom: -4px;
-  left: var(--ranking-marker);
+  left: calc(var(--budget) / var(--max) * 100%);
   width: 3px;
   margin-left: -1px;
+  border-radius: 2px;
   background: var(--color-text);
 }
 
 .ranking-bar-text {
   color: var(--color-muted);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+}
+
+.ranking-why {
+  margin-top: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.ranking-why-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 6px;
+  background: var(--orange);
+  color: #111111;
+}
+
+.ranking-why-body {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  animation: ranking-open var(--duration) var(--ease);
+}
+
+@keyframes ranking-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
 }
 
 .ranking-sr-only {
@@ -161,8 +239,10 @@
   white-space: nowrap;
 }
 
-@media (max-width: 900px) {
-  .ranking-numbers {
-    flex-direction: column;
-  }
+/* The hotel's marker is under the pointer on the map. */
+.ranking-card-lit .card {
+  border-color: var(--orange);
+  box-shadow:
+    0 0 0 2px var(--orange),
+    var(--shadow-md);
 }

@@ -17,6 +17,16 @@ class CompareRequest(BaseModel):
     budget: Any = None
 
 
+def city_summary(city: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "city_id": city["city_id"],
+        "name": city["name"],
+        "hotel_count": len(city["hotels"]),
+        "place_count": len(city["places"]),
+        "has_demo_preset": city.get("demo_preset") is not None,
+    }
+
+
 def catalog_view(city: dict[str, Any]) -> dict[str, Any]:
     return {
         "city_id": city["city_id"],

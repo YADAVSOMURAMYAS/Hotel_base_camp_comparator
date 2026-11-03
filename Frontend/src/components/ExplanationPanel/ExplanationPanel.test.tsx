@@ -1,22 +1,19 @@
 import { render, screen, within } from '@testing-library/react'
-import { useComparatorContext } from '../../state/ComparatorContext'
 import type { Comparator } from '../../state/useComparator'
 import type { ComparisonResult, HotelResult } from '../../types/contracts'
 import {
-  idleComparator,
-  invalidResult,
   loadedComparator,
   noHotelResult,
   okResult,
   sampleCity,
 } from '../../test/renderWithComparator'
-import ExplanationPanel from './index'
+import HotelExplanation from './index'
 
-vi.mock('../../state/ComparatorContext', () => ({ useComparatorContext: vi.fn() }))
-
+/** Renders the explanation of the comparator's inspected hotel, as the ranked card does. */
 function show(comparator: Comparator) {
-  vi.mocked(useComparatorContext).mockReturnValue(comparator)
-  return render(<ExplanationPanel />)
+  const result = comparator.result!
+  const hotel = result.hotels.find((h) => h.id === comparator.inspectedHotelId)!
+  return render(<HotelExplanation hotel={hotel} result={result} city={comparator.city} />)
 }
 
 function hotel(id: string, result: ComparisonResult = okResult): HotelResult {
@@ -184,46 +181,17 @@ describe('ExplanationPanel calculation', () => {
   })
 })
 
-describe('ExplanationPanel empty and busy states', () => {
-  it('before load: invites loading the Demo trip', () => {
-    show(idleComparator())
-    expect(
-      screen.getByText(
-        'Load the Demo trip, then pick a hotel to see how its score is calculated.',
-      ),
-    ).toBeInTheDocument()
-  })
-
-  it('INVALID: no explanation', () => {
-    show(loadedComparator({ result: invalidResult, inspectedHotelId: null }))
-    expect(
-      screen.getByText('No explanation while inputs are invalid.'),
-    ).toBeInTheDocument()
-    expect(screen.queryByRole('table')).not.toBeInTheDocument()
-  })
-
-  it('request error: no explanation', () => {
-    show(idleComparator({ phase: 'error', error: 'down' }))
-    expect(
-      screen.getByText('No explanation while inputs are invalid.'),
-    ).toBeInTheDocument()
-  })
-
-  it('inspected hotel missing from the result: shows a hint', () => {
-    show(loadedComparator({ inspectedHotelId: 'H_NOPE' }))
-    expect(
-      screen.getByText('Pick a hotel in the ranking or table to see its explanation.'),
-    ).toBeInTheDocument()
-    expect(screen.queryByRole('table')).not.toBeInTheDocument()
-  })
-
-  it('stale: aria-busy is set', () => {
-    show(
-      loadedComparator({ inspectedHotelId: 'H_GARDEN', isStale: true, phase: 'loading' }),
-    )
-    expect(screen.getByRole('region', { name: 'Explanation' })).toHaveAttribute(
-      'aria-busy',
-      'true',
-    )
+describe('ExplanationPanel stacked bar', () => {
+  it('has one segment per place, sized by the contribution and carrying a tooltip', () => {
+    show(loadedComparator({ inspectedHotelId: 'H_GARDEN' }))
+    const segments = document.querySelectorAll<HTMLElement>('.explain-segment')
+    const inspected = hotel('H_GARDEN')
+    expect(segments).toHaveLength(inspected.contributions.length)
+    inspected.contributions.forEach((c, i) => {
+      expect(segments[i].style.flexGrow).toBe(String(c.contribution))
+      expect(segments[i].dataset.tip).toContain(
+        `${c.importance} × ${c.minutes} = ${c.contribution}`,
+      )
+    })
   })
 })

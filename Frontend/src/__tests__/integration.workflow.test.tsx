@@ -1,9 +1,11 @@
 // End-to-end workflow for the Demo trip: the real <App/>, real provider and real
 // components. Only the network functions are replaced by a fake that answers with REAL
 // backend responses (src/test/samples/flow_*.json, compare_*.json), chosen by the request.
+// Flow under test: Plan screen -> Load Demo trip -> Results; edits go Edit (drawer) -> Update results.
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import App from '../App'
 import * as client from '../api/client'
+import { saveTrip } from '../state/savedTrip'
 import type {
   City,
   CompareRequest,
@@ -65,27 +67,42 @@ beforeEach(() => {
   compareMock.mockImplementation(async (body) => respond(body))
 })
 
-// ---- DOM helpers: one per panel, found by role and accessible name ----
-const controls = () => screen.getByRole('region', { name: 'Controls' })
+// ---- DOM helpers: found by role and accessible name ----
 // The banner is role=status normally and role=alert when INVALID, so find it by its class.
 const banner = () => document.querySelector<HTMLElement>('.statusbanner')!
 const mapPanel = () => screen.getByRole('region', { name: 'City map' })
 const ranking = () => screen.getByRole('region', { name: 'Ranked hotels' })
-const explanation = () => screen.getByRole('region', { name: 'Explanation' })
-const table = () => screen.getByRole('region', { name: 'Travel times' })
+const plan = () => screen.getByRole('region', { name: 'Plan your trip' })
+const budgetInput = () => screen.getByLabelText(/Budget for the complete stay/)
+// The main button is "Compare hotels" on the Plan screen and "Update results" in the Edit drawer.
+const compareButton = () =>
+  screen.getByRole('button', { name: /Compare hotels|Update results/ })
+
+/** The travel-time table is collapsed until asked for. */
+function table(): HTMLElement {
+  const toggle = screen.queryByRole('button', { name: 'Show travel times' })
+  if (toggle) fireEvent.click(toggle)
+  return screen.getByRole('region', { name: 'Travel times' })
+}
 
 const hotelName = (id: string) => city.hotels.find((h) => h.id === id)!.name
+const placeName = (id: string) => city.places.find((p) => p.id === id)!.name
 const hotelOf = (result: ComparisonResult, id: string): HotelResult =>
   result.hotels.find((h) => h.id === id)!
-const budgetInput = () => screen.getByLabelText(/Budget for the complete stay/)
-const importanceInput = (placeId: string) =>
-  document.getElementById(`controls-importance-${placeId}`) as HTMLInputElement
 
-function rankingIds(): string[] {
-  return within(ranking())
+/** The ranking's own cards (an open card holds a nested list that is not a card). */
+function cards(): HTMLElement[] {
+  const list = within(ranking()).getByRole('list', { name: 'Hotels in rank order' })
+  return within(list)
     .getAllByRole('listitem')
-    .map((li) => li.querySelector('.ranking-id')!.textContent!)
+    .filter((li) => li.parentElement === list)
 }
+const idOf = (card: HTMLElement) => card.querySelector('.ranking-id')!.textContent!
+const cardOf = (id: string) => cards().find((c) => idOf(c) === id)!
+const rankingIds = () => cards().map(idOf)
+/** The open "Why this score?" body of a card. */
+const whyOf = (id: string) => document.getElementById(`why-${id}`)!
+
 const markers = () => document.querySelectorAll('[data-testid^="marker-"]')
 const linkLines = () => screen.getByTestId('citymap-links').querySelectorAll('line')
 const linkLabels = () =>
@@ -100,9 +117,9 @@ const linkLabels = () =>
     ]),
   )
 
-/** The panels that must never mention a recommendation in INVALID / NO_AFFORDABLE states. */
+/** Panels that must never mention a recommendation in INVALID / NO_AFFORDABLE states. */
 function expectNoRecommendation() {
-  for (const panel of [ranking(), explanation(), table()]) {
+  for (const panel of [ranking(), table()]) {
     expect(panel.textContent).not.toMatch(/Recommended/)
   }
   expect(banner().textContent).not.toMatch(/Recommended/)
@@ -115,16 +132,16 @@ function expectNoRecommendation() {
   expect(mapPanel().querySelector('.citymap-hotel-best')).toBeNull()
 }
 
-/** The four views plus the 15 map links all agree on the inspected hotel, using API values. */
+/** The views plus the 15 map links all agree on the inspected hotel, using API values. */
 function expectInspected(result: ComparisonResult, id: string) {
   const hotel = hotelOf(result, id)
   const name = hotelName(id)
-  // ranking
-  const card = within(ranking())
-    .getAllByRole('listitem')
-    .find((li) => li.querySelector('.ranking-id')!.textContent === id)!
-  expect(within(card).getByRole('button')).toHaveAttribute('aria-current', 'true')
+  // ranking: exactly one inspected card, and it is open
+  expect(
+    within(cardOf(id)).getByRole('button', { name: new RegExp(id) }),
+  ).toHaveAttribute('aria-current', 'true')
   expect(within(ranking()).getAllByRole('button', { current: true })).toHaveLength(1)
+  expect(whyOf(id)).toBeInTheDocument()
   // map: ring marker + 15 links starting at this hotel, labelled from the API
   expect(mapPanel().querySelector(`[data-testid="marker-hotel-${id}"]`)).toHaveAttribute(
     'aria-current',
@@ -145,8 +162,8 @@ function expectInspected(result: ComparisonResult, id: string) {
       ]),
     ),
   )
-  // explanation
-  expect(within(explanation()).getByRole('heading', { level: 3 })).toHaveTextContent(name)
+  // explanation inside the card
+  expect(within(whyOf(id)).getByRole('heading', { level: 3 })).toHaveTextContent(name)
   // table: exactly one highlighted row, and it is this hotel
   const current = table().querySelectorAll('tr[aria-current="true"]')
   expect(current).toHaveLength(1)
@@ -159,21 +176,68 @@ async function loadDemo(): Promise<void> {
   await screen.findByText(/Recommended:/)
 }
 
+/** Results -> Edit drawer with the Plan steps inside. */
+async function backToPlan() {
+  fireEvent.click(screen.getByRole('button', { name: /Edit/ }))
+  await screen.findByRole('dialog')
+}
+
+async function toResults() {
+  await waitFor(() => expect(compareButton()).toBeEnabled())
+  fireEvent.click(compareButton())
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+  await screen.findByRole('region', { name: 'Results' })
+}
+
+/** Edit -> change the budget text -> Compare hotels. */
 async function setBudget(text: string) {
+  await backToPlan()
   fireEvent.change(budgetInput(), { target: { value: text } })
+  await toResults()
+}
+
+/** The 1-5 segmented control of one place, in the Plan screen. */
+function importanceRadio(placeId: string, value: number): HTMLElement {
+  const group = screen.getByRole('group', { name: new RegExp(`^${placeName(placeId)}`) })
+  return within(group).getByRole('radio', { name: String(value) })
+}
+
+async function setImportance(placeId: string, value: number) {
+  await backToPlan()
+  fireEvent.click(importanceRadio(placeId, value))
+  await toResults()
+}
+
+/** Opens Results straight from a saved trip, as a reload would (used for INVALID inputs). */
+async function openSavedTrip(budgetText: string, museumText = '3') {
+  saveTrip({
+    cityId: preset.city_id,
+    selection: { hotel_ids: preset.hotel_ids, place_ids: preset.place_ids },
+    inputs: {
+      budgetText,
+      importanceTexts: {
+        ...Object.fromEntries(
+          Object.entries(preset.importances).map(([k, v]) => [k, String(v)]),
+        ),
+        MUSEUM: museumText,
+      },
+    },
+    budgetTouched: true,
+  })
+  localStorage.setItem('hbc.view', JSON.stringify('results'))
+  render(<App />)
+  await screen.findByText(/Cannot compare/)
 }
 
 describe('page structure', () => {
-  it('has one h1, a header outside <main>, and every workspace panel inside <main>', () => {
-    render(<App />)
+  it('has one h1, a header outside <main>, and the Results panels inside <main>', async () => {
+    await loadDemo()
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
     const main = screen.getByRole('main')
-    const header = screen.getByRole('banner')
-    expect(main.contains(header)).toBe(false)
-    for (const panel of [controls(), mapPanel(), ranking(), explanation(), table()]) {
+    expect(main.contains(screen.getByRole('banner'))).toBe(false)
+    for (const panel of [mapPanel(), ranking(), banner()]) {
       expect(main.contains(panel)).toBe(true)
     }
-    expect(main.contains(banner())).toBe(true)
   })
 
   it('has no temporary scaffolding', () => {
@@ -182,7 +246,7 @@ describe('page structure', () => {
     expect(screen.queryByText(/dev panel/i)).toBeNull()
   })
 
-  it('uses headings in order (h1, then h2 panels) and unique element ids', async () => {
+  it('uses headings in order and unique element ids', async () => {
     await loadDemo()
     const levels = screen.getAllByRole('heading').map((h) => Number(h.tagName[1]))
     for (let i = 1; i < levels.length; i++) {
@@ -192,32 +256,50 @@ describe('page structure', () => {
     expect(new Set(ids).size).toBe(ids.length)
   })
 
-  it('announces through exactly one live region (the banner)', async () => {
+  it('keeps the banner the only status/alert on Results; the map notice is the only other live region', async () => {
     await loadDemo()
-    const live = document.querySelectorAll('[aria-live], [role="status"], [role="alert"]')
-    expect(live).toHaveLength(1)
-    expect(live[0]).toBe(banner())
+    const roles = document.querySelectorAll('[role="status"], [role="alert"]')
+    expect(roles).toHaveLength(1)
+    expect(roles[0]).toBe(banner())
+    const polite = [...document.querySelectorAll('[aria-live]')]
+    expect(polite.map((e) => e.textContent)).toEqual([''])
+    for (const region of polite) {
+      expect(region).toHaveAttribute('aria-live', 'polite')
+      expect(region).not.toHaveAttribute('role')
+    }
+  })
+
+  it('shows no edit controls on Results', async () => {
+    await loadDemo()
+    expect(screen.queryByLabelText(/Budget for the complete stay/)).toBeNull()
+    expect(screen.queryByRole('combobox')).toBeNull()
+    expect(screen.queryByRole('radio')).toBeNull()
+    expect(screen.queryByRole('textbox')).toBeNull()
+    expect(screen.getByRole('button', { name: /Edit/ })).toBeInTheDocument()
   })
 })
 
 describe('a. before loading', () => {
-  it('enables only Load and shows an empty state in every panel', () => {
+  it('Plan: only Load is enabled and the user is told what to do next', () => {
     render(<App />)
     expect(screen.getByRole('button', { name: 'Load Demo trip' })).toBeEnabled()
     expect(screen.getByRole('button', { name: 'Reset' })).toBeDisabled()
     expect(budgetInput()).toBeDisabled()
-    expect(within(controls()).queryAllByLabelText(/Importance for/)).toHaveLength(0)
-    expect(banner()).toHaveTextContent('Load the Demo trip to begin.')
-    expect(ranking()).toHaveTextContent('Load the Demo trip to see ranked hotels.')
-    expect(mapPanel()).toHaveTextContent('Load the Demo trip to see the map.')
-    expect(explanation()).toHaveTextContent('Load the Demo trip, then pick a hotel')
-    expect(table()).toHaveTextContent('Load the Demo trip to see the travel-time table.')
+    expect(compareButton()).toBeDisabled()
+    expect(within(plan()).getByText('Pick a city to get started.')).toBeInTheDocument()
     expect(compareMock).not.toHaveBeenCalled()
+  })
+
+  it('Results with nothing loaded shows a friendly empty state', () => {
+    localStorage.setItem('hbc.view', JSON.stringify('results'))
+    render(<App />)
+    expect(screen.getByText('Nothing to compare yet')).toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Ranked hotels' })).toBeNull()
   })
 })
 
 describe('b. Load Demo trip', () => {
-  it('shows the recommended hotel everywhere, in the order the API sent', async () => {
+  it('goes straight to Results and shows the recommended hotel everywhere, in the order the API sent', async () => {
     await loadDemo()
     const recommended = ok.recommended_hotel_id!
     expect(banner()).toHaveTextContent(`Recommended: ${hotelName(recommended)}`)
@@ -228,23 +310,27 @@ describe('b. Load Demo trip', () => {
     expect(compareMock).toHaveBeenCalledTimes(1)
   })
 
+  it('shows the three headline numbers of the recommended hotel from the API', async () => {
+    await loadDemo()
+    const best = hotelOf(ok, ok.recommended_hotel_id!)
+    const stats = screen.getByRole('list', { name: 'Recommended hotel at a glance' })
+    expect(stats).toHaveTextContent(best.weighted_average_display)
+    expect(stats).toHaveTextContent(`${best.longest_trip} min`)
+    expect(stats).toHaveTextContent('Total cost vs budget')
+  })
+
   it('shows over-budget hotels unranked with their shortfall, including the most accessible one', async () => {
     await loadDemo()
     const lowest = [...ok.hotels].sort((a, b) => a.weighted_total - b.weighted_total)[0]
     expect(lowest.label).toBe('OVER_BUDGET')
-    const cards = within(ranking()).getAllByRole('listitem')
     for (const hotel of ok.hotels.filter((h) => h.label === 'OVER_BUDGET')) {
-      const card = cards.find(
-        (li) => li.querySelector('.ranking-id')!.textContent === hotel.id,
-      )!
+      const card = cardOf(hotel.id)
       expect(card).toHaveTextContent('✕ Over budget')
       expect(card).toHaveTextContent(/Over budget by ₹[\d,]+/)
       expect(card).toHaveTextContent('Unranked')
       expect(card.querySelector('.ranking-rank')!.textContent).not.toMatch(/#\d/)
     }
-    expect(
-      cards.find((li) => li.querySelector('.ranking-id')!.textContent === lowest.id),
-    ).toHaveTextContent('✕ Over budget')
+    expect(cardOf(lowest.id)).toHaveTextContent('✕ Over budget')
   })
 })
 
@@ -255,12 +341,7 @@ describe('c. inspecting another hotel', () => {
     [
       'a ranking card',
       (id: string) =>
-        fireEvent.click(
-          within(ranking())
-            .getAllByRole('listitem')
-            .find((li) => li.querySelector('.ranking-id')!.textContent === id)!
-            .querySelector('button')!,
-        ),
+        fireEvent.click(within(cardOf(id)).getByRole('button', { name: new RegExp(id) })),
     ],
     [
       'a map hotel marker',
@@ -290,19 +371,15 @@ describe('d. budget what-if', () => {
     await loadDemo()
     const best = atBest.recommended_hotel_id!
     fireEvent.click(screen.getByTestId(`marker-hotel-${best}`))
-    const cardOf = () =>
-      within(ranking())
-        .getAllByRole('listitem')
-        .find((li) => li.querySelector('.ranking-id')!.textContent === best)!
 
     await setBudget(String(atBest.budget))
     await waitFor(() =>
       expect(banner()).toHaveTextContent(`Recommended: ${hotelName(best)}`),
     )
     expect(rankingIds()).toEqual(atBest.hotels.map((h) => h.id))
-    expect(cardOf()).toHaveTextContent('★ Recommended')
-    expect(cardOf()).toHaveTextContent('₹0 left in budget')
-    expect(explanation()).toHaveTextContent('★ Recommended')
+    expect(cardOf(best)).toHaveTextContent('★ Recommended')
+    expect(cardOf(best)).toHaveTextContent('₹0 left in budget')
+    expect(whyOf(best)).toHaveTextContent('★ Recommended')
 
     await setBudget(String(oneLess.budget))
     await waitFor(() =>
@@ -311,18 +388,18 @@ describe('d. budget what-if', () => {
       ),
     )
     expect(rankingIds()).toEqual(oneLess.hotels.map((h) => h.id))
-    expect(cardOf()).toHaveTextContent('Over budget by ₹1')
-    expect(cardOf()).toHaveTextContent('Unranked')
-    expect(cardOf()).not.toHaveTextContent('★ Recommended')
-    expect(explanation()).toHaveTextContent('✕ Over budget')
+    expect(cardOf(best)).toHaveTextContent('Over budget by ₹1')
+    expect(cardOf(best)).toHaveTextContent('Unranked')
+    expect(cardOf(best)).not.toHaveTextContent('★ Recommended')
+    expect(whyOf(best)).toHaveTextContent('✕ Over budget')
   })
 
   it('keeps the inspected hotel contributions identical across a budget-only change', async () => {
     await loadDemo()
-    const before = within(explanation()).getByRole('table').textContent
+    const before = within(whyOf('H_GARDEN')).getByRole('table').textContent
     await setBudget(String(atBest.budget))
     await waitFor(() => expect(banner()).toHaveTextContent(hotelName('H_GHANTA')))
-    expect(within(explanation()).getByRole('table').textContent).toBe(before)
+    expect(within(whyOf('H_GARDEN')).getByRole('table').textContent).toBe(before)
     expect(linkLabels()).toEqual(
       Object.fromEntries(
         hotelOf(ok, 'H_GARDEN').contributions.map((c) => [
@@ -338,7 +415,7 @@ describe('e. importance what-if', () => {
   it('changes the recommendation, the contributions and the map link labels', async () => {
     await loadDemo()
     const labelsBefore = linkLabels()
-    fireEvent.change(importanceInput('MUSEUM'), { target: { value: '1' } })
+    await setImportance('MUSEUM', 1)
     await waitFor(() =>
       expect(banner()).toHaveTextContent(
         `Recommended: ${hotelName(importanceWhatIf.recommended_hotel_id!)}`,
@@ -350,7 +427,7 @@ describe('e. importance what-if', () => {
     expectInspected(importanceWhatIf, ok.default_inspected_hotel_id!)
     expect(linkLabels()).not.toEqual(labelsBefore)
     expect(linkLabels().MUSEUM).toBe(labelsBefore.MUSEUM.replace(/· \d+$/, '· 19'))
-    expect(within(explanation()).getByRole('table')).toHaveTextContent('1 × 19 = 19')
+    expect(within(whyOf('H_GARDEN')).getByRole('table')).toHaveTextContent('1 × 19 = 19')
   })
 })
 
@@ -358,57 +435,59 @@ describe('f. exact budget', () => {
   it('shows ₹0 left in budget at the exact cost and Over budget by ₹1 one rupee below', async () => {
     await loadDemo()
     const id = 'H_NEELGHAT'
-    const cardOf = () =>
-      within(ranking())
-        .getAllByRole('listitem')
-        .find((li) => li.querySelector('.ranking-id')!.textContent === id)!
 
     await setBudget(String(exact.budget))
-    await waitFor(() => expect(cardOf()).toHaveTextContent('₹0 left in budget'))
-    expect(cardOf()).toHaveTextContent('✓ Within budget')
-    expect(cardOf()).toHaveTextContent(`#${hotelOf(exact, id).rank}`)
+    await waitFor(() => expect(cardOf(id)).toHaveTextContent('₹0 left in budget'))
+    expect(cardOf(id)).toHaveTextContent('✓ Within budget')
+    expect(cardOf(id)).toHaveTextContent(`#${hotelOf(exact, id).rank}`)
 
     await setBudget(String(oneOver.budget))
-    await waitFor(() => expect(cardOf()).toHaveTextContent('Over budget by ₹1'))
-    expect(cardOf()).toHaveTextContent('Unranked')
-    expect(cardOf().textContent).not.toMatch(/₹0 left/)
+    await waitFor(() => expect(cardOf(id)).toHaveTextContent('Over budget by ₹1'))
+    expect(cardOf(id)).toHaveTextContent('Unranked')
+    expect(cardOf(id).textContent).not.toMatch(/₹0 left/)
     expect(rankingIds()).toEqual(oneOver.hotels.map((h) => h.id))
   })
 })
 
 describe('g. invalid inputs', () => {
-  const cases: [string, () => HTMLElement, string, ComparisonResult][] = [
-    ['budget -5', budgetInput, '-5', as(invalidBudgetJson)],
-    ['budget 12.5', budgetInput, '12.5', as(invalidBudgetJson)],
-    ['budget abc', budgetInput, 'abc', as(invalidBudgetJson)],
-    ['importance 6', () => importanceInput('MUSEUM'), '6', as(invalidImportanceJson)],
+  const cases: [string, string, string, ComparisonResult][] = [
+    ['budget -5', '-5', '3', as(invalidBudgetJson)],
+    ['budget 12.5', '12.5', '3', as(invalidBudgetJson)],
+    ['budget abc', 'abc', '3', as(invalidBudgetJson)],
+    ['importance 6', '30000', '6', as(invalidImportanceJson)],
   ]
 
   it.each(cases)(
-    '%s clears every derived view and keeps the markers',
-    async (_n, input, value, sample) => {
-      await loadDemo()
-      fireEvent.change(input(), { target: { value } })
-      await waitFor(() => expect(banner()).toHaveTextContent('Cannot compare'))
+    '%s clears every derived view on Results',
+    async (_name, budgetText, museumText, sample) => {
+      await openSavedTrip(budgetText, museumText)
       for (const e of sample.errors) expect(banner()).toHaveTextContent(e.message)
-      expect(input()).toHaveAttribute('aria-invalid', 'true')
-      expect(ranking()).toHaveTextContent('No ranking while inputs are invalid.')
-      expect(within(ranking()).queryAllByRole('listitem')).toHaveLength(0)
-      expect(explanation()).toHaveTextContent('No explanation while inputs are invalid.')
-      expect(linkLines()).toHaveLength(0)
-      expect(table().textContent).not.toMatch(/#\d|Over budget|Within budget/)
-      expect(markers()).toHaveLength(25)
-      expectNoRecommendation()
+      expect(screen.queryByRole('region', { name: 'Ranked hotels' })).toBeNull()
+      expect(screen.queryByRole('region', { name: 'City map' })).toBeNull()
+      expect(
+        screen.queryByRole('list', { name: 'Recommended hotel at a glance' }),
+      ).toBeNull()
+      expect(screen.getByRole('main').textContent).not.toMatch(
+        /★|Recommended|#\d|Within budget|Over budget by/,
+      )
     },
   )
 
+  it('Plan shows the API message at the field and blocks Compare', async () => {
+    await openSavedTrip('abc')
+    fireEvent.click(screen.getByRole('button', { name: 'Edit plan' }))
+    await screen.findByRole('dialog')
+    expect(budgetInput()).toHaveAttribute('aria-invalid', 'true')
+    expect(compareButton()).toBeDisabled()
+  })
+
   it('recovers when the input becomes valid again', async () => {
-    await loadDemo()
-    await setBudget('abc')
-    await waitFor(() => expect(banner()).toHaveTextContent('Cannot compare'))
-    await setBudget('30000')
+    await openSavedTrip('abc')
+    fireEvent.click(screen.getByRole('button', { name: 'Edit plan' }))
+    await screen.findByRole('dialog')
+    fireEvent.change(budgetInput(), { target: { value: '30000' } })
+    await toResults()
     await waitFor(() => expect(banner()).toHaveTextContent('Recommended:'))
-    expect(budgetInput()).not.toHaveAttribute('aria-invalid')
   })
 })
 
@@ -418,21 +497,22 @@ describe('h. no affordable hotel', () => {
     await setBudget('0')
     await waitFor(() => expect(banner()).toHaveTextContent('No hotel fits this budget'))
     expect(ranking()).toHaveTextContent('No hotel fits this budget')
-    const cards = within(ranking()).getAllByRole('listitem')
-    expect(cards).toHaveLength(10)
-    for (const card of cards) {
+    expect(cards()).toHaveLength(10)
+    for (const card of cards()) {
       expect(card).toHaveTextContent(/Over budget by ₹[\d,]+/)
       expect(card).toHaveTextContent('Unranked')
     }
     expect(rankingIds()).toEqual(noHotel.hotels.map((h) => h.id))
-    expect(mapPanel().querySelector('.citymap-badge')?.textContent).toBe('✕')
     expect(
       [...mapPanel().querySelectorAll('.citymap-badge')].every(
         (b) => b.textContent === '✕',
       ),
     ).toBe(true)
+    expect(
+      screen.queryByRole('list', { name: 'Recommended hotel at a glance' }),
+    ).toBeNull()
     expectNoRecommendation()
-    expect(explanation()).toHaveTextContent('nothing is recommended')
+    expect(ranking()).toHaveTextContent('nothing is recommended')
   })
 })
 
@@ -440,20 +520,22 @@ describe('i. reset', () => {
   it('restores the preset inputs, the recommendation and the inspected hotel', async () => {
     await loadDemo()
     await setBudget('36500')
-    fireEvent.change(importanceInput('MUSEUM'), { target: { value: '1' } })
+    await setImportance('MUSEUM', 1)
     fireEvent.click(screen.getByTestId('marker-hotel-H_HILLTOP'))
     await waitFor(() => expect(banner()).toHaveTextContent('Recommended:'))
 
+    await backToPlan()
     fireEvent.click(screen.getByRole('button', { name: 'Reset' }))
+    await waitFor(() => expect(budgetInput()).toHaveValue(String(preset.budget)))
+    for (const [placeId, value] of Object.entries(preset.importances)) {
+      await waitFor(() => expect(importanceRadio(placeId, value)).toBeChecked())
+    }
+    await toResults()
     await waitFor(() =>
       expect(banner()).toHaveTextContent(
         `Recommended: ${hotelName(ok.recommended_hotel_id!)}`,
       ),
     )
-    expect(budgetInput()).toHaveValue(String(preset.budget))
-    for (const [placeId, value] of Object.entries(preset.importances)) {
-      expect(importanceInput(placeId)).toHaveValue(String(value))
-    }
     expect(rankingIds()).toEqual(ok.hotels.map((h) => h.id))
     expectInspected(ok, ok.default_inspected_hotel_id!)
   })
@@ -482,8 +564,8 @@ describe('the frontend never re-sorts or computes', () => {
     }
     compareMock.mockImplementation(async () => tampered)
     await loadDemo()
-    expect(ranking()).toHaveTextContent('Weighted total: 99999')
-    expect(ranking()).toHaveTextContent('Average: 9.9 min')
-    expect(explanation()).toHaveTextContent('Weighted total = 99999')
+    expect(cardOf('H_GARDEN')).toHaveTextContent('Weighted total: 99999')
+    expect(cardOf('H_GARDEN')).toHaveTextContent('9.9')
+    expect(whyOf('H_GARDEN')).toHaveTextContent('Weighted total = 99999')
   })
 })

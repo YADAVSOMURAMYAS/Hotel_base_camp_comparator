@@ -35,6 +35,12 @@ def get_city(city_id: str) -> dict[str, Any]:
         raise UnknownCityError(city_id) from None
 
 
+@cache
+def list_cities() -> tuple[dict[str, Any], ...]:
+    """Every shipped city, sorted by city_id. Callers must not modify them."""
+    return tuple(get_city(path.stem) for path in sorted(CITIES_DIR.glob("*.json")))
+
+
 def get_catalog_source() -> CatalogSource:
     """FastAPI dependency; tests override it to serve a custom catalog."""
     return get_city

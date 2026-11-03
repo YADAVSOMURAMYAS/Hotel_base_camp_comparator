@@ -1,5 +1,6 @@
 import type {
   City,
+  CitySummary,
   CompareRequest,
   ComparisonResult,
   DemoPreset,
@@ -49,6 +50,11 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     if (isAbortError(error)) throw error
     throw new ApiError('The server sent a response that could not be read.')
   }
+}
+
+export async function getCities(signal?: AbortSignal): Promise<CitySummary[]> {
+  const body = await request<{ cities: CitySummary[] }>('/api/cities', { signal })
+  return body.cities
 }
 
 export function getCity(cityId: string, signal?: AbortSignal): Promise<City> {

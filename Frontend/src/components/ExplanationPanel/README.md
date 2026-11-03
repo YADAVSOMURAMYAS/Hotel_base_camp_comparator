@@ -1,7 +1,6 @@
 # ExplanationPanel
 
-**Status:** done (T13).
-**Shows:** the inspected hotel's header (name, ID, symbol + text status), a plain-language reason built from API values, a per-place calculation table (`3 × 40 = 120`), the weighted total and average line, and CSS contribution bars with the numbers printed.
-**Files:** `index.tsx`, `ExplanationPanel.css` (`explain-*`), `ExplanationPanel.test.tsx`. Status, shortfall and place-type wording come from `utils/hotelLabels`.
-**Rules:** data only from `useComparatorContext()`. The only arithmetic is a count of affordable flags, one subtraction for the "why not" line, and the CSS bar ratio (D-32). Totals, average and shortfall are shown as given.
-**States:** no result, INVALID/error, no inspected hotel, stale (dimmed, `aria-busy`).
+**Purpose:** `HotelExplanation`, the "why this score" body shown inside the inspected ranked card (props: `hotel`, `result`, `city`).
+**Shows:** header (name, ID, symbol + text status), a plain-language reason built from API values, a stacked bar (segment width = the API contribution, hover tooltip) with an equivalent list of numbers, the per-place calculation table (`3 × 40 = 120`), and the weighted total / average lines as given.
+**Rules:** data only from props. The only arithmetic is a count of affordable flags and one subtraction for the "why not" line (D-32); the bar is a CSS ratio.
+**Tests:** `ExplanationPanel.test.tsx`.

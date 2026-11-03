@@ -82,3 +82,20 @@ Values below come from `Backend/tests/fixtures/expected_demo.py` (typed by hand 
 | 13 | Click **Reset**. Set the budget to **0** | Banner: "⚠ No hotel fits this budget. Nothing is recommended." No ★, no ranks. Every hotel says "Over budget by" its full cost (smallest: ₹12,400 for Hilltop Hostel). ✕ on all 10 hotel markers. | AC-12 |
 | 14 | Click **Reset** | Original budget, importances, recommendation and inspected hotel are back. | AC-08 |
 | 15 | (Phase B) Pick another city, select by list and by marker click; exceed limits | Counters x/10, y/15; limit enforced; Load Demo trip still restores preset | AC-25 |
+
+## T16 traceability: selection UI
+| Behaviour | Test |
+|---|---|
+| Cities list fetched once, failure is non-fatal | `useComparator.selection.test.tsx::cities list`, `clientCities.test.ts` |
+| Catalog order, default importance texts, no validity decision in the hook | `::toggling` |
+| Compare gating (not called below minimums or without a budget, once when met) | `::compare gating` |
+| Budget "never entered" vs typed-then-cleared (INVALID from backend) vs Demo clear | `::budget that was never entered`; existing `useComparator.test.tsx` budget text `""` row |
+| Out-of-order responses from quick toggles | `::request sequencing for selection changes` |
+| Deselecting the inspected hotel | `::inspection after deselect` |
+| Pickers: districts, search, counters, limits, clear | `Selection.test.tsx` |
+| City picker, Demo helper text | `ControlsCity.test.tsx` |
+| Map Inspect vs Select (25 markers + 15 links, 80 markers, hover/focus labels, keyboard, limits, no links) | `CityMapSelect.test.tsx` |
+| Guidance banner wording | `StatusBannerGuidance.test.tsx` |
+| End-to-end Shikharpur 501 / 753 / 778, 11th hotel blocked, switch city, Load Demo, Reset | `integration.selection.test.tsx` |
+| Fixture sizes | `fixtures.test.ts` |
+| Live-region and heading rules | `integration.workflow.test.tsx::page structure` (amended, D-44) |

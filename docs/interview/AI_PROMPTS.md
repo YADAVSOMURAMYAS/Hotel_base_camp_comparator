@@ -498,3 +498,97 @@ out-of-order sample; accessibility pass (one h1, main wraps the workspace, one l
 below; vite preview proxy; finalise TESTING.md checklist and traceability, COMMANDS.md and READMEs; do not touch Backend/app, data, fixtures or verification;
 do not commit, merge or tag; print the commands and a PROVEN / NOT YET acceptance table. Ask before adding Playwright.
 ```
+
+## T15: Catalog data, generator, cities list, selection limits (backend only)
+
+| Field | Detail |
+|---|---|
+| Goal | Grow each city to 30 hotels / 50 places without changing one Demo value; add a second city; list endpoint; prove selection limits |
+| Refined prompt | Step 0/1 first: ambiguities (a missing test file, a spec field, clamp vs assert) and design tables for approval, then tests first with the real failing run, then generator and endpoint. Approval answers: theme Shikharpur, Demo rows keep hand-authored offsets, assert not clamp, pin a second hash, add `has_demo_preset` to the list spec first, four renames |
+| Result | 344 pytest (77 new), ruff clean, 180 Vitest unchanged; regeneration is byte-identical; Demo block hash unchanged |
+
+**Prompt (summary):**
+```text
+Task T15: catalog data (2 cities, 30 hotels and 50 places each), deterministic generator, cities list endpoint, selection-limit verification. Backend only.
+The Demo trip is frozen: compute its SHA-256 first and pin it in a test; new rows/columns are appended. Generator: base[district][district] + hotel offset +
+place offset, integers only, no random/time/positions, idempotent bytes, T03 formatting. Positions at least 30 px apart. Tests first (freeze, catalog data,
+generator, list API, selection API incl. every limit case, plus a hand-computed 3x4 check outside the engine). Show the plan and tables and wait for approval
+before writing data. Do not touch Frontend or the engine; do not commit.
+```
+
+## T16: Selection UI
+| Field | Value |
+|---|---|
+| Goal | Choose a city, pick up to 10 hotels and 15 places by list or map click, set importances and budget, see the same result views as the Demo trip |
+| Refined prompt | Step 0 ambiguities and Step 1 design tables for approval, tests first with the real failing run, then implementation. Then two decisions when existing tests conflicted: fixture split instead of editing a test (D-43), a `budgetTouched` rule so Phase A behaviour stays (D-42), and a deliberate amendment of the live-region test (D-44) |
+| Result | 251 Vitest, lint, typecheck, format and build clean, 344 pytest unchanged |
+
+**Prompt (summary):**
+```text
+Task T16: selection UI, frontend only. City picker, city-scoped hotel/place pickers grouped by district with search and counters, map Inspect/Select modes
+(80 markers in Select, labels only on hover/focus), compare gating with a readiness object, request sequencing kept. The Demo trip must stay exactly as it is
+(25 markers, 15 links). Existing tests must pass unchanged; if one cannot, stop and say why. No new dependencies; backend and data untouched; do not commit.
+```
+
+### T19 / U1 — design tokens and app shell
+
+```text
+Redesign the front end into a Selection (Plan) screen and a Results screen with a light editorial look (orange accent, black pill buttons, large-radius cards, big map).
+Do not change scoring, data or the API. Step U1 only: CSS design tokens (light + dark), faint background arcs, sticky top bar with theme toggle,
+shared PillButton / Card / Chip. Old page must keep working under the new skin. Self-host one Inter variable font. No new npm dependencies; do not commit.
+```
+
+### T19 / U2 — view mode and persistence
+
+```text
+U2: add useViewMode (plan/results + drawer open) and persist city, budget, importances and selections to localStorage (guarded with try/catch).
+Save choices only, never the API result; restore on mount through the existing compare path. Keep the scoring state hook unchanged in behaviour. Tests first; no new dependencies; do not commit.
+```
+
+### T19 / U3 — Selection (Plan) screen
+
+```text
+U3: build the Plan screen: Step 1 city + Load Demo + Reset, Step 2 searchable hotel/place chips with checkmarks (keep map Select mode), Step 3 budget + 1-5 segmented importance,
+step indicator in the top bar, black "Compare hotels" pill with friendly inline validation instead of the old banner. Reuse the existing hook (no new state, no calculation).
+Load Demo goes straight to Results. Keep existing tests green; tests first for the new screen; no new dependencies; do not commit.
+```
+
+### T19 / U4 — Results screen
+
+```text
+U4: build the Results screen. Read-only summary chips + Edit button, three stat cards (API values only), ranked cards (rank, big score, budget-fit bar, longest trip, "Why this score?" accordion with a stacked contribution bar and hover tooltips),
+collapsible travel-time table, skeleton and empty states. No edit controls on this screen: delete Controls and Selection (Plan replaces them). No frontend arithmetic; no new dependencies; migrate the App-level tests to Plan -> Results; do not commit.
+```
+
+### T19 / U5 — Edit drawer
+
+```text
+U5: the Edit button on Results opens a slide-in drawer (bottom sheet on mobile) that reuses the Plan steps (no second copy of the controls). Values preserved; Esc closes; focus trapped and restored; page behind inert; "Update results" closes it and results re-render.
+Keep one map on screen. Tests first (Drawer unit tests + an App-level drawer flow); migrate the integration tests' edit helper to the drawer; no new dependencies; do not commit.
+```
+
+### T19 / U6a — map viewport
+
+```text
+U6a: make the SVG map a large hero on Results (>=70vh) with the ranking as a floating glass panel (collapsible; stacked on mobile). Add pan/zoom as a viewBox camera in a MapViewport component:
+drag with inertia, wheel zoom toward the cursor, pinch, double-click in / Shift+double-click and right-click out, arrow keys and +/-/0, floating buttons (zoom, fit all, reset, fullscreen), legend on the map, auto-fit when the selection changes.
+Respect prefers-reduced-motion. Camera maths as pure functions with tests. No map library, no new dependencies; markers keep working; do not commit.
+```
+
+### T19 / U6b — marker effects and links
+
+```text
+U6b: on the Results map add hover (spring scale + tooltip card with name/score/price/trip; the matching ranked card lights up, and hovering a card pulses its marker), click on a hotel marker (ripple, fly-to, detail popup, select it and unfold "Why this score?"),
+click on empty map (clear the inspection with a ripple), animated dashed links with line width by importance and minutes on each label. Reduced motion respected; keyboard focus behaves like hover. Share view state between map and cards without touching the comparison hook except letting inspectHotel accept null.
+No clustering or radius rings. Tests first; no new dependencies; do not commit.
+```
+
+### T19 / U7 — polish and verification
+
+```text
+U7: micro-interactions: count-up of the first score (final value must be exactly the API string), FLIP re-order of ranked cards, staggered entrance, screen slide on mode switch, button press ripple. Accessibility: focus rings that meet 3:1, AA contrast for every token pair in both themes as a test, mobile top bar.
+Respect reduced motion. Update docs and write a manual visual checklist, since screenshots cannot be taken here. No new dependencies; do not commit.
+```
+
+## Results screen bug fixes
+Prompt: fix 3 bugs on Results (map vanishes when the travel table opens; ranking panel scrolls; white patch when dragging the map). Reproduce, find root cause, do not change scoring, data or the Selection screen. Outcome: grid-blowout (`minmax(0,1fr)`), panel moved to a grid column, infinite grid layer (D-55).

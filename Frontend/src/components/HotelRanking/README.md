@@ -1,8 +1,9 @@
 # HotelRanking
 
-**Purpose:** the "Ranked hotels" panel. One card per hotel from `result.hotels`, in exactly the order the API returns them (never re-sorted).
-**Contents:** `index.tsx` (panel + `HotelCard`), `HotelRanking.css` (`ranking-` classes, tokens from `styles.css`), `HotelRanking.test.tsx` (uses the shared `src/test/renderWithComparator.tsx`). Status and shortfall wording come from `utils/hotelLabels`.
-**Shows per card:** rank `#n` or "–"/Unranked, name and ID, complete-stay price, status (`★ Recommended` / `✓ Within budget` / `✕ Over budget`), money line (`₹X left in budget` / `Over budget by ₹X`), weighted total, average, longest trip, a CSS price bar against a budget marker with a text equivalent, and an "Inspecting" tag.
-**States:** idle, loading without result, INVALID or request error, stale (dimmed, `aria-busy`), NO_AFFORDABLE_HOTEL ("No hotel fits this budget", no star, no ranks).
-**Rules:** state only from `useComparatorContext()`; no totals, ranks, affordability or shortfalls computed here. Bar percentages are presentation only on one shared scale. Each card is a native button; `inspectHotel(id)` on click, Enter or Space; the inspected card has `aria-current="true"`.
-**Does not belong here:** sorting, explanation details, map code.
+**Purpose:** the "Ranked hotels" panel: one card per hotel from `result.hotels`, in exactly the order the API returns them (never re-sorted). Renders nothing without a result (Results owns empty states).
+**Shows per card:** rank `#n` or "–"/Unranked, name and ID, the weighted average as the large score, status (`★ Recommended` / `✓ Within budget` / `✕ Over budget`), complete-stay price, money line (`₹X left in budget` / `Over budget by ₹X`), a budget-fit bar with a text equivalent, weighted total, longest trip, and a "Why this score?" toggle. The recommended card has the orange accent.
+**Accordion:** only the inspected card can be open; the toggle on another card inspects it first. The open body is `HotelExplanation`.
+**Linked to the map:** hovering a card pulses its marker; a card whose marker is hovered gets an orange outline; an inspected card scrolls into view.
+**Motion:** cards stagger in on first display, the score counts up once, and a changed order slides (FLIP; `flip.ts` is the pure part). All off under reduced motion.
+**Rules:** state only from `useComparatorContext()`; nothing is computed here. Bar lengths are CSS ratios of API numbers (`--v`, `--max`, `--budget`). The card summary is a native button (`inspectHotel`, `aria-current`).
+**Tests:** `HotelRanking.test.tsx`.

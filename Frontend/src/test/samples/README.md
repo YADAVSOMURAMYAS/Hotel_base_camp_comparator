@@ -50,3 +50,11 @@ Save-Flow flow_invalid_importance $p.budget @{ MUSEUM = 6 }
 ```
 
 After regenerating, run `npm test` and compare the recommended hotel and rank order with `expected_demo.py` (`WHATIF_BUDGET_EXACT`, `WHATIF_BUDGET_MINUS_ONE`, `WHATIF_IMPORTANCE_CHANGE`).
+
+## T16 additions
+| File | Source |
+|---|---|
+| `city_surmapur.json` | Refreshed copy of `Backend/tests/api/samples/city_surmapur.json` (full 30 x 50 catalog, untouched). Tests that expect only the Demo selection use `sampleCity` from `renderWithComparator.tsx`, which narrows it from the preset (D-43) |
+| `cities_list.json` | Copy of `Backend/tests/api/samples/cities_list.json` |
+| `city_shikharpur.json` | `GET /api/cities/shikharpur` from the running backend |
+| `flow_shikharpur_small_ok.json` | `POST /api/compare`: Shikharpur, hotels `H_MALLROAD H_BARRACK H_ROPEWAY`, places `TOYTRAIN MONASTERY CHOLE FALLS` with importances 5/2/3/4, budget 13000. Totals 501 / 753 / 778 |

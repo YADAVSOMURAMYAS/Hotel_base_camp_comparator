@@ -1,0 +1,18 @@
+{
+  "cities": [
+    {
+      "city_id": "shikharpur",
+      "name": "Shikharpur",
+      "hotel_count": 30,
+      "place_count": 50,
+      "has_demo_preset": false
+    },
+    {
+      "city_id": "surmapur",
+      "name": "Surmapur",
+      "hotel_count": 30,
+      "place_count": 50,
+      "has_demo_preset": true
+    }
+  ]
+}

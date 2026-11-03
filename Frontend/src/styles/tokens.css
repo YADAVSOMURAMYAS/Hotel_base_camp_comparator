@@ -1,0 +1,75 @@
+/* Design tokens: the only place colours, radii, shadows and fonts are defined.
+   Text colours meet WCAG AA (4.5:1) on --color-bg and --color-surface in both themes.
+   --orange is decorative (fills, pins, rings); --color-accent is the text-safe orange. */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/InterVariable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --color-bg: #f6f6f4;
+  --color-bg-2: #ebebe8;
+  --color-surface: #ffffff;
+  --color-text: #111111;
+  --color-muted: #55585e;
+  --color-border: #dcdcd8;
+  --color-ink: #111111;
+  --color-on-ink: #ffffff;
+  --orange: #ff7a00;
+  --color-accent: #b8460a;
+  --color-success: #15803d;
+  --color-warning: #92400e;
+  --color-error: #b91c1c;
+  --color-arc: rgba(17, 17, 17, 0.07);
+  --color-glass: rgba(255, 255, 255, 0.72);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
+
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(17, 17, 17, 0.04), 0 2px 6px rgba(17, 17, 17, 0.04);
+  --shadow-md: 0 1px 2px rgba(17, 17, 17, 0.04), 0 8px 24px rgba(17, 17, 17, 0.07);
+  --shadow-lg: 0 2px 4px rgba(17, 17, 17, 0.05), 0 20px 48px rgba(17, 17, 17, 0.12);
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration: 300ms;
+}
+
+:root[data-theme='dark'] {
+  --color-bg: #0e0e0f;
+  --color-bg-2: #17171a;
+  --color-surface: #19191c;
+  --color-text: #f4f4f2;
+  --color-muted: #a5a8ae;
+  --color-border: #2c2c31;
+  --color-ink: #f4f4f2;
+  --color-on-ink: #111111;
+  --color-accent: #ff9a3d;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+  --color-arc: rgba(255, 255, 255, 0.08);
+  --color-glass: rgba(25, 25, 28, 0.72);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration: 0ms;
+  }
+}

@@ -14,7 +14,7 @@ API shapes built from this data: [API_SPECIFICATION.md](API_SPECIFICATION.md).
 | Reads | `Backend/app/data/` loads files, nothing else. No validation of business rules, no calculation |
 | Writes | Never at runtime. Files change only by a deliberate task and a commit |
 | Phase A (T03) | Final schema, short arrays: the 10 Demo hotels, 15 Demo places, 10×15 matrix |
-| Phase B (T15) | Grow to 30 hotels / 50 places / 30×50 matrix per city; add a second city |
+| Phase B (T15, done) | 30 hotels / 50 places / 30×50 matrix per city; second city `shikharpur` (no preset). Design tables: [../verification/CATALOG_DESIGN_NOTES.md](../verification/CATALOG_DESIGN_NOTES.md) |
 
 ## City file schema
 | Field | Type | Rules |
@@ -76,7 +76,9 @@ minutes(h, p) = base[district(h)][district(p)] + hotel_offset[h] + place_offset[
 | Inputs | District base table (minutes), per-hotel integer offset, per-place integer offset. All integers |
 | Forbidden | Randomness, map coordinates, distance, floats |
 | Range | The generator **asserts** every result is 1–600 (it never clamps silently) |
-| Demo block | The 10×15 Demo-trip cells are hand-authored overrides applied after generation (and are the only cells in Phase A) |
+| Offsets | New hotels/places: `hotel_offset(i) = (i*7) % 13 - 6`, `place_offset(j) = (j*5) % 11 - 5` (index in the final file order). Demo hotels/places keep their hand-authored offsets (D-39) |
+| Demo block | The 10×15 Demo-trip cells are hand-authored and copied through unchanged (the only cells in Phase A); pinned by `tests/unit/test_demo_freeze.py` |
+| Data module | Names, costs, positions and base tables live in `Backend/scripts/catalog_design.py` (plain data) |
 | Freeze | Output is written to the city JSON and committed. Re-running the generator must give byte-identical output (test, T15) |
 | Hand-tuned cells | Any cell changed by hand to satisfy a story condition is logged in [DECISIONS.md](DECISIONS.md) |
 | Location | `Backend/scripts/design_helper.py` (run by hand; never imported by `Backend/app/`) |
@@ -109,7 +111,7 @@ erDiagram
 
 ## Adding a new city
 1. Choose `city_id`; create `Backend/app/data/cities/<city_id>.json` following this schema (30 hotels, 50 places, full matrix).
-2. Define districts and base table; add the city's generator parameters to `Backend/scripts/design_helper.py`; run it once; commit the JSON.
+2. Define districts and base table; add the city's data to `Backend/scripts/catalog_design.py` and a `build_<city>` function to `Backend/scripts/design_helper.py`; run it once; commit the JSON. Add the city to the parametrised lists in `test_catalog_data.py` and `test_catalog_generator.py`.
 3. Set `demo_preset` to `null` (only the primary city owns the Demo trip).
 4. Add tests: counts, ID format and uniqueness, matrix completeness and ranges, regeneration is identical.
 5. Update this doc and `Backend/app/data/README.md` if the schema changes. No code change should be needed to list the city.

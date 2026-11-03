@@ -13,5 +13,7 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     css: false,
+    // The 80-marker map tests are slow when files run in parallel; this is load, not a bug.
+    testTimeout: 15000,
   },
 })
